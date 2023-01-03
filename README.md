@@ -28,7 +28,7 @@ You need OpenNMT-tf, pyonmttok, flask and flask_cors libraries. You may use a re
 ### Client
 
 Load bisync.html using any web browser:
-* Config:
+* Configuration:
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Activate the Debug setting to obtain details of the client/server communication.
   - Select the left and right-side languages (the model must habe been trained with such languages).
