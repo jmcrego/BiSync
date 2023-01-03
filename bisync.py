@@ -23,32 +23,14 @@ def json_request():
     src = req['src']
     tag = req['tag']
     tgt = req['tgt']
-    ind = int(req['ind'])
-    tok_prefix = None
     
-    if ind > 0:
-        last = tgt[:ind].rfind(" ")
-        if last>0:
-            raw_prefix = tgt[:last]
-            tok_prefix = onmttok(raw_prefix)
-            raw_input = src + ' ' + tag
-            tok_input = onmttok(raw_input)
+    raw_input = src + ' ' + tag + ' ' + tgt
+    tok_input = onmttok(raw_input)
 
-    else:
-        raw_input = src + ' ' + tag + ' ' + tgt
-        tok_input = onmttok(raw_input)
-
-    if tok_prefix is not None:
-        ### translate with prefix and keep n-best
-        raw_alternatives = ['', '', '', '', '']
-        tok_output = tok_input #translate(tok_input)
-        raw_output = onmttok.detokenize(tok_output)
-        pass
-    else:
-        ### translate 
-        alt = []
-        tok_output = tok_input #translate(tok_input)
-        raw_output = onmttok.detokenize(tok_output)
+    ### translate 
+    alt = []
+    tok_output = tok_input #translate(tok_input)
+    raw_output = onmttok.detokenize(tok_output)
         
     raw_output = onmttok.detokenize(tok_output)
     res = {"out" : raw_output, "alt": alt}
