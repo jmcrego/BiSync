@@ -1,5 +1,6 @@
+<img src="logos/systran-logo.svg" height="75"/> &nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="75"/>
+
 # BiSync  
-| <img src="logos/systran-logo.svg" height="75"/> &nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="75"/> |
 
 BiSync is a writing assistant that allows to edit and synchronize text in two languages.
              
