@@ -1,4 +1,4 @@
-# BiSync
+# BiSync <img src="logos/systran-logo.svg" height="75"/> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="75"/>
 
 BiSync is a writing assistant that allows to edit and synchronize text in two languages.
              
@@ -34,10 +34,3 @@ Load bisync.html using any web browser:
 * Use:
   - Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
   - Double-click on any word to obtain alternative translations starting from the selected word.
-
-<br>
-<p align="center">
-<img src="logos/systran-logo.svg" height="75"/>
-  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-<img src="logos/lisn-logo.svg" height="75"/>
-</p>
