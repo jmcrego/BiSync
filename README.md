@@ -22,6 +22,7 @@ To run the model (linux or macos) use:
 export FLASK_APP=bisync.py
 flask run --host=127.0.0.1 --port=5000
 ```
+Dependencies in requirements.txt are needed to run the model.
 
 ### Client
 
