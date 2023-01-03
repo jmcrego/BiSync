@@ -4,10 +4,7 @@
 
 BiSync is a writing tool that allows you to edit texts in two languages.
 
-In the general setting, BiSync works as a classical MT system providing the translation of input sentences. 
-When the user refines (post-edits) a previous translation in one of the languages, BiSync transforms the text in the other language to restore the translation parallelism.
-BiSync is trained to restore parallelism by following similar updates to those introduced by the user.
-BiSync can also produce alternative translations from a given word or paraphrases for a selected word sequence. 
+In the general setting, BiSync works as a classical MT system providing the translation of input sentences. When the user refines (post-edits) a previous translation in one of the languages, BiSync transforms the text in the other language to restore the translation parallelism. BiSync is trained to restore parallelism by following similar updates to those introduced by the user. BiSync can also produce alternative translations from a given word or paraphrases for a selected word sequence. 
 
 ## Download
 
