@@ -35,6 +35,6 @@ Load bisync.html using any web browser:
   - Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
   - Double-click on any word to obtain alternative translations starting from the selected word.
 
-
-[<img src="logos/systran-logo.svg" height="75"/>](systran-logo)
-[<img src="logos/lisn-logo.svg" height="75"/>](lisn-logo)
+<p align="center">
+[<img src="logos/systran-logo.svg" height="75"/>](systran-logo)   [<img src="logos/lisn-logo.svg" height="75"/>](lisn-logo)
+</p>
