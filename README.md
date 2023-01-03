@@ -36,4 +36,4 @@ Load bisync.html using any web browser:
   - Double-click on any word to obtain alternative translations starting from the selected word.
 
 
-![alt text](https://github.com/jmcrego/BiSync/blob/main/logos/systran-logo.svg =250x)
+![alt text](https://github.com/jmcrego/BiSync/blob/main/logos/systran-logo.svg=250x)
