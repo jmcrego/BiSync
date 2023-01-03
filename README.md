@@ -35,6 +35,7 @@ Load bisync.html using any web browser:
   - Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
   - Double-click on any word to obtain alternative translations starting from the selected word.
 
+<br>
 <p align="center">
 <img src="logos/systran-logo.svg" height="75"/>
   &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
