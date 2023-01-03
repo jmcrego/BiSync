@@ -37,4 +37,4 @@ Load bisync.html using any web browser:
 * Use:
   - Edit (or post-edit) any text area and press the BiSync <b>button</b> to get the corresponding translation.
   - <b>Click</b> on any word to obtain alternative translations starting from the selected word.
-  - <b>Select</b> a word sequence to obtain paraphrases of the selected sequence.
+  - <b>Select</b> a word sequence to obtain paraphrases for the selected sequence.
