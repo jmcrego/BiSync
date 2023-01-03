@@ -35,6 +35,6 @@ Load bisync.html using any web browser:
   - Activate the Debug setting to obtain details of the client/server communication.
   - Select the left and right-side languages (the model must habe been trained with such languages).
 * Use:
-  - <b>BiSync button</b> to get the corresponding translation of an edit (or post-edited) text area.
+  - <b>BiSync button</b> to get the corresponding translation of an edited (or post-edited) text area.
   - <b>Right-Click</b> on any word to obtain alternative translations starting from the selected word.
   - <b>Select</b> a sequence of words to obtain paraphrases for the selected sequence.
