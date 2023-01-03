@@ -36,5 +36,5 @@ Load bisync.html using any web browser:
   - Double-click on any word to obtain alternative translations starting from the selected word.
 
 <p align="center">
-[<img src="logos/systran-logo.svg" height="75"/>]   [<img src="logos/lisn-logo.svg" height="75"/>]
+<img src="logos/systran-logo.svg" height="75"/>   <img src="logos/lisn-logo.svg" height="75"/>
 </p>
