@@ -124,30 +124,64 @@ sync_button.addEventListener('click', (event) => {
 });
 
 //when src_textarea clicked to prefix from a word
-src_textarea.addEventListener('dblclick', (event) => {
+src_textarea.addEventListener('click', (event) => {
     if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length){
 	src = tgt_textarea.value;
 	tgt = src_textarea.value;
 	tag = tag_t2s;
 	ind = src_textarea.selectionStart;
-	alternatives = server_request_alt(src,tgt,tag,ind);
-	showOptionsMenu(event);  
+	txt = src.substring(0,ind)
+	alert('click: '+txt);
+	//alternatives = server_request_alt(src,tgt,tag,ind);
+	//showOptionsMenu(event);  
 	//rewrite src_textarea
-	src_count.innerHTML = src_textarea.value.length + '/' + textareaMaxLen;
+	//src_count.innerHTML = src_textarea.value.length + '/' + textareaMaxLen;
     }
 });
 
 //when tgt_textarea clicked to prefix from a word
-tgt_textarea.addEventListener('dblclick', (event) => {
+tgt_textarea.addEventListener('click', (event) => {
     if (tgt_textarea.value.length > 0 && src_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length){
 	src = src_textarea.value;
 	tgt = tgt_textarea.value;
 	tag = tag_s2t;
 	ind = tgt_textarea.selectionStart;
-	alternatives = server_request_alt(src,tgt,tag,ind);
-	showOptionsMenu(event);  
+	txt = tgt.substring(0,ind)
+	alert('click: '+txt);
+	//alternatives = server_request_alt(src,tgt,tag,ind);
+	//showOptionsMenu(event);  
 	//rewrite tgt_textarea
-	tgt_count.innerHTML = tgt_textarea.value.length + '/' + textareaMaxLen;
+	//tgt_count.innerHTML = tgt_textarea.value.length + '/' + textareaMaxLen;
+    }
+});
+
+//when src_textarea select a substring to fill
+src_textarea.addEventListener('select', (event) => {
+    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0){
+	src = src_textarea.value;
+	tgt = tgt_textarea.value;
+	tag = tag_t2s;
+	start = src_textarea.selectionStart;
+	finish = src_textarea.selectionEnd;
+	sel = src.substring(start, finish);
+	txt = tgt + tag + src.substring(0,start) + '<fill>' + src.substring(finish);
+	alert('select: '+txt);
+	//rewrite src_textarea
+    }
+});
+
+//when tgt_textarea select a substring to fill
+tgt_textarea.addEventListener('select', (event) => {
+    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0){
+	src = src_textarea.value;
+	tgt = tgt_textarea.value;
+	tag = tag_s2t;
+	start = tgt_textarea.selectionStart;
+	finish = tgt_textarea.selectionEnd;
+	sel = tgt.substring(start, finish);
+	txt = src + tag + tgt.substring(0,start) + '<fill>' + tgt.substring(finish);
+	alert('select: '+txt);
+	//rewrite tgt_textarea
     }
 });
 
@@ -164,6 +198,14 @@ myselect.onchange = function(){
     mydiv.setAttribute("hidden", "hidden");
     console.log('selected ' + myselect.value)
 };
+
+function getSel() // JavaScript
+{
+    txtarea = document.getElementById("mytextarea");
+    start = txtarea.selectionStart;
+    finish = txtarea.selectionEnd;
+    sel = txtarea.value.substring(start, finish);
+}
 
 function autoGrow(oField,oField2) {
     if (oField.scrollHeight > oField.clientHeight & oField.rows < 20) {
@@ -193,16 +235,16 @@ function add_console_row(pos, rest){
 async function server_request_out(src, tgt, tag, side){
     add_console_row(0, src + ' ' + tag + ' ' + tgt + ' ' + '[ind=' + ind + ']');
     params = { "src": src, "tgt": tgt, "tag": tag, "ind": ind }
-    //console.log("REQUEST: "+JSON.stringify(params));
-    response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    console.log("REQUEST: "+JSON.stringify(params));
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
-	//console.log("RESPONSE: HTTP error: "+`${response.status}`);
-	alarm("RESPONSE: HTTP error: "+`${response.status}`);
+	console.log("RESPONSE: HTTP error: "+`${response.status}`);
+	alert("RESPONSE: HTTP error: "+`${response.status}`);
     }
     else{
 	const data = await response.json();
 	one_best = data['out']
-	//console.log("RESPONSE: "+one_best);
+	console.log("RESPONSE: "+one_best);
 	add_console_row(1, one_best);
 	if (side == 'src'){src_textarea.value = one_best;}
 	if (side == 'tgt'){tgt_textarea.value = one_best;}
