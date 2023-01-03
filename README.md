@@ -27,11 +27,12 @@ You need OpenNMT-tf, pyonmttok, flask and flask_cors libraries. You may use a re
 
 ### Client
 
-Use a web browser and load bisync.html:
-* Update IP and Port settings with the address where the BiSync server was launched.
-* Activate the Debug setting to obtain details of the client/server communication.
-* Select the left and right-side languages (the model must habe been trained with such languages).
-* Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
-* Double-click on any word to obtain alternative translations starting from the selected word.
-* You are allowed to write up to 5000 characters.
+Load bisync.html using any web browser:
+* Config:
+** Update IP and Port settings with the address where the BiSync server was launched.
+** Activate the Debug setting to obtain details of the client/server communication.
+** Select the left and right-side languages (the model must habe been trained with such languages).
+* Use:
+** Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
+** Double-click on any word to obtain alternative translations starting from the selected word.
 
