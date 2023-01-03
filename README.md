@@ -6,4 +6,10 @@ In the most general setting, BiSync works as a classical MT system providing the
 
 ## Download
 
+Download available BiSync models (use *-cpu to run on CPU and *-gpu when a GPU is available):
+
+* en-fr-cpu, en-fr-gpu
+* en-es-cpu, en-es-gpu
+* es-fr-cpu, es-fr-gpu
+
 ## Instructions
