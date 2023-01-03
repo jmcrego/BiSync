@@ -13,3 +13,22 @@ Download available BiSync models (use *-cpu to run on CPU and *-gpu when a GPU i
 * es-fr-cpu, es-fr-gpu
 
 ## Instructions
+
+### Server
+
+To run the model (linux or macos) use:
+
+ export FLASK_APP=bisync.py
+ flask run --host=127.0.0.1 --port=5000
+
+You need OpenNMT-tf, pyonmttok, flask and flask_cors libraries. You may use a remote host and any available port.
+
+### Client
+
+* Update IP and Port settings with the address where the BiSync server was launched.
+* Activate the Debug setting to obtain details of the client/server communication.
+* Select the left and right-side languages (the model must habe been trained with such languages).
+* Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
+* Double-click on any word to obtain alternative translations starting from the selected word.
+* You are allowed to write up to 5000 characters.
+
