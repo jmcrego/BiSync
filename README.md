@@ -23,8 +23,6 @@ export FLASK_APP=bisync.py
 flask run --host=127.0.0.1 --port=5000
 ```
 
-You need OpenNMT-tf, pyonmttok, flask and flask_cors libraries. You may use a remote host and any available port.
-
 ### Client
 
 Load bisync.html using any web browser:
