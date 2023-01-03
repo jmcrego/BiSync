@@ -37,3 +37,4 @@ Load bisync.html using any web browser:
 
 
 ![alt text](https://github.com/jmcrego/BiSync/blob/main/logos/systran-logo.svg)
+[<img src="logos/lisn-logo.svg" width="250"/>](lisn-logo)
