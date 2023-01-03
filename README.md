@@ -8,8 +8,9 @@ In the most general setting, BiSync works as a classical MT system providing the
 
 ## Download
 
-* Clone this repository to a machine with an available web browser where the client will run.
-* Download available BiSync models to a machine where the server will run (use *-cpu to run on CPU and *-gpu when a GPU is available):
+* Clone this repository into a machine with an available web browser to run the client (bisync.html).
+* Clone this repository into a machine to run the server (bisync.py).
+* Download available BiSync models into the machine where the server will run (use *-cpu to run on CPU and *-gpu when a GPU is available):
   - en-fr-cpu, en-fr-gpu
   - en-es-cpu, en-es-gpu
   - es-fr-cpu, es-fr-gpu
@@ -24,7 +25,7 @@ To run the model (linux or macos) use:
 export FLASK_APP=bisync.py
 flask run --host=127.0.0.1 --port=5000
 ```
-Dependencies in requirements.txt are needed to run the model.
+Dependencies in requirements.txt are needed to run the server.
 
 ### Client
 
