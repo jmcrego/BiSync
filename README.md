@@ -36,4 +36,5 @@ Load bisync.html using any web browser:
   - Select the left and right-side languages (the model must habe been trained with such languages).
 * Use:
   - Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
-  - Double-click on any word to obtain alternative translations starting from the selected word.
+  - Click on any word to obtain alternative translations starting from the selected word.
+  - Select a word sequence to obtain paraphrases of the selected sequence.
