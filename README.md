@@ -37,5 +37,6 @@ Load bisync.html using any web browser:
 
 <p align="center">
 <img src="logos/systran-logo.svg" height="75"/>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 <img src="logos/lisn-logo.svg" height="75"/>
 </p>
