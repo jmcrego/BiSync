@@ -125,13 +125,13 @@ sync_button.addEventListener('click', (event) => {
 
 //when src_textarea clicked to prefix from a word
 src_textarea.addEventListener('click', (event) => {
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length){
+    if (event.shiftKey && src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length && src_textarea.selectionEnd == src_textarea.selectionStart){
 	src = tgt_textarea.value;
 	tgt = src_textarea.value;
 	tag = tag_t2s;
 	ind = src_textarea.selectionStart;
 	txt = src.substring(0,ind)
-	alert('click: '+txt);
+	alert('click['+src_textarea.selectionStart+','+src_textarea.selectionEnd+']: '+txt);
 	//alternatives = server_request_alt(src,tgt,tag,ind);
 	//showOptionsMenu(event);  
 	//rewrite src_textarea
@@ -141,13 +141,13 @@ src_textarea.addEventListener('click', (event) => {
 
 //when tgt_textarea clicked to prefix from a word
 tgt_textarea.addEventListener('click', (event) => {
-    if (tgt_textarea.value.length > 0 && src_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length){
+    if (event.shiftKey && tgt_textarea.value.length > 0 && src_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length && tgt_textarea.selectionEnd == tgt_textarea.selectionStart){
 	src = src_textarea.value;
 	tgt = tgt_textarea.value;
 	tag = tag_s2t;
 	ind = tgt_textarea.selectionStart;
 	txt = tgt.substring(0,ind)
-	alert('click: '+txt);
+	alert('click['+tgt_textarea.selectionStart+','+tgt_textarea.selectionEnd+']: '+txt);
 	//alternatives = server_request_alt(src,tgt,tag,ind);
 	//showOptionsMenu(event);  
 	//rewrite tgt_textarea
@@ -157,7 +157,7 @@ tgt_textarea.addEventListener('click', (event) => {
 
 //when src_textarea select a substring to fill
 src_textarea.addEventListener('select', (event) => {
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0){
+    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length && src_textarea.selectionEnd > src_textarea.selectionStart){
 	src = src_textarea.value;
 	tgt = tgt_textarea.value;
 	tag = tag_t2s;
@@ -165,14 +165,14 @@ src_textarea.addEventListener('select', (event) => {
 	finish = src_textarea.selectionEnd;
 	sel = src.substring(start, finish);
 	txt = tgt + tag + src.substring(0,start) + '<fill>' + src.substring(finish);
-	alert('select: '+txt);
+	alert('select['+src_textarea.selectionStart+','+src_textarea.selectionEnd+']: '+txt);
 	//rewrite src_textarea
     }
 });
 
 //when tgt_textarea select a substring to fill
 tgt_textarea.addEventListener('select', (event) => {
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0){
+    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length && tgt_textarea.selectionEnd > tgt_textarea.selectionStart){
 	src = src_textarea.value;
 	tgt = tgt_textarea.value;
 	tag = tag_s2t;
@@ -180,7 +180,7 @@ tgt_textarea.addEventListener('select', (event) => {
 	finish = tgt_textarea.selectionEnd;
 	sel = tgt.substring(start, finish);
 	txt = src + tag + tgt.substring(0,start) + '<fill>' + tgt.substring(finish);
-	alert('select: '+txt);
+	alert('select['+tgt_textarea.selectionStart+','+tgt_textarea.selectionEnd+']: '+txt);
 	//rewrite tgt_textarea
     }
 });
