@@ -8,89 +8,77 @@
 </head>  
 
 <!-- #ccddff !-->
-<body bgcolor="white" style="margin: 0; padding: 0;">
+<body bgcolor="white" align="center">
+
+    
+  <!-- ############### Title and logos ################################################### !-->
+  <table border="0" style="margin: 0; padding: 10px; text-align:left; width:100%;">
+    <tr>
+      <td style="font-family: optima, sans-serif; min-width:750px;">
+        <p style="margin:0; font-size:60px; font-weight: bold;">BiSync</p>
+        <p style="margin:0; font-size:22px; ">A writing assistant that allows to edit and synchronize text in two languages.</p>
+      </td>
+      <td style="text-align:right;min-width:500px;"> <img src="logos/systran-logo.svg" height="75"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="75"> </td>
+    </tr>
+  </table>
+  
+  <!-- ############### Parameters (IP, Port) ############################################# !--> 
+  <!-- div style="width:100%; background-color:white; #f9f9f9; border-color:cadfd2;" !-->
   <center>
-    <!-- ############### Title and logos ################################################### !-->
-    <table border="0" style="margin: 0; padding: 10px; text-align:left; width:100%; background-color:white;">
+    <table width="10%" border="0" style="margin: 10px; background-color:#ccddff; border-radius: 0px; padding: 5px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
       <tr>
-        <td style="font-family: optima, sans-serif; min-width:750px;">
-          <p style="margin:0; font-size:60px; font-weight: bold;">BiSync</p>
-          <p style="margin:0; font-size:22px; ">A writing assistant that allows to edit and synchronize text in two languages.</p>
-        </td>
-        <td style="text-align:right;min-width:500px;"> <img src="logos/systran-logo.svg" height="75"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="75"> </td>
+	<td style="text-align:left; font-family:courier; font-size:16px;">IP</td>
+	<td style="text-align:left"><input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1" style="font-family:courier; font-size:16px;"></td>
+      </tr>
+      <tr>
+	<td style="text-align:left; font-family:courier; font-size:16px;">Port</td>
+	<td style="text-align:left"><input type="text" id="PORT" maxlength="4" size="4" value="5000" style="font-family:courier; font-size:16px;"></td>
+      </tr>
+      <tr>
+	<td style="text-align:left; font-family:courier; font-size:16px;">Debug</td>
+	<td><input type="checkbox" id="cbox_debug"> </td>
       </tr>
     </table>
     
-    <!-- ############### Introduction ################################################### !-->
-    <div style="width: 95%; margin: 10px; font-family: optima, sans-serif; font-size:16px;">
-      <!-- BiSync is a writing tool that allows you to compose texts in two different languages.!-->
-      <!-- In addition to this website (client), you need a model (server) to deliver the translations required by the client.
-      You can launch the model in a remote (or local) server which must be reachable via the IP and Port settings. !-->
-      In the most general setting, BiSync works as a classical MT system providing the translation of input sentences.
-      In addition, when the user refines (post-edits) a preceding translation in either language, BiSync transforms the text in the other language to restore translation parallelism.
-      BiSync is trained to restore parallelism by following similar updates to those introduced by the user.
-      Follow this <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">link</a> for further details on the BiSync network.
-    </div>
+    <!-- ############### Main table (languages, textareas, counters and sync_button) #################### !--> 
+    <table cellspacing="0" border="0" bordercolor="#dddddd" style="border-collapse:collapse; width:85%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
+      <tr>
+	<td style="text-align:left; background-color:#ccddff;">
+	  <select id="src_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none"><option value="en">English</option><option value="fr">Français</option></select>
+	</td>
+	<td style="text-align:right; background-color:#ccddff;">
+	  <select id="tgt_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none;"><option value="fr">Français</option><option value="en">English</option></select>
+	</td>
+      </tr>      
+      <tr style="background-color:#ffffff">
+	<td style="text-align:left; border-right: solid 2px #dddddd;">
+	  <textarea id="src_textarea" tabindex="1" style="max-height:500px; border:0px; width:95%; height:100%; margin:0; background: transparent; font-size:22px;" rows="10" autofocus></textarea>
+	</td>
+	<td style="text-align:right;">
+	  <textarea id="tgt_textarea" tabindex="2" style="max-height:500px; border:0px; width:95%; height:100%; margin:0; background: transparent; font-size:22px;" rows="10"></textarea>
+	</td>
+      </tr>
+      <tr width="100%" style="background-color:#ffffff">
+	<td style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey; border-right: solid 2px #dddddd;">
+	  <label id="src_count"></label>
+	</td>
+	<td style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey">
+	  <label id="tgt_count"></label>
+	</td>
+      </tr>      
+    </table>
     
-    <!-- ############### Parameters (IP, Port) ############################################# !--> 
-    <div style="width:100%; background-color:#f9f9f9; border-color:cadfd2;">
-      <center>
-      <table width="10%" border="0" style="margin: 10px; background-color:#ccddff; border-radius: 0px; padding: 5px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
-	<tr>
-	  <td style="text-align:left; font-family:courier; font-size:16px;">IP</td>
-	  <td style="text-align:left"><input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1" style="font-family:courier; font-size:16px;"></td>
-	</tr>
-	<tr>
-	  <td style="text-align:left; font-family:courier; font-size:16px;">Port</td>
-	  <td style="text-align:left"><input type="text" id="PORT" maxlength="4" size="4" value="5000" style="font-family:courier; font-size:16px;"></td>
-	</tr>
-	<tr>
-	  <td style="text-align:left; font-family:courier; font-size:16px;">Debug</td>
-	  <td><input type="checkbox" id="cbox_debug"> </td>
-	</tr>
+    <table cellspacing="0" border="0" width="85%" style="margin:10px;">
+      <tr width="100%">
+	<td style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="src_count"></label></td>
+	<td style="text-align:center; white-space: nowrap;"> <button id="sync_button" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">&#9664; BiSync &#9654;</button> </td>
+	<td style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="tgt_count"></label></td>
+      </tr>
+    </table>
+    <!-- ############### console ############################################################### !-->
+    <div id="console_div" style="overflow:scroll; height:175px; width:90%; background-color:#cccccc; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" hidden>
+      <table id="console_table" width="100%" border="0" padd="1" style="font-family:courier; font-size:12px;">
       </table>
-      
-      <!-- ############### Main table (languages, textareas, counters and sync_button) #################### !--> 
-      <table cellspacing="0" border="0" bordercolor="#dddddd" style="border-collapse:collapse; width:85%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
-	<tr>
-	  <td style="text-align:left; background-color:#ccddff;">
-	    <select id="src_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none"><option value="en">English</option><option value="fr">Français</option></select>
-	  </td>
-	  <td style="text-align:right; background-color:#ccddff;">
-	    <select id="tgt_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none;"><option value="fr">Français</option><option value="en">English</option></select>
-	  </td>
-	</tr>      
-	<tr style="background-color:#ffffff">
-	  <td style="text-align:left; border-right: solid 2px #dddddd;">
-	    <textarea id="src_textarea" tabindex="1" style="max-height:500px; border:0px; width:95%; height:100%; margin:0; background: transparent; font-size:22px;" rows="10" autofocus></textarea>
-	  </td>
-	  <td style="text-align:right;">
-	    <textarea id="tgt_textarea" tabindex="2" style="max-height:500px; border:0px; width:95%; height:100%; margin:0; background: transparent; font-size:22px;" rows="10"></textarea>
-	  </td>
-	</tr>
-	<tr width="100%" style="background-color:#ffffff">
-	  <td style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey; border-right: solid 2px #dddddd;">
-	    <label id="src_count"></label>
-	  </td>
-	  <td style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey">
-	    <label id="tgt_count"></label>
-	  </td>
-	</tr>      
-      </table>
-      
-      <table cellspacing="0" border="0" width="85%" style="margin:10px;">
-	<tr width="100%">
-	  <td style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="src_count"></label></td>
-	  <td style="text-align:center; white-space: nowrap;"> <button id="sync_button" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">&#9664; BiSync &#9654;</button> </td>
-	  <td style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="tgt_count"></label></td>
-	</tr>
-      </table>
-      <!-- ############### console ############################################################### !-->
-      <div id="console_div" style="overflow:scroll; height:175px; width:90%; background-color:#cccccc; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" hidden>
-	<table id="console_table" width="100%" border="0" padd="1" style="font-family:courier; font-size:12px;">
-	</table>
-      </div>
-    </center>    
     </div>
 
     <!-- ############### floating select ####################################################### !-->
@@ -108,45 +96,10 @@
       </select>
     </div>
     
-    <!-- ############### Footnotes ######################################################### !--> 
-    <fieldset style="margin: 0rem 2rem; border-radius: 8px; background-color:white">
-      <legend> <h1 style="margin: 0">Instructions</h1> </legend>
-      <table cellspacing="0" border="0" width="100%" style="padding:0; margin:0; border-collapse: collapse; border-spacing:0; font-family: optima, sans-serif; font-size:16px;">
-	<tr>
-	  <td width="50%" style="vertical-align: top; ">
-	    <h3 style="margin:0; padding: 0px; background: lightgrey; display:inline; border-top:1px solid grey; border-bottom: 1px solid grey;">Server (BiSync model)</h3>
-	    <ul style="margin: 10;">
-	      <li> Download available BiSync models:
-		<ul style="font-family: courier; margin:0;">
-		  <li> <a href="https://address/en-fr-cpu" target="_blank">en-fr-cpu</a>, <a href="https://address/en-fr-gpu" target="_blank">en-fr-gpu</a>
-		  <li> <a href="https://address/en-es-cpu" target="_blank">en-es-cpu</a>, <a href="https://address/en-es-gpu" target="_blank">en-es-gpu</a>
-		  <li> <a href="https://address/fr-es-cpu" target="_blank">fr-es-cpu</a>, <a href="https://address/fr-es-gpu" target="_blank">fr-es-gpu</a>
-		</ul>
-	      <li> Run the model:
-		<ul style="font-family: courier; color:blue; margin: 0;">
-		  <li> export FLASK_APP=bisync.py
-		  <li> flask run --host=127.0.0.1 --port=5000
-		  <li style="color:black; list-style: none; text-indent: -2em; font-family: optima, sans-serif; font-size:16px;"> (You need OpenNMT-tf, pyonmttok, flask and flask_cors libraries. You may use a remote host and any available port)
-		</ul>
-	      <!--li> Save the <b>IP</b> and <b>Port</b> address where the model can be reached. </li!-->
-	    </ul>
-	  </td>
-	  <td width="50%" style="vertical-align: top;">
-	    <h3 style="margin:0; padding: 0px; background: lightgrey; display:inline; border-top:1px solid grey; border-bottom: 1px solid grey;">Client (this website)</h3>
-	    <ul style="margin: 10;">
-	      <li> Update <b>IP</b> and <b>Port</b> settings with the address where the BiSync server was launched.
-	      <li> Activate the <b>Debug</b> setting to obtain details of the client/server communication.
-	      <li> Select the left and right-side languages (the model must habe been trained with such languages).
-	      <li> Edit (or post-edit) any text area and press the BiSync button to get the corresponding translation.
-	      <li> Double-click on any word to obtain alternative translations starting from the selected word.
-	      <li> You are allowed to write up to 5000 characters.
-	    </ul>
-	  </td>
-	</tr>
-      </table>      
-    </fieldset>
-    <br>
-  </center>
+    <!-- ############### Footnotes ######################################################### !-->
+    <p>
+      Visit <a href="https://github.com/jmcrego/BiSync" target="_blank">BiSync</a> for further details.
+    </p>
   <script type="text/javascript" src="./bisync.js"></script>
 </body>
 </html>
