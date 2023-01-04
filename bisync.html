@@ -34,12 +34,19 @@
 	<td style="text-align:left"><input type="text" id="PORT" maxlength="4" size="4" value="5000" style="font-family:courier; font-size:16px;"></td>
       </tr>
       <tr>
+	<td style="text-align:left; font-family:courier; font-size:16px;">Delay</td>
+	<td>
+	  <input type="range" id="sync_time" value="1" min="0" max="9" step="1" oninput="sync_label.value = sync_time.value" style="width: 100px;"> <output id="sync_label" style="font-family:courier; font-size:16px;">1</output>
+	  <label style="font-family:courier; font-size:16px;">sec</label>
+	</td>
+      </tr>
+      <tr>
 	<td style="text-align:left; font-family:courier; font-size:16px;">Debug</td>
 	<td><input type="checkbox" id="cbox_debug"> </td>
       </tr>
     </table>
     
-    <!-- ############### Main table (languages, textareas, counters and sync_button) #################### !--> 
+    <!-- ############### Main table (languages, textareas, counters) #################### !--> 
     <table cellspacing="0" border="0" bordercolor="#dddddd" style="border-collapse:collapse; width:85%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
       <tr>
 	<td style="text-align:left; background-color:#ccddff;">
@@ -66,14 +73,7 @@
 	</td>
       </tr>      
     </table>
-    
-    <table cellspacing="0" border="0" width="85%" style="margin:10px;">
-      <tr width="100%">
-	<td style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="src_count"></label></td>
-	<td style="text-align:center; white-space: nowrap;"> <button id="sync_button" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">&#9664; BiSync &#9654;</button> </td>
-	<td style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey"><label id="tgt_count"></label></td>
-      </tr>
-    </table>
+
     <!-- ############### console ############################################################### !-->
     <div id="console_div" style="overflow:scroll; height:175px; width:90%; background-color:#cccccc; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" hidden>
       <table id="console_table" width="100%" border="0" padd="1" style="font-family:courier; font-size:12px;">
@@ -81,8 +81,8 @@
     </div>
 
     <!-- ############### floating select ####################################################### !-->
-    <div id="mydiv" style="position:absolute;" hidden>
-      <select size="4" id="myselect">
+    <div id="menudiv" style="position:absolute;" hidden>
+      <select size="4" id="menuselect">
 	<option value="1">New York is the ...</option>
 	<option value="2">Paris ...</option>
 	<option value="5">Barcelona ...</option>
