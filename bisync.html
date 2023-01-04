@@ -9,19 +9,19 @@
 
 <!-- #ccddff !-->
 <body bgcolor="white" align="center">
-
     
   <!-- ############### Title and logos ################################################### !-->
   <table border="0" style="margin:0px; padding: 10px; text-align:left; width:100%;">
     <tr>
-      <td style="font-family: optima, sans-serif; min-width:700px;">
+      <td style="font-family: optima, sans-serif; min-width:520px;">
         <p style="margin:0; font-size:60px; font-weight: bold;">BiSync</p>
         <p style="margin:0; font-size:20px; ">A writing tool that allows you to edit texts in two languages.</p>
       </td>
-      <td style="text-align:right;min-width:550px; vertical-align:bottom"> <img src="logos/systran-logo.svg" height="80"> &nbsp; &nbsp; &nbsp; &nbsp; <img src="logos/lisn-logo.svg" height="80"> </td>
+      <td style="text-align:right;min-width:520px; vertical-align:bottom"> <a href="https://www.systran.net/" target="_blank"><img src="logos/systran-logo.svg" height="80"></a> &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://www.lisn.upsaclay.fr/" target="_blank"><img src="logos/lisn-logo.svg" height="80"></a> </td>
     </tr>
   </table>
   <br> <br>
+  
   <!-- ############### Parameters (IP, Port, Debug) ############################################# !--> 
   <center>
     <table width="10%" border="0" style="margin: 10px; background-color:#ccddff; border-radius: 0px; padding: 5px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
@@ -36,7 +36,8 @@
       <tr>
 	<td style="text-align:left; font-family:courier; font-size:16px;">Delay</td>
 	<td>
-	  <input type="range" id="sync_time" value="1" min="1" max="9" step="1" oninput="sync_label.value = sync_time.value" style="width: 100px;"> <output id="sync_label" style="font-family:courier; font-size:16px;">1</output>
+	  <input type="range" id="sync_time" value="1" min="1" max="30" step="1" oninput="sync_label.value = sync_time.value" style="width: 90px;">
+	  <output id="sync_label" style="font-family:courier; font-size:16px;">1</output>
 	  <label style="font-family:courier; font-size:16px;">sec</label>
 	</td>
       </tr>
@@ -47,12 +48,12 @@
     </table>
     
     <!-- ############### Main table (languages, textareas, counters) #################### !--> 
-    <table cellspacing="0" border="0" bordercolor="#dddddd" style="border-collapse:collapse; width:85%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
+    <table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
       <tr>
-	<td style="text-align:left; background-color:#ccddff;">
+	<td style="text-align:left; background-color:#00FFFF;">
 	  <select id="src_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none"><option value="en">English</option><option value="fr">Français</option></select>
 	</td>
-	<td style="text-align:right; background-color:#ccddff;">
+	<td style="text-align:right; background-color:#00FFFF;">
 	  <select id="tgt_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none;"><option value="fr">Français</option><option value="en">English</option></select>
 	</td>
       </tr>      
@@ -73,16 +74,16 @@
 	</td>
       </tr>      
     </table>
+    <p style="font-family:optima; font-size:14px">Visit <a href="https://github.com/jmcrego/BiSync" target="_blank">BiSync</a> on Github.</p>
 
-    <!-- ############### console ############################################################### !-->
-    <div id="console_div" style="overflow:scroll; height:175px; width:90%; background-color:#cccccc; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" hidden>
-      <table id="console_table" width="100%" border="0" padd="1" style="font-family:courier; font-size:12px;">
-      </table>
+    <!-- ############### console ############################################################### kkk !--> 
+    <div id="console_div" style="overflow:scroll; height:175px; width:90%; background-color:#00FFFF; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" hidden>
+      <table id="console_table" width="100%" border="0" padd="1" style="font-family:courier; font-size:12px;"></table>
     </div>
 
     <!-- ############### floating select ####################################################### !-->
     <div id="menudiv" style="position:absolute;" hidden>
-      <select size="4" id="menuselect">
+      <select size="5" id="menuselect">
 	<option value="1">New York is the ...</option>
 	<option value="2">Paris ...</option>
 	<option value="5">Barcelona ...</option>
@@ -96,9 +97,6 @@
     </div>
     
     <!-- ############### Footnotes ######################################################### !-->
-    <p style="font-size:14px">
-      Visit <a href="https://github.com/jmcrego/BiSync" target="_blank">BiSync</a> for further details.
-    </p>
   <script type="text/javascript" src="./bisync.js"></script>
 </body>
 </html>
