@@ -16,13 +16,13 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/', methods=['POST'])
 
-#def process_json():
-def json_request():
+def sync_request():
     req = request.json
     logging.info('REQUEST {}'.format(req))
     src = req['src']
     tag = req['tag']
     tgt = req['tgt']
+    src_pre = req['src-']
     
     raw_input = src + ' ' + tag + ' ' + tgt
     tok_input = onmttok(raw_input)
@@ -32,8 +32,9 @@ def json_request():
     tok_output = tok_input #translate(tok_input)
     raw_output = onmttok.detokenize(tok_output)
         
-    raw_output = onmttok.detokenize(tok_output)
-    res = {"out" : raw_output, "alt": alt}
+    raw_output = onmttok.detokenize(onmttok(src))
+    res = {"out" : raw_output}
+    #res = {"out" : raw_output, "alt": alt}
     logging.info('RESPONSE {}'.format(res))
     return jsonify(res);
 
