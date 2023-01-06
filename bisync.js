@@ -81,93 +81,89 @@ tgt_textarea.addEventListener('input', (event) => {
    	update_counts();
 });
 
-function clean_line(txt){
-    txt = txt.replace('  ',' ');
-    if (textareaSingleLine) {txt = txt.replace('\n',' ');}
-    if (textareaMaxLen > 0 && txt.length > textareaMaxLen) {txt = txt.substring(0,textareaMaxLen);}
-    return txt;
-}
+//when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
+src_textarea_cursor = -1;
+src_textarea.addEventListener('keyup',(event) => cursor_moved_src(event)); // Any key released (only arrows must be considered)
+src_textarea.addEventListener('click',(event) => cursor_moved_src(event)); // Click down (only left button must be considered)
 
-function clear_and_reset_timeout(do_reset){
-    if (timeoutID) { //clear if already set
-	   	clearTimeout(timeoutID);
-    }
-    if (do_reset && sync_time.value > 0){ //set new timeout
-    	timeoutID = setTimeout(server_request_sync,sync_time.value*1000);
-    }
+function cursor_moved_src(e) {
+	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
+		return;
+	} 
+	Start = src_textarea.selectionStart;
+	End = src_textarea.selectionEnd;
+	if (Start != End) { //selection
+		txt = src_textarea.value.substring(Start, End);
+   		console.log('src_textarea cursor selects from ' + Start + ' to ' + End + ' ' + txt);
+	}
+	else if (Start != src_textarea_cursor) { //movement of cursor
+		nextChar = ' ';
+		prevChar = ' ';
+		if (Start < src_textarea.value.length) {nextChar = src_textarea.value.charAt(Start);} 
+		if (Start > 0) {prevChar = src_textarea.value.charAt(Start-1);} 
+		if (prevChar == ' ' && nextChar != ' '){
+			console.log('Start=' + Start + ' char is '+src_textarea.value.charAt(Start));
+		}
+	}
+	src_textarea_cursor = Start;
 }
+//when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
 
 //************************************************************************************
 //*** textareas right-clicked ********************************************************
 //************************************************************************************
 
 //when src_textarea right-clicked to prefix from a word
+/*
 src_textarea.addEventListener("contextmenu", function(e){e.preventDefault();}); //to avoid opening context menu (when right-clicking) in next function
 src_textarea.addEventListener('contextmenu', (event) => {
     if (!sync_time) return;
     if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length){ 
 	   	console.log('right-click on src_textarea pos='+src_textarea.selectionStart)
 	   	alternatives = []; //server_request_alt(tgt_textarea.value,src_textarea.value,tag_t2s,src_textarea.selectionStart);
-	/*
-	src_textarea.value = showOptionsMenu(event, alternatives);  
-	src_textarea_pre = src_textarea.value;
-	src_count.innerHTML = src_textarea.value.length;
-	if (textareaMaxLen>0) {src_count.innerHTML += '/'+textareaMaxLen;}
-	*/
     }
 });
+*/
 
 //when tgt_textarea right-clicked to prefix from a word
+/*
 tgt_textarea.addEventListener("contextmenu", function(e){e.preventDefault();}); //to avoid opening context menu (when right-clicking) in next function
 tgt_textarea.addEventListener('contextmenu', (event) => {
     if (sync_time.value == 0) return;
     if (tgt_textarea.value.length > 0 && src_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length){ // && tgt_textarea.selectionEnd == tgt_textarea.selectionStart){
 	   	console.log('right-click on tgt_textarea pos='+tgt_textarea.selectionStart)
 	   	alternatives = []; //server_request_alt(src_textarea.value,tgt_textarea.value,tag_s2t,tgt_textarea.selectionStart);
-	/*
-	tgt_textarea.value = showOptionsMenu(event, alternatives);
-	tgt_textarea_pre = tgt_textarea.value;
-	tgt_count.innerHTML = tgt_textarea.value.length;
-	if (textareaMaxLen>0) {tgt_count.innerHTML += '/'+textareaMaxLen;}
-	*/
     }
 });
+*/
 
 //************************************************************************************
 //*** textareas selected *************************************************************
 //************************************************************************************
 
 //when src_textarea select (mouseup) a gap to fill
+/*
 src_textarea.addEventListener('mouseup', (event) => {
     if (sync_time.value == 0) return;
     if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length && src_textarea.selectionEnd > src_textarea.selectionStart){
 	   	console.log('select on src_textarea pos=['+src_textarea.selectionStart+','+src_textarea.selectionEnd+']')
-	   	txt = tgt_textarea.value + tag_t2s + src_textarea.value.substring(0,src_textarea.selectionStart) + '<GAP>' + src_textarea.value.substring(src_textarea.selectionEnd);
+	   	txt = tgt_textarea.value + tag_t2s + src_textarea.value.substring(0,src_textarea.selectionStart) + ' ｟gap｠ ' + src_textarea.value.substring(src_textarea.selectionEnd);
 	   	paraphrases = []; //server_request_par(txt);
-	/*
-	src_textarea.value = showOptionsMenu(event, paraphrases);  
-	src_textarea_pre = src_textarea.value;
-	src_count.innerHTML = src_textarea.value.length;
-	if (textareaMaxLen>0) {src_count.innerHTML += '/'+textareaMaxLen;}
-	*/
     }
 });
+*/
 
 //when tgt_textarea select (mouseup) a gap to fill
+/*
 tgt_textarea.addEventListener('mouseup', (event) => {
     if (sync_time.value == 0) return;
     if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length && tgt_textarea.selectionEnd > tgt_textarea.selectionStart){
     	console.log('select on tgt_textarea pos=['+tgt_textarea.selectionStart+','+tgt_textarea.selectionEnd+']')
-	   	txt = src_textarea.value + tag_s2t + tgt_textarea.value.substring(0,tgt_textarea.selectionStart) + '<GAP>' + tgt_textarea.value.substring(tgt_textarea.selectionEnd);
+	   	txt = src_textarea.value + tag_s2t + tgt_textarea.value.substring(0,tgt_textarea.selectionStart) + ' ｟gap｠ ' + tgt_textarea.value.substring(tgt_textarea.selectionEnd);
 	   	paraphrases = []; //server_request_par(txt);
-	/*
-	tgt_textarea.value = showOptionsMenu(event, paraphrases);
-	tgt_textarea_pre = tgt_textarea.value;
-	tgt_count.innerHTML = tgt_textarea.value.length;
-	if (textareaMaxLen>0) {tgt_count.innerHTML += '/'+textareaMaxLen;}
-	*/
     }
 });
+*/
 
 //when one option is selected on the floating menudiv
 menuselect.onchange = function(){
@@ -234,7 +230,7 @@ async function server_request_sync(){
 function disable_textareas(side){
     //src_textarea.disabled
     if (side == 'src') src_textarea.disabled = true;
-    else src_textarea.disabled = false
+    else src_textarea.disabled = false;
     
     //src_textarea.style.background
     if (side == 'src') src_textarea.style.background = disabled_color;
@@ -246,7 +242,7 @@ function disable_textareas(side){
 
     //tgt_textarea.disabled
     if (side == 'tgt') tgt_textarea.disabled = true;
-    else tgt_textarea.disabled = false
+    else tgt_textarea.disabled = false;
     
     //tgt_textarea.style.background
     if (side == 'tgt') tgt_textarea.style.background = disabled_color;
@@ -257,13 +253,29 @@ function disable_textareas(side){
     else tgt_count_cell.style.background = 'transparent';    
 }
 
-update_counts(){
+function update_counts(){
 	src_count.innerHTML = src_textarea.value.length;
 	tgt_count.innerHTML = tgt_textarea.value.length;
 	if (textareaMaxLen>0) {
 		src_count.innerHTML += '/'+textareaMaxLen;
 		tgt_count.innerHTML += '/'+textareaMaxLen;
 	}
+}
+
+function clean_line(txt){
+    txt = txt.replace('  ',' ');
+    if (textareaSingleLine) {txt = txt.replace('\n',' ');}
+    if (textareaMaxLen > 0 && txt.length > textareaMaxLen) {txt = txt.substring(0,textareaMaxLen);}
+    return txt;
+}
+
+function clear_and_reset_timeout(do_reset){
+    if (timeoutID) { //clear if already set
+	   	clearTimeout(timeoutID);
+    }
+    if (do_reset && sync_time.value > 0){ //set new timeout
+    	timeoutID = setTimeout(server_request_sync,sync_time.value*1000);
+    }
 }
 
 
