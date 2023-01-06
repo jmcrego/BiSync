@@ -83,29 +83,48 @@ tgt_textarea.addEventListener('input', (event) => {
 
 //when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
 src_textarea_cursor = -1;
-src_textarea.addEventListener('keyup',(event) => cursor_moved_src(event)); // Any key released (only arrows must be considered)
-src_textarea.addEventListener('click',(event) => cursor_moved_src(event)); // Click down (only left button must be considered)
+tgt_textarea_cursor = -1;
+src_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'src')); // Any key released (only arrows must be considered)
+src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
+tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
+tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 
-function cursor_moved_src(e) {
+function cursor_moved(e,side) {
 	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
 		return;
 	} 
-	Start = src_textarea.selectionStart;
-	End = src_textarea.selectionEnd;
-	if (Start != End) { //selection
-		txt = src_textarea.value.substring(Start, End);
-   		console.log('src_textarea cursor selects from ' + Start + ' to ' + End + ' ' + txt);
+	if (side=='src'){
+		Start = src_textarea.selectionStart;
+		End = src_textarea.selectionEnd;
+		ta_value = src_textarea.value;
+		cursor = src_textarea_cursor
 	}
-	else if (Start != src_textarea_cursor) { //movement of cursor
+	else{
+		Start = tgt_textarea.selectionStart;
+		End = tgt_textarea.selectionEnd;
+		ta_value = tgt_textarea.value;
+		cursor = tgt_textarea_cursor
+	}
+
+	if (Start != End) { //selection
+   		console.log('src_textarea cursor selects from ' + Start + ' to ' + End + ' ' + ta_value.substring(Start, End));
+	}
+	else if (Start != cursor) { //movement of cursor
 		nextChar = ' ';
 		prevChar = ' ';
-		if (Start < src_textarea.value.length) {nextChar = src_textarea.value.charAt(Start);} 
-		if (Start > 0) {prevChar = src_textarea.value.charAt(Start-1);} 
+		if (Start < ta_value.length) {nextChar = ta_value.charAt(Start);} 
+		if (Start > 0) {prevChar = ta_value.charAt(Start-1);} 
 		if (prevChar == ' ' && nextChar != ' '){
-			console.log('Start=' + Start + ' char is '+src_textarea.value.charAt(Start));
+			console.log('Start=' + Start + ' char is '+ta_value.charAt(Start));
 		}
 	}
-	src_textarea_cursor = Start;
+
+	if (side=='src'){
+		src_textarea_cursor = Start;
+	}
+	else{
+		tgt_textarea_cursor = Start;		
+	}
 }
 //when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
 
