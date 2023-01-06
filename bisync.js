@@ -39,7 +39,7 @@ function reset_default(){
 document.addEventListener("DOMContentLoaded", reset_default());
 
 //hide menudiv when escape released
-document.addEventListener('keyup', (event) => {if (event.keyCode == 27){menudiv.setAttribute("hidden", "hidden");}});
+document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {menudiv.setAttribute("hidden", "hidden");}});
 
 //change of source language
 src_lang.addEventListener('change', (event) => {reset_default();});
@@ -54,6 +54,7 @@ tgt_lang.addEventListener('change', (event) => {reset_default();});
 //when src_textarea is modified
 src_textarea.addEventListener('input', (event) => {
     if (sync_time.value == 0) return;
+    console.log('src_textarea modified');
     if (src_textarea.value.length){ //the other textarea is disabled
     	disable_textareas('tgt');
 	   	src_textarea.value = clean_line(src_textarea.value);
@@ -69,6 +70,7 @@ src_textarea.addEventListener('input', (event) => {
 //when tgt_textarea is modified
 tgt_textarea.addEventListener('input', (event) => {
     if (sync_time.value == 0) return;
+    console.log('tgt_textarea modified');
     if (tgt_textarea.value.length){ //the other textarea is disabled
     	disable_textareas('src');
 	   	tgt_textarea.value = clean_line(tgt_textarea.value);
@@ -80,6 +82,10 @@ tgt_textarea.addEventListener('input', (event) => {
     }
    	update_counts();
 });
+
+//************************************************************************************
+//*** textareas cursor moved *********************************************************
+//************************************************************************************
 
 //when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
 src_textarea_cursor = -1;
@@ -93,29 +99,33 @@ function cursor_moved(e,side) {
 	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
 		return;
 	} 
-	if (side=='src'){
+	if (side=='src') {
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
+		ta = src_textarea;
 		ta_value = src_textarea.value;
 		cursor = src_textarea_cursor
 	}
-	else{
+	else if (side=='tgt') {
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
+		ta = tgt_textarea;
 		ta_value = tgt_textarea.value;
 		cursor = tgt_textarea_cursor
 	}
 
-	if (Start != End) { //selection
+	if (Start != End) { //selection => gap
    		console.log('src_textarea cursor selects from ' + Start + ' to ' + End + ' ' + ta_value.substring(Start, End));
+   		server_request_gap(side);
 	}
-	else if (Start != cursor) { //movement of cursor
+	else if (Start != cursor) { //movement of cursor => prefix
 		nextChar = ' ';
 		prevChar = ' ';
 		if (Start < ta_value.length) {nextChar = ta_value.charAt(Start);} 
 		if (Start > 0) {prevChar = ta_value.charAt(Start-1);} 
 		if (prevChar == ' ' && nextChar != ' '){
 			console.log('Start=' + Start + ' char is '+ta_value.charAt(Start));
+	   		server_request_pref(side);
 		}
 	}
 
@@ -125,79 +135,6 @@ function cursor_moved(e,side) {
 	else{
 		tgt_textarea_cursor = Start;		
 	}
-}
-//when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
-
-//************************************************************************************
-//*** textareas right-clicked ********************************************************
-//************************************************************************************
-
-//when src_textarea right-clicked to prefix from a word
-/*
-src_textarea.addEventListener("contextmenu", function(e){e.preventDefault();}); //to avoid opening context menu (when right-clicking) in next function
-src_textarea.addEventListener('contextmenu', (event) => {
-    if (!sync_time) return;
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length){ 
-	   	console.log('right-click on src_textarea pos='+src_textarea.selectionStart)
-	   	alternatives = []; //server_request_alt(tgt_textarea.value,src_textarea.value,tag_t2s,src_textarea.selectionStart);
-    }
-});
-*/
-
-//when tgt_textarea right-clicked to prefix from a word
-/*
-tgt_textarea.addEventListener("contextmenu", function(e){e.preventDefault();}); //to avoid opening context menu (when right-clicking) in next function
-tgt_textarea.addEventListener('contextmenu', (event) => {
-    if (sync_time.value == 0) return;
-    if (tgt_textarea.value.length > 0 && src_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length){ // && tgt_textarea.selectionEnd == tgt_textarea.selectionStart){
-	   	console.log('right-click on tgt_textarea pos='+tgt_textarea.selectionStart)
-	   	alternatives = []; //server_request_alt(src_textarea.value,tgt_textarea.value,tag_s2t,tgt_textarea.selectionStart);
-    }
-});
-*/
-
-//************************************************************************************
-//*** textareas selected *************************************************************
-//************************************************************************************
-
-//when src_textarea select (mouseup) a gap to fill
-/*
-src_textarea.addEventListener('mouseup', (event) => {
-    if (sync_time.value == 0) return;
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && src_textarea.selectionStart < src_textarea.value.length && src_textarea.selectionEnd > src_textarea.selectionStart){
-	   	console.log('select on src_textarea pos=['+src_textarea.selectionStart+','+src_textarea.selectionEnd+']')
-	   	txt = tgt_textarea.value + tag_t2s + src_textarea.value.substring(0,src_textarea.selectionStart) + ' ｟gap｠ ' + src_textarea.value.substring(src_textarea.selectionEnd);
-	   	paraphrases = []; //server_request_par(txt);
-    }
-});
-*/
-
-//when tgt_textarea select (mouseup) a gap to fill
-/*
-tgt_textarea.addEventListener('mouseup', (event) => {
-    if (sync_time.value == 0) return;
-    if (src_textarea.value.length > 0 && tgt_textarea.value.length > 0 && tgt_textarea.selectionStart < tgt_textarea.value.length && tgt_textarea.selectionEnd > tgt_textarea.selectionStart){
-    	console.log('select on tgt_textarea pos=['+tgt_textarea.selectionStart+','+tgt_textarea.selectionEnd+']')
-	   	txt = src_textarea.value + tag_s2t + tgt_textarea.value.substring(0,tgt_textarea.selectionStart) + ' ｟gap｠ ' + tgt_textarea.value.substring(tgt_textarea.selectionEnd);
-	   	paraphrases = []; //server_request_par(txt);
-    }
-});
-*/
-
-//when one option is selected on the floating menudiv
-menuselect.onchange = function(){
-    menudiv.setAttribute("hidden", "hidden");
-    console.log('selected ' + menuselect.value)
-};
-
-function showOptionsMenu(e,options){
-    posX = e.clientX
-    posY = e.clientY
-    console.log('mouse on ' + posX + ', ' + posY)
-    menudiv.style.left = posX + 'px';
-    menudiv.style.top  = posY+10 + 'px';
-    menudiv.removeAttribute("hidden");
-    return 'my new sentence';
 }
 
 //************************************************************************************
@@ -217,14 +154,12 @@ async function server_request_sync(){
         tgt = tgt_textarea.value;
         pre = src_textarea_pre;
     }
-        
     params = { "src": src, "tag": tag, "tgt": tgt, "src-": pre }
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
         alert("HTTP error: "+`${response.status}`);
-        return;
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
@@ -239,8 +174,112 @@ async function server_request_sync(){
 		tgt_textarea_pre = one_best;
 		update_counts();
     }
-    disable_textareas('noone');
+    disable_textareas('none');
 }
+
+async function server_request_gap(side){
+	if (side=='src'){
+		Start = src_textarea.selectionStart;
+		End = src_textarea.selectionEnd;
+		ta = src_textarea;
+		ta_value = src_textarea.value;
+		cursor = src_textarea_cursor
+        tag = tag_t2s;
+        src = tgt_textarea.value;
+	}
+	else{ //side=='tgt'
+		Start = tgt_textarea.selectionStart;
+		End = tgt_textarea.selectionEnd;
+		ta = tgt_textarea;
+		ta_value = tgt_textarea.value;
+		cursor = tgt_textarea_cursor
+        tag = tag_s2t;
+        src = src_textarea.value;
+	}
+	let {posX, posY} = getCaretCoordinates(ta);
+   	gappy = ta_value.substring(0,Start) + par_op+'gap'+par_cl + ta_value.substring(End);
+    params = { "src": src, "tag": tag, "gappy": gappy}
+    console.log("REQ: "+JSON.stringify(params));
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    if (! response.ok){
+        console.log("RES: HTTP error: "+`${response.status}`);
+        alert("HTTP error: "+`${response.status}`);
+        return;
+    }
+    const data = await response.json();
+    console.log("RES: "+JSON.stringify(data));
+    //options = data['alt']; //menu
+    options = ['uuu','vvv','www','xxx','yyy','zzz'];
+    optionsMenu(posX,posY,options);
+}
+
+async function server_request_pref(side){
+	if (side=='src'){
+		Start = src_textarea.selectionStart;
+		End = src_textarea.selectionEnd;
+		ta = src_textarea;
+		ta_value = src_textarea.value;
+		cursor = src_textarea_cursor
+        tag = tag_t2s;
+        src = tgt_textarea.value;
+	}
+	else{ //side=='tgt'
+		Start = tgt_textarea.selectionStart;
+		End = tgt_textarea.selectionEnd;
+		ta = tgt_textarea;
+		ta_value = tgt_textarea.value;
+		cursor = tgt_textarea_cursor
+        tag = tag_s2t;
+        src = src_textarea.value;
+	}
+	let {posX, posY} = getCaretCoordinates(ta);
+	pref = ta_value.substring(0,Start);
+    params = { "src": src, "tag": tag, "pref": pref}
+    console.log("REQ: "+JSON.stringify(params));
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    if (! response.ok){
+        console.log("RES: HTTP error: "+`${response.status}`);
+        alert("HTTP error: "+`${response.status}`);
+        return;
+    }
+    const data = await response.json();
+    console.log("RES: "+JSON.stringify(data));
+    //options = data['alt']; //menu
+    options = ['uuu','vvv','www','xxx','yyy','zzz'];
+    optionsMenu(posX,posY,options);
+}
+
+//************************************************************************************
+//*** Menu with alternatives *********************************************************
+//************************************************************************************
+
+//when one option is selected on the floating menudiv
+menuselect.onchange = function(){
+    menudiv.setAttribute("hidden", "hidden");
+    console.log('selected ' + menuselect.options[menuselect.selectedIndex].text)
+    //write result in corresponding textarea
+   	update_counts();
+};
+
+function optionsMenu(posX,posY,options){
+	//remove previous select options
+	while (menuselect.options.length > 0) {menuselect.remove(0);}
+
+	//add new select options
+	for (i = 0; i<options.length; i++){
+	    opt = document.createElement('option');
+    	opt.value = i;
+	    opt.innerHTML = options[i];
+    	menuselect.appendChild(opt);
+	}
+
+    //positionning menu
+    console.log('positionning Menu on (' + posX + ', ' + posY + ')')
+    menudiv.style.left = posX + 'px';
+    menudiv.style.top  = posY + 'px';
+    menudiv.removeAttribute("hidden");
+}
+
 
 //************************************************************************************
 //*** other **************************************************************************
@@ -297,6 +336,11 @@ function clear_and_reset_timeout(do_reset){
     }
 }
 
+function getCaretCoordinates(el){
+	posX = 300;
+	posY = 300;
+	return {posX, posY};
+}
 
 /*
 function autoGrow(oField,oField2) {

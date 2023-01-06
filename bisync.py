@@ -21,9 +21,19 @@ def sync_request():
     logging.info('REQUEST {}'.format(req))
     src = req['src']
     tag = req['tag']
-    tgt = req['tgt']
-    src_pre = req['src-']
+    if 'pref' in req:
+        pref = req['pref']
+    if 'gappy' in req:
+        gappy = req['gappy']
+    if 'src-' in req:
+        src_pre = req['src-']
     
+    res = {"out" : src}
+    logging.info('RESPONSE {}'.format(res))
+    return jsonify(res);
+
+
+
     raw_input = src + ' ' + tag + ' ' + tgt
     tok_input = onmttok(raw_input)
 
