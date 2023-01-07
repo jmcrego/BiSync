@@ -21,7 +21,7 @@
     padding: 0px;
     background-color: white;
     text-align: justify;
-    width: 75%;
+    width: 1px;
     margin: 5px;
     font-size: 18px;
 }
@@ -41,7 +41,7 @@
     */
 }
 
-option { padding: 4px; border-top: 1px solid lightgrey;}
+option { padding: 10px; border-top: 1px solid lightgrey;}
 option:hover { background-color: #EDFC92; }
 /* option:hover { box-shadow: 0 0 10px 100px #000 inset; }*/
 /* select:focus > option:checked { background: #EDFC92; !important; }*/

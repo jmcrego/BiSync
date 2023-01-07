@@ -14,7 +14,6 @@ tgt_count_cell = document.getElementById("tgt_count_cell");
 src_lang = document.getElementById("src_lang");
 tgt_lang = document.getElementById("tgt_lang");
 sync_time = document.getElementById("sync_time");
-menudiv = document.getElementById("menudiv");
 menuselect = document.getElementById("menuselect");
 timeoutID = null;
 src_textarea_pre = '';
@@ -38,8 +37,8 @@ function reset_default(){
 //when the initial HTML document has been completely loaded and parsed, without waiting for style sheets, images, and subframes to finish loading
 document.addEventListener("DOMContentLoaded", reset_default());
 
-//hide menudiv when escape released
-document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {menudiv.setAttribute("hidden", "hidden");}});
+//hide menuselect when escape released
+document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {menuselect.setAttribute("hidden", "hidden");}});
 
 //change of source language
 src_lang.addEventListener('change', (event) => {reset_default();});
@@ -253,9 +252,9 @@ async function server_request_pref(side){
 //*** Menu with alternatives *********************************************************
 //************************************************************************************
 
-//when one option is selected on the floating menudiv
+//when one option is selected on the floating menuselect
 menuselect.onchange = function(){
-    menudiv.setAttribute("hidden", "hidden");
+    menuselect.setAttribute("hidden", "hidden");
     console.log('selected ' + menuselect.options[menuselect.selectedIndex].text)
     //write result in corresponding textarea
    	update_counts();
@@ -275,9 +274,9 @@ function optionsMenu(posX,posY,options){
 
     //positionning menu
     console.log('positionning Menu on (' + posX + ', ' + posY + ')')
-    menudiv.style.left = posX + 'px';
-    menudiv.style.top  = posY + 'px';
-    menudiv.removeAttribute("hidden");
+    menuselect.style.left = posX + 'px';
+    menuselect.style.top  = posY + 'px';
+    menuselect.removeAttribute("hidden");
 }
 
 
