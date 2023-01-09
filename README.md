@@ -35,5 +35,5 @@ Load bisync.html using any web browser:
   - Select the left and right-side languages (the model must habe been trained with such languages).
 * Use:
   - Edit (or post-edit) your text on either language. BiSync will update the corresponding translation.
-  - Place the cursor on the beginning of a word to get alternative translations starting on the selected word.
+  - Place the cursor on the beginning of a word to get alternative translations starting on the selected word (previous words will remain unchanged).
   - Select a sequence of words to get alternative translations if the selected sequence.
