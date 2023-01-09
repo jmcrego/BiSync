@@ -36,4 +36,4 @@ Load bisync.html using any web browser:
 * Use:
   - Edit (or post-edit) your text on either language. BiSync will update the corresponding translation.
   - Place the cursor on the beginning of a word to get alternative translations starting on the selected word (previous words will remain unchanged).
-  - Select a sequence of words to get alternative translations if the selected sequence.
+  - Select a sequence of words to get alternative translations for the selected sequence.
