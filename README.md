@@ -34,6 +34,6 @@ Load bisync.html using any web browser:
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Select the left and right-side languages (the model must habe been trained with such languages).
 * Use:
-  - Edit (or post-edit) your text on either language. BiSync will update the corresponding translation.
-  - Place the cursor on the beginning of a word to get alternative translations starting on the selected word (previous words will remain unchanged).
+  - Edit (or post-edit) your text and BiSync will automatically update the corresponding translation.
+  - Place the cursor on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
   - Select a sequence of words to get alternative translations for the selected sequence.
