@@ -32,9 +32,8 @@ Dependencies in requirements.txt are needed to run the server.
 Load bisync.html using any web browser:
 * Configuration:
   - Update IP and Port settings with the address where the BiSync server was launched.
-  - Activate the Debug setting to obtain details of the client/server communication.
   - Select the left and right-side languages (the model must habe been trained with such languages).
 * Use:
-  - <b>BiSync button</b> to get the corresponding translation of an edited (or post-edited) text area.
-  - <b>Right-Click</b> on any word to obtain alternative translations starting from the selected word.
-  - <b>Select</b> a sequence of words to obtain paraphrases for the selected sequence.
+  - Edit (or post-edit) your text on either language. BiSync will update the corresponding translation.
+  - Place the cursor on the beginning of a word to get alternative translations starting on the selected word.
+  - Select a sequence of words to get alternative translations if the selected sequence.
