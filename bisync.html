@@ -3,6 +3,8 @@
 <html>
   
 <head>
+	<link href="https://fonts.googleapis.com/css2?family=El+Messiri&family=Poppins:wght@300;400;700&family=Rajdhani&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="./bisync.css" />
 	<title>BiSync</title>
 </head>  
@@ -13,63 +15,83 @@
 	<!-- ############### Title and logos ################################################### !-->
 	<table border="0" style="margin:0px; padding: 10px; text-align:left; width:100%; background:#FFFFFF;">
 		<tr>
-			<td style="font-family: optima, sans-serif; min-width:520px;">
-				<p style="margin:0; font-size:60px; font-weight: bold;">BiSync</p>
-				<p style="margin:0; font-size:20px; ">A writing tool that allows you to compose text in two languages.</p>
+			<td style="min-width:650px;">
+				<p style="margin:0; font-size:60px; font-family:El Messiri, sans-serif;">BiSync</p>
+				<p style="margin:0; font-size:18px; margin-top:-20px;">Write texts powered by AI and bilingual synchronisation.</p>
 			</td>
 			<td style="text-align:right;min-width:520px; vertical-align:bottom"> 
 				<a href="https://www.systran.net/" target="_blank"><img src="logos/systran-logo.svg" height="80"></a> &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://www.lisn.upsaclay.fr/" target="_blank"><img src="logos/lisn-logo.svg" height="80"></a> 
 			</td>
 		</tr>
 	</table>
-	<br> <br>
   
-  	<!-- ############### Parameters (IP, Port, Debug) ############################################# !--> 
 	<center>
-		<table border="0" style="margin: 10px; background-color:#ccddff; border-radius: 0px; padding: 5px; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
+	  	<!-- ############### Parameters (IP, Port, Delay) ############################################# !--> 
+		<table id="pars_table" border="0">
 			<tr>
-				<td style="text-align:left; font-family:courier; font-size:16px;">
-					IP <input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1" style="font-family:courier; font-size:16px;">
-					Port <input type="text" id="PORT" maxlength="4" size="4" value="5000" style="font-family:courier; font-size:16px;">
+				<td style="text-align:left; font-size:16px; color: #336699">
+					IP &nbsp;<input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1">&nbsp;&nbsp; Port &nbsp;<input type="text" id="PORT" maxlength="4" size="4" value="5000">
 				</td>
 			</tr>
-			<tr>
-				<td style="text-align:left; font-family:courier; font-size:16px;">
-					BiSync &nbsp;&nbsp;<input type="range" id="sync_time" value="1" min="0" max="5" step="1" style="width: 160px;">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p style="text-align:left; font-family:courier; font-size:12px; background-color: transparent; width:300px; border-style:none; position: relative; margin-top:-10px;">
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;off &nbsp;&nbsp;1 &nbsp;&nbsp;2 &nbsp;&nbsp;3 &nbsp;&nbsp;4 &nbsp;&nbsp;5 (sec)
+			<!--tr>
+				<td style="text-align:left; font-size:16px; color: #336699">
+					BiSync &nbsp;&nbsp;&nbsp;<input type="range" id="sync_time" value="1" min="0" max="5" step="1" style="width: 165px;">
+					<p style="text-align:left; font-family:courier; font-size:12px; background-color: transparent; width:300px; border-style:none; position: relative; margin-top:-5px;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OFF &nbsp;&nbsp;1 &nbsp;&nbsp;2 &nbsp;&nbsp;3 &nbsp;&nbsp;4 &nbsp;&nbsp;5 (sec)
 					</p>
+				</td>
+			</tr !-->
+			<tr>
+				<td style="text-align:left; font-size:16px; color: #336699">
+					BiSync &nbsp; <input type="range" id="sync_time" value="1" min="0" max="5" step="1" list="sync_values" style="width: 160px;">
+					&nbsp; <label id="sync_label" style="width: 50px;">1 sec</label>
+					<datalist id="sync_values">
+						<option value="0" label="OFF"></option>
+						<option value="1" label="1 sec"></option>
+						<option value="2" label="2 sec"></option>
+						<option value="3" label="3 sec"></option>
+						<option value="4" label="4 sec"></option>
+						<option value="5" label="5 sec"></option>
+					</datalist>
 				</td>
 			</tr>
 		</table>
+		<br>
 
-		<!-- ############### Main table (languages, textareas, counters) #################### !--> 
-		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; min-width:1000px;">
+		<!-- ############### Main table #################### !--> 
+		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
+			<!-- ############### (languages) #################### !--> 
 			<tr>
-				<td style="text-align:left; background-color:#00FFFF;">
-					<select id="src_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none"><option value="en">English</option><option value="fr">Français</option></select>
+				<td id="src_lang_cell">
+					<select id="src_lang" style="color:grey; font-size:14px;">
+						<option value="en">English</option>
+						<option value="fr">Français</option>
+					</select>
 				</td>
-				<td style="text-align:right; background-color:#00FFFF;">
-					<select id="tgt_lang" style="border:0px; background-color:transparent; padding: 5px; font-family:optima; font-size:18px; -moz-appearance: listbox; -webkit-appearance: none;"><option value="fr">Français</option><option value="en">English</option></select>
+				<td id="tgt_lang_cell">
+					<select id="tgt_lang" style="color:grey; font-size:14px;">
+						<option value="fr">Français</option>
+						<option value="en">English</option>
+					</select>
 				</td>
 			</tr>
+
+			<!-- ############### (textareas) #################### !--> 
 			<tr style="background-color:#ffffff; height:500px">
 				<td style="text-align:left; position:relative; border-right: solid 2px #dddddd;">
-					<textarea id="src_textarea" style="position:absolute;" tabindex="1" autofocus></textarea>
+					<textarea id="src_textarea" tabindex="1" autofocus></textarea>
 				</td>
 				<td style="text-align:right; position:relative;">
-					<textarea id="tgt_textarea" style="position:absolute;" tabindex="2"></textarea>
+					<textarea id="tgt_textarea" tabindex="2"></textarea>
 				</td>
 			</tr>
+
+			<!-- ############### (counters) #################### !--> 
 			<tr width="100%">
-				<td id="src_count_cell" style="text-align:left; vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey; border-right: solid 2px #dddddd;">
+				<td id="src_count_cell">
 					<label id="src_count"></label>
 				</td>
-				<td id="tgt_count_cell" style="text-align:right;vertical-align: top; font-size:14px; font-family:courier; width:150px; color:grey">
+				<td id="tgt_count_cell">
 					<label id="tgt_count"></label>
 				</td>
 			</tr>      
@@ -77,12 +99,10 @@
 
 
 		<!-- ############### footnote ####################################################### !-->
-		<p style="font-family:optima; font-size:14px">Visit <a href="https://github.com/jmcrego/BiSync" target="_blank">BiSync</a> on Github.</p>
+		<p id="footnote">Visit <a href="https://github.com/jmcrego/BiSync" target="_blank">BiSync</a> on Github.</p>
 
 		<!-- ############### floating select ####################################################### !-->
-		<!--div id="menudiv" style="position:absolute;" hidden!-->
-			<select size="5" id="menuselect" style="position:absolute;" hidden></select>
-		<!--/div!-->
+		<select size="5" id="menuselect" hidden></select>
 
 		<script type="text/javascript" src="./bisync.js"></script>
 	</center>

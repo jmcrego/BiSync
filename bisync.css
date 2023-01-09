@@ -1,8 +1,18 @@
+html * {
+   font-family: Poppins, sans-serif; /* !important;*/
+}
+
+#pars_table {
+    margin: 10px; 
+    background-color:white; 
+    padding: 5px; 
+    border-top: solid #336699; 
+    border-bottom: solid #336699;
+}
 
 #src_textarea, #tgt_textarea {
     resize: none;
     font-size: 22px;
-    font-family: helvetica, sans-serif;
     border-radius: 0px;
     background: transparent; 
     box-shadow: 0 0 0;
@@ -15,39 +25,74 @@
     bottom: 0; 
     overflow: hidden;
     white-space: pre-wrap;
-}
-
-#menudiv {
-    padding: 0px;
-    background-color: white;
-    text-align: justify;
-    width: 1px;
-    margin: 5px;
-    font-size: 18px;
+    position: absolute;
+    font-family: Poppins;
 }
 
 #menuselect {
     padding: 0px;
     font-size: 18px;
-    font-family: helvetica, sans-serif;
-    border-radius: .0em;
-    background-color:white;
+    border-radius: 0px;
+    background-color: white;
     border: 1px solid #aaa;
-    /*box-shadow: 0px 5px 15p[Ox rgba(0, 0, 0, 0.35);*/
-    /*
-    box-shadow: 0 0 0;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    */
+    position: relative;
+    /*border-left: thick double #32a1ce;*/
 }
 
-option { padding: 10px; border-top: 1px solid lightgrey;}
-option:hover { background-color: #EDFC92; }
-/* option:hover { box-shadow: 0 0 10px 100px #000 inset; }*/
-/* select:focus > option:checked { background: #EDFC92; !important; }*/
-
-/*
-th, td {
-    padding: 3px;
+#src_count_cell {
+    padding-left: 5px;
+    text-align: left;
+    vertical-align: top; 
+    font-size: 14px; 
+    font-family: courier; 
+    width: 150px; 
+    color: grey; 
+    border-right: solid 2px #dddddd; /* must show border */
 }
-*/
+
+#tgt_count_cell {
+    padding-right: 5px;
+    text-align: right;
+    vertical-align: top; 
+    font-size: 14px; 
+    font-family: courier; 
+    width:150px; 
+    color:grey;
+}
+
+#src_lang, #tgt_lang {
+    border: 0px; 
+    background-color: transparent; 
+    padding: 5px; 
+    font-size: 16px; 
+    -moz-appearance: listbox; 
+    -webkit-appearance: none
+}
+
+#IP, #PORT {
+    font-family: courier; 
+    font-size: 16px;
+}
+
+#src_lang_cell {
+    text-align:left; border-right: solid 2px #dddddd;
+}
+
+#tgt_lang_cell {
+    text-align:right;
+}
+
+#footnote {
+    font-size:12px; 
+    color:#336699;
+}
+
+option { 
+    padding: 10px; 
+    border-top: 1px solid lightgrey; 
+}
+option:hover { 
+    background-color: #EDFC92; 
+}
+
+

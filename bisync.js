@@ -14,6 +14,8 @@ tgt_count_cell = document.getElementById("tgt_count_cell");
 src_lang = document.getElementById("src_lang");
 tgt_lang = document.getElementById("tgt_lang");
 sync_time = document.getElementById("sync_time");
+sync_label = document.getElementById("sync_label");
+sync_values = document.getElementById("sync_values");
 menuselect = document.getElementById("menuselect");
 timeoutID = null;
 src_textarea_pre = '';
@@ -38,7 +40,9 @@ function reset_default(){
 document.addEventListener("DOMContentLoaded", reset_default());
 
 //hide menuselect when escape released
-document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {menuselect.setAttribute("hidden", "hidden");}});
+document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {hide_menuselect();}});
+//hide menuselect when click outside menuselect
+document.addEventListener('click', (event) => {if (!menuselect.contains(event.target)) {hide_menuselect();}}); 
 
 //change of source language
 src_lang.addEventListener('change', (event) => {reset_default();});
@@ -46,12 +50,15 @@ src_lang.addEventListener('change', (event) => {reset_default();});
 //change of target language
 tgt_lang.addEventListener('change', (event) => {reset_default();});
 
+sync_time.addEventListener('change', (event) => {console.log('changed sync to '+sync_values.options[event.target.value].label); sync_label.innerHTML = sync_values.options[event.target.value].label;});
+
 //************************************************************************************
 //*** textareas modified *************************************************************
 //************************************************************************************
 
 //when src_textarea is modified
 src_textarea.addEventListener('input', (event) => {
+   	hide_menuselect();
     if (sync_time.value == 0) return;
     console.log('src_textarea modified');
     if (src_textarea.value.length){ //the other textarea is disabled
@@ -68,6 +75,7 @@ src_textarea.addEventListener('input', (event) => {
 
 //when tgt_textarea is modified
 tgt_textarea.addEventListener('input', (event) => {
+   	hide_menuselect();
     if (sync_time.value == 0) return;
     console.log('tgt_textarea modified');
     if (tgt_textarea.value.length){ //the other textarea is disabled
@@ -87,14 +95,13 @@ tgt_textarea.addEventListener('input', (event) => {
 //************************************************************************************
 
 //when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
-src_textarea_cursor = -1;
-tgt_textarea_cursor = -1;
 src_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'src')); // Any key released (only arrows must be considered)
 src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
 tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
 tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 
 function cursor_moved(e,side) {
+	hide_menuselect();
 	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
 		return;
 	} 
@@ -103,36 +110,27 @@ function cursor_moved(e,side) {
 		End = src_textarea.selectionEnd;
 		ta = src_textarea;
 		ta_value = src_textarea.value;
-		cursor = src_textarea_cursor
 	}
 	else if (side=='tgt') {
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
 		ta = tgt_textarea;
 		ta_value = tgt_textarea.value;
-		cursor = tgt_textarea_cursor
 	}
 
 	if (Start != End) { //selection => gap
-   		console.log('src_textarea cursor selects from ' + Start + ' to ' + End + ' ' + ta_value.substring(Start, End));
+   		console.log('textarea cursor selects from ' + Start + ' to ' + End + ': ' + ta_value.substring(Start, End));
    		server_request_gap(side);
 	}
-	else if (Start != cursor) { //movement of cursor => prefix
+	else { //cursor moves => prefix (if begin of token)
 		nextChar = ' ';
 		prevChar = ' ';
 		if (Start < ta_value.length) {nextChar = ta_value.charAt(Start);} 
 		if (Start > 0) {prevChar = ta_value.charAt(Start-1);} 
 		if (prevChar == ' ' && nextChar != ' '){
-			console.log('Start=' + Start + ' char is '+ta_value.charAt(Start));
+			console.log('textarea cursor prefixes from ' + Start + ' char is '+ta_value.charAt(Start));
 	   		server_request_pref(side);
 		}
-	}
-
-	if (side=='src'){
-		src_textarea_cursor = Start;
-	}
-	else{
-		tgt_textarea_cursor = Start;		
 	}
 }
 
@@ -182,7 +180,7 @@ async function server_request_gap(side){
 		End = src_textarea.selectionEnd;
 		ta = src_textarea;
 		ta_value = src_textarea.value;
-		cursor = src_textarea_cursor
+		//cursor = src_textarea_cursor
         tag = tag_t2s;
         src = tgt_textarea.value;
 	}
@@ -191,11 +189,10 @@ async function server_request_gap(side){
 		End = tgt_textarea.selectionEnd;
 		ta = tgt_textarea;
 		ta_value = tgt_textarea.value;
-		cursor = tgt_textarea_cursor
+		//cursor = tgt_textarea_cursor
         tag = tag_s2t;
         src = src_textarea.value;
 	}
-	let {posX, posY} = getCaretCoordinates(ta);
    	gappy = ta_value.substring(0,Start) + par_op+'gap'+par_cl + ta_value.substring(End);
     params = { "src": src, "tag": tag, "gappy": gappy}
     console.log("REQ: "+JSON.stringify(params));
@@ -209,7 +206,7 @@ async function server_request_gap(side){
     console.log("RES: "+JSON.stringify(data));
     //options = data['alt']; //menu
     options = ['uuu','vvv','www','xxx','yyy','zzz'];
-    optionsMenu(posX,posY,options);
+    optionsMenu(side,options);
 }
 
 async function server_request_pref(side){
@@ -218,7 +215,7 @@ async function server_request_pref(side){
 		End = src_textarea.selectionEnd;
 		ta = src_textarea;
 		ta_value = src_textarea.value;
-		cursor = src_textarea_cursor
+		//cursor = src_textarea_cursor
         tag = tag_t2s;
         src = tgt_textarea.value;
 	}
@@ -227,11 +224,10 @@ async function server_request_pref(side){
 		End = tgt_textarea.selectionEnd;
 		ta = tgt_textarea;
 		ta_value = tgt_textarea.value;
-		cursor = tgt_textarea_cursor
+		//cursor = tgt_textarea_cursor
         tag = tag_s2t;
         src = src_textarea.value;
 	}
-	let {posX, posY} = getCaretCoordinates(ta);
 	pref = ta_value.substring(0,Start);
     params = { "src": src, "tag": tag, "pref": pref}
     console.log("REQ: "+JSON.stringify(params));
@@ -245,7 +241,7 @@ async function server_request_pref(side){
     console.log("RES: "+JSON.stringify(data));
     //options = data['alt']; //menu
     options = ['uuu','vvv','www','xxx','yyy','zzz'];
-    optionsMenu(posX,posY,options);
+    optionsMenu(side,options);
 }
 
 //************************************************************************************
@@ -258,9 +254,10 @@ menuselect.onchange = function(){
     console.log('selected ' + menuselect.options[menuselect.selectedIndex].text)
     //write result in corresponding textarea
    	update_counts();
+   	hide_menuselect();
 };
 
-function optionsMenu(posX,posY,options){
+function optionsMenu(side, options){
 	//remove previous select options
 	while (menuselect.options.length > 0) {menuselect.remove(0);}
 
@@ -273,12 +270,60 @@ function optionsMenu(posX,posY,options){
 	}
 
     //positionning menu
-    console.log('positionning Menu on (' + posX + ', ' + posY + ')')
+	//let {posX, posY} = getCaretTopPoint();
+
+	posY = -565;
+	if (side == 'src') {posX = 30;}
+	else {posX = -30 - menuselect.clientWidth;}
+
     menuselect.style.left = posX + 'px';
     menuselect.style.top  = posY + 'px';
-    menuselect.removeAttribute("hidden");
+    menuselect.removeAttribute("hidden"); //is visible
 }
 
+function getCaretTopPoint () {
+	const sel = document.getSelection();
+    const r = sel.getRangeAt(0);
+    let rect;
+    let r2;
+    let x;
+    let y;
+    // supposed to be textNode in most cases
+    // but div[contenteditable] when empty
+    const node = r.startContainer;
+    const offset = r.startOffset;
+    if (offset > 0) {
+        // new range, don't influence DOM state
+        r2 = document.createRange()
+        r2.setStart(node, (offset - 1))
+        r2.setEnd(node, offset)
+        // https://developer.mozilla.org/en-US/docs/Web/API/range.getBoundingClientRect
+        // IE9, Safari?(but look good in Safari 8)
+        rect = r2.getBoundingClientRect()
+        x = rect.right;
+        y = rect.top;
+    } else if (offset < node.length) {
+        r2 = document.createRange()
+        // similar but select next on letter
+        r2.setStart(node, offset)
+        r2.setEnd(node, (offset + 1))
+        rect = r2.getBoundingClientRect()
+		x = rect.left;
+		y = rect.top;
+    } else { // textNode has length
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element.getBoundingClientRect
+        rect = node.getBoundingClientRect()
+        const styles = getComputedStyle(node)
+        const lineHeight = parseInt(styles.lineHeight)
+        const fontSize = parseInt(styles.fontSize)
+        // roughly half the whitespace... but not exactly
+        const delta = (lineHeight - fontSize) / 2
+        x = rect.left;
+        y = (rect.top + delta);
+    }
+    console.log('caret position ['+x+', '+y+']');
+    return {x, y};
+}
 
 //************************************************************************************
 //*** other **************************************************************************
@@ -297,6 +342,11 @@ function disable_textareas(side){
     if (side == 'src') src_count_cell.style.background = disabled_color;
     else src_count_cell.style.background = 'transparent';
 
+    //src_lang_cell.disabled
+    if (side == 'src') src_lang_cell.style.background = disabled_color;
+    else src_lang_cell.style.background = 'transparent';
+
+
     //tgt_textarea.disabled
     if (side == 'tgt') tgt_textarea.disabled = true;
     else tgt_textarea.disabled = false;
@@ -308,6 +358,11 @@ function disable_textareas(side){
     //tgt_count_cell.disabled
     if (side == 'tgt') tgt_count_cell.style.background = disabled_color;
     else tgt_count_cell.style.background = 'transparent';    
+
+    //tgt_lang_cell.disabled
+    if (side == 'tgt') tgt_lang_cell.style.background = disabled_color;
+    else tgt_lang_cell.style.background = 'transparent';
+
 }
 
 function update_counts(){
@@ -335,10 +390,10 @@ function clear_and_reset_timeout(do_reset){
     }
 }
 
-function getCaretCoordinates(el){
-	posX = 300;
-	posY = 300;
-	return {posX, posY};
+function hide_menuselect(){
+	if (!menuselect.hasAttribute('hidden')){
+		menuselect.setAttribute("hidden", "hidden");
+	}	
 }
 
 /*
