@@ -21,15 +21,16 @@ timeoutID = null;
 src_textarea_pre = '';
 tgt_textarea_pre = '';
 disabled_color = '#FAFAFA';
+const tts = window.speechSynthesis;
 
 function reset_default(){
     src_textarea.disabled = false; //src_textarea is disabled when tgt_textarea is modified
     src_textarea.value = '';
-    tag_s2t = par_op + 'to-' + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
+    tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
     
     tgt_textarea.disabled = false; //tgt_textarea is disabled when src_textarea is modified
     tgt_textarea.value = '';
-    tag_t2s = par_op + 'to-' + src_lang.options[src_lang.selectedIndex].value + par_cl;
+    tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
 
     update_counts();
     //sync_time.value = 1;
@@ -51,6 +52,25 @@ src_lang.addEventListener('change', (event) => {reset_default();});
 tgt_lang.addEventListener('change', (event) => {reset_default();});
 
 sync_time.addEventListener('change', (event) => {console.log('changed sync to '+sync_values.options[event.target.value].label); sync_label.innerHTML = sync_values.options[event.target.value].label;});
+
+//press button speak_src
+speak_src.addEventListener('click', (event) => {
+	if (src_textarea.value.length == 0){return;}
+	tts.cancel(); // stop any speaking in progress
+	const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
+	utterance.lang = 'en-GB';
+	tts.speak(utterance);
+});
+
+//press button speak_tgt
+speak_tgt.addEventListener('click', (event) => {
+	if (tgt_textarea.value.length == 0){return;}
+	tts.cancel(); // stop any speaking in progress
+	const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
+	utterance.lang = 'fr-FR';
+	tts.speak(utterance);
+});
+
 
 //************************************************************************************
 //*** textareas modified *************************************************************
