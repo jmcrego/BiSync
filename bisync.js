@@ -58,13 +58,15 @@ sync_time.addEventListener('change', (event) => {console.log('changed sync to '+
 speak_src.addEventListener('click', (event) => {
 	if (src_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();}
-		else {tts.pause();}
+		if (tts.paused) {tts.resume();console.log('speak_src resume');}
+		else {tts.pause();console.log('speak_src pause');}
 	}
 	else{
+		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
 		utterance.lang = 'en-GB';
 		tts.speak(utterance);
+		console.log('speak_src speak');
 	}
 });
 
@@ -72,13 +74,15 @@ speak_src.addEventListener('click', (event) => {
 speak_tgt.addEventListener('click', (event) => {
 	if (tgt_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();}
-		else {tts.pause();}
+		if (tts.paused) {tts.resume();console.log('speak_tgt resume');}
+		else {tts.pause();console.log('speak_tgt pause');}
 	}
 	else{
+		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
 		utterance.lang = 'fr-FR';
 		tts.speak(utterance);
+		console.log('speak_tgt speak');
 	}
 });
 
