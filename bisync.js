@@ -33,6 +33,7 @@ function reset_default(){
     tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
 
     update_counts();
+    if (tts.speaking) tts.cancel();
     //sync_time.value = 1;
     //sync_label.value = '1 (sec)';
 }
@@ -56,19 +57,29 @@ sync_time.addEventListener('change', (event) => {console.log('changed sync to '+
 //press button speak_src
 speak_src.addEventListener('click', (event) => {
 	if (src_textarea.value.length == 0){return;}
-	tts.cancel(); // stop any speaking in progress
-	const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
-	utterance.lang = 'en-GB';
-	tts.speak(utterance);
+	if (tts.speaking) {
+		if (tts.paused) {tts.resume();}
+		else {tts.pause();}
+	}
+	else{
+		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
+		utterance.lang = 'en-GB';
+		tts.speak(utterance);
+	}
 });
 
 //press button speak_tgt
 speak_tgt.addEventListener('click', (event) => {
 	if (tgt_textarea.value.length == 0){return;}
-	tts.cancel(); // stop any speaking in progress
-	const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
-	utterance.lang = 'fr-FR';
-	tts.speak(utterance);
+	if (tts.speaking) {
+		if (tts.paused) {tts.resume();}
+		else {tts.pause();}
+	}
+	else{
+		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
+		utterance.lang = 'fr-FR';
+		tts.speak(utterance);
+	}
 });
 
 
@@ -91,6 +102,7 @@ src_textarea.addEventListener('input', (event) => {
 	   	clear_and_reset_timeout(false);
     }
    	update_counts();
+    if (tts.speaking) tts.cancel();
 });
 
 //when tgt_textarea is modified
@@ -108,6 +120,7 @@ tgt_textarea.addEventListener('input', (event) => {
 	   	clear_and_reset_timeout(false);
     }
    	update_counts();
+    if (tts.speaking) tts.cancel();
 });
 
 //************************************************************************************
