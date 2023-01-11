@@ -188,7 +188,11 @@ async function server_request_sync(){
         tgt = tgt_textarea.value;
         pre = src_textarea_pre;
     }
-    params = { "src": src, "tag": tag, "tgt": tgt, "src-": pre }
+    params = { "src": src, "lang": tag, "tgt": tgt }
+    //if (tgt.length > 0){
+    //	params['tgt'] = tgt // src ((lang)) tgt ((op)) ===> tgt
+    //}
+    
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
@@ -197,7 +201,7 @@ async function server_request_sync(){
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-    one_best = data['out']
+    one_best = data['oraw']
     if (src_textarea.disabled){ //outputs in source side
 		src_textarea.value = one_best;
 		src_textarea_pre = one_best;
@@ -212,6 +216,7 @@ async function server_request_sync(){
 }
 
 async function server_request_gap(side){
+	return;
 	if (side=='src'){
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
@@ -247,6 +252,7 @@ async function server_request_gap(side){
 }
 
 async function server_request_pref(side){
+	return;
 	if (side=='src'){
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
