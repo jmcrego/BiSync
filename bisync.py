@@ -37,16 +37,29 @@ def translate(src, lang, tgt, mode):
         else:
             operation = '｟INS｠'
             iraw = src + ' ' + lang #+ ' ' + tgt + ' ' + operation
+        itok = onmttok(iraw)
+        results = translator.translate_batch([itok])
+        otok = results[0].hypotheses
+        oraw = [onmttok.detokenize(t) for t in otok]
 
     elif mode == 'gap':
         iraw = src + ' ' + lang + ' ' + tgt
+        itok = onmttok(iraw)
+        results = translator.translate_batch([itok], beam_size=10, num_hypotheses=10, return_alternatives=True)
+        otok = results[0].hypotheses
+        oraw = [onmttok.detokenize(t) for t in otok]
+
+    elif mode == 'pref':
+        iraw = src + ' ' + lang 
+        itok = onmttok(iraw)
+        praw = tgt
+        ptok = onmttok(praw)
+        results = translator.translate_batch([itok], target_prefix=[ptok], beam_size=10, num_hypotheses=10, return_alternatives=True)
+        otok = results[0].hypotheses
+        oraw = [onmttok.detokenize(t[len(ptok):]) for t in otok]
 
     logging.info('iraw: {}'.format(iraw))
-    itok = onmttok(iraw)
     logging.info('itok: {}'.format(itok))
-    results = translator.translate_batch([itok])
-    otok = results[0].hypotheses[0]
     logging.info('otok: {}'.format(otok))
-    oraw = onmttok.detokenize(otok)
     logging.info('oraw: {}'.format(oraw))
-    return oraw
+    return oraw #list with alternatives
