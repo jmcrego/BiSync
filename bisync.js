@@ -79,7 +79,7 @@ speak_tgt.addEventListener('click', (event) => {
 	}
 	else{
 		tts.cancel();
-		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
+		const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
 		utterance.lang = 'fr-FR';
 		tts.speak(utterance);
 		console.log('speak_tgt speak');
