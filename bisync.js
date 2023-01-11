@@ -188,7 +188,7 @@ async function server_request_sync(){
         tgt = tgt_textarea.value;
         pre = src_textarea_pre;
     }
-    params = { "src": src, "lang": tag, "tgt": tgt }
+    params = { "src": src, "lang": tag, "tgt": tgt, "mode": "sync" }
     //if (tgt.length > 0){
     //	params['tgt'] = tgt // src ((lang)) tgt ((op)) ===> tgt
     //}
@@ -197,7 +197,7 @@ async function server_request_sync(){
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
-        alert("HTTP error: "+`${response.status}`);
+        //alert("HTTP error: "+`${response.status}`);
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
@@ -216,39 +216,47 @@ async function server_request_sync(){
 }
 
 async function server_request_gap(side){
-	return;
-	if (side=='src'){
+	//NSA Affair Emphasizes Complete Lack of Debate on Intelligence ｟fr｠ ｟GAP｠ totale de débat sur le renseignement
+	//N'y aurait-il pas comme une vague hypocrisie de votre part ? ｟en｠ Is there not ｟GAP｠ your part?
+	if (side=='src'){ // tgt ((t2s)) src_with_gap
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
-		ta = src_textarea;
-		ta_value = src_textarea.value;
-		//cursor = src_textarea_cursor
-        tag = tag_t2s;
+		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
+        lang = tag_t2s;
         src = tgt_textarea.value;
 	}
-	else{ //side=='tgt'
+	else{ //side=='tgt'// src ((s2t)) tgt_with_gap
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
-		ta = tgt_textarea;
-		ta_value = tgt_textarea.value;
-		//cursor = tgt_textarea_cursor
-        tag = tag_s2t;
+		tgt_with_gap = tgt_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + tgt_textarea.value.substring(End);
+        lang = tag_s2t;
         src = src_textarea.value;
 	}
-   	gappy = ta_value.substring(0,Start) + par_op+'gap'+par_cl + ta_value.substring(End);
-    params = { "src": src, "tag": tag, "gappy": gappy}
+    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
-        alert("HTTP error: "+`${response.status}`);
+        //alert("HTTP error: "+`${response.status}`);
         return;
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
+
+    one_best = data['oraw']
+    if (side == 'src'){ //outputs in source side
+		src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,one_best)
+		update_counts();
+    }
+    else{ //side=='tgt'
+		tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,one_best)
+		update_counts();
+    }
+    disable_textareas('none');
+
     //options = data['alt']; //menu
-    options = ['uuu','vvv','www','xxx','yyy','zzz'];
-    optionsMenu(side,options);
+    //options = ['uuu','vvv','www','xxx','yyy','zzz'];
+    //optionsMenu(side,options);
 }
 
 async function server_request_pref(side){
@@ -272,7 +280,7 @@ async function server_request_pref(side){
         src = src_textarea.value;
 	}
 	pref = ta_value.substring(0,Start);
-    params = { "src": src, "tag": tag, "pref": pref}
+    params = { "src": src, "tag": tag, "pref": pref, "mode": "pref"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
     if (! response.ok){
