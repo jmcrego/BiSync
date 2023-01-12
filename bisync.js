@@ -21,6 +21,8 @@ timeoutID = null;
 src_textarea_pre = '';
 tgt_textarea_pre = '';
 disabled_color = '#FAFAFA';
+src_textarea_is_modified = false;
+tgt_textarea_is_modified = false;
 const tts = window.speechSynthesis;
 
 function reset_default(){
@@ -95,7 +97,8 @@ speak_tgt.addEventListener('click', (event) => {
 src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (sync_time.value == 0) return;
-    console.log('src_textarea modified');
+    //console.log('src_textarea modified');
+    src_textarea_is_modified = true
     if (src_textarea.value.length){ //the other textarea is disabled
     	disable_textareas('tgt');
 	   	src_textarea.value = clean_line(src_textarea.value);
@@ -113,7 +116,8 @@ src_textarea.addEventListener('input', (event) => {
 tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (sync_time.value == 0) return;
-    console.log('tgt_textarea modified');
+    //console.log('tgt_textarea modified');
+    tgt_textarea_is_modified = true    
     if (tgt_textarea.value.length){ //the other textarea is disabled
     	disable_textareas('src');
 	   	tgt_textarea.value = clean_line(tgt_textarea.value);
@@ -221,6 +225,7 @@ async function server_request_gap(){
 		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
         lang = tag_t2s;
         src = tgt_textarea.value;
+        disable_textareas('tgt');
 	}
 	else{ //side=='tgt'// src ((s2t)) tgt_with_gap
 		Start = tgt_textarea.selectionStart;
@@ -228,6 +233,7 @@ async function server_request_gap(){
 		tgt_with_gap = tgt_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + tgt_textarea.value.substring(End);
         lang = tag_s2t;
         src = src_textarea.value;
+        disable_textareas('src');
 	}
     params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
@@ -240,7 +246,6 @@ async function server_request_gap(){
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
     optionsMenu(data['oraw']);
-    disable_textareas('none');
 }
 
 async function server_request_pref(){
@@ -249,12 +254,14 @@ async function server_request_pref(){
 		tgt_pref = src_textarea.value.substring(0,Start);
         lang = tag_t2s;
         src = tgt_textarea.value;
+	    disable_textareas('tgt');
 	}
 	else{ //side=='tgt'// src ((s2t)) tgt_pref
 		Start = tgt_textarea.selectionStart;
 		tgt_pref = tgt_textarea.value.substring(0,Start);
         lang = tag_s2t;
         src = src_textarea.value;
+	    disable_textareas('src');
 	}
     params = { "src": src, "lang": lang, "tgt": tgt_pref, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
@@ -267,7 +274,6 @@ async function server_request_pref(){
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
 	optionsMenu(data['oraw']);
-    disable_textareas('none');
 }
 
 //************************************************************************************
@@ -299,8 +305,10 @@ menuselect.onchange = function(){
 			tgt_textarea_pre = tgt_textarea.value;
     	}
     }
+    //disable_textareas('none');
    	update_counts();
    	hide_menuselect();
+	clear_and_reset_timeout(true);
 };
 
 function optionsMenu(options){
