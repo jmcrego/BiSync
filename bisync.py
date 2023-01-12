@@ -11,7 +11,7 @@ from flask_cors import CORS
 #curl -X POST -H "Content-type: application/json" -d "{\"src\": \"My source sentence.\", \"tgt\": \"Ma phrase\", \"tag\":\"｟to-fr｠\", \"ind\": -1}" "http://10.25.0.1:5000/"
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(levelname)s %(message)s', datefmt='%Y-%m-%d_%H:%M:%S', level=getattr(logging, 'INFO', None), filename='./bisync.log')
 
-mdir = "./ct2_model_ckpt-131072"
+mdir = "./ct2_bisync"
 translator = ctranslate2.Translator(mdir, device="cpu")
 logging.info('loaded Model {}'.format(mdir))
 onmttok = pyonmttok.Tokenizer('aggressive', joiner_annotate=True, segment_numbers=True, bpe_model_path=mdir+"/bpe_32k")

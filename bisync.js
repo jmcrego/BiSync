@@ -4,11 +4,15 @@ par_cl = '｠';
 address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
 console.log('Server address: ' + address_server);
 textareaMaxLen = 0; //0 for no limit
-textareaSingleLine = false;
+textareaSingleLine = true;
 src_textarea = document.getElementById("src_textarea");
 tgt_textarea = document.getElementById("tgt_textarea");
+src_speak = document.getElementById("src_speak");
+tgt_speak = document.getElementById("tgt_speak");
 src_count = document.getElementById("src_count");
 tgt_count = document.getElementById("tgt_count");
+src_remove = document.getElementById("src_remove");
+tgt_remove = document.getElementById("tgt_remove");
 src_count_cell = document.getElementById("src_count_cell");
 tgt_count_cell = document.getElementById("tgt_count_cell");
 src_lang = document.getElementById("src_lang");
@@ -57,35 +61,57 @@ tgt_lang.addEventListener('change', (event) => {reset_default();});
 sync_time.addEventListener('change', (event) => {console.log('changed sync to '+sync_values.options[event.target.value].label); sync_label.innerHTML = sync_values.options[event.target.value].label;});
 
 //press button speak_src
-speak_src.addEventListener('click', (event) => {
+src_speak.addEventListener('click', (event) => {
 	if (src_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('speak_src resume');}
-		else {tts.pause();console.log('speak_src pause');}
+		if (tts.paused) {tts.resume();console.log('src_speak resume');}
+		else {tts.pause();console.log('src_speak pause');}
 	}
 	else{
 		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
 		utterance.lang = 'en-GB';
 		tts.speak(utterance);
-		console.log('speak_src speak');
+		console.log('src_speak speak');
 	}
 });
 
-//press button speak_tgt
-speak_tgt.addEventListener('click', (event) => {
+//press button tgt_speak
+tgt_speak.addEventListener('click', (event) => {
 	if (tgt_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('speak_tgt resume');}
-		else {tts.pause();console.log('speak_tgt pause');}
+		if (tts.paused) {tts.resume();console.log('tgt_speak resume');}
+		else {tts.pause();console.log('tgt_speak pause');}
 	}
 	else{
 		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
 		utterance.lang = 'fr-FR';
 		tts.speak(utterance);
-		console.log('speak_tgt speak');
+		console.log('tgt_speak speak');
 	}
+});
+
+//press button src_remove
+src_remove.addEventListener('click', (event) => {
+	if (src_textarea.value.length == 0){return;}
+	console.log('src_remove');
+	src_textarea.value = "";
+	tgt_textarea.value = "";
+	update_counts();
+	//disable_textareas('src');
+   	//clear_and_reset_timeout(true);
+});
+
+//press button tgt_remove
+tgt_remove.addEventListener('click', (event) => {
+	if (tgt_textarea.value.length == 0){return;}
+	console.log('tgt_remove');
+	tgt_textarea.value = "";
+	src_textarea.value = "";
+	update_counts();
+	//disable_textareas('tgt');
+   	//clear_and_reset_timeout(true);
 });
 
 
@@ -204,7 +230,7 @@ async function server_request_sync(){
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-    one_best = data['oraw'][0]
+    one_best = data['oraw'][0];
     if (src_textarea.disabled){ //outputs in source side
 		src_textarea.value = one_best;
 		src_textarea_pre = src_textarea.value;
