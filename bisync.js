@@ -402,6 +402,8 @@ function clear_and_reset_timeout(do_reset){
 function hide_menuselect(){
 	if (!menuselect.hasAttribute('hidden')){
 		menuselect.setAttribute("hidden", "hidden");
+		clear_and_reset_timeout(false);
+		disable_textareas('none');
 	}	
 }
 
