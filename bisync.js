@@ -96,8 +96,8 @@ tgt_speak.addEventListener('click', (event) => {
 });
 
 //press button srctgt_remove
-srctgt_remove.addEventListener('click', (event) => {
-	console.log('src_remove');
+srctgt_clear.addEventListener('click', (event) => {
+	console.log('srctgt clear');
 	src_textarea.value = "";
 	tgt_textarea.value = "";
 	update_counts();
