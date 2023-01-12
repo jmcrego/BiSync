@@ -11,8 +11,11 @@ src_speak = document.getElementById("src_speak");
 tgt_speak = document.getElementById("tgt_speak");
 src_count = document.getElementById("src_count");
 tgt_count = document.getElementById("tgt_count");
-src_remove = document.getElementById("src_remove");
-tgt_remove = document.getElementById("tgt_remove");
+srctgt_back = document.getElementById("srctgt_back");
+srctgt_clear = document.getElementById("srctgt_clear");
+srctgt_next = document.getElementById("srctgt_next");
+src_freeze = document.getElementById("src_freeze");
+tgt_freeze = document.getElementById("tgt_freeze");
 src_count_cell = document.getElementById("src_count_cell");
 tgt_count_cell = document.getElementById("tgt_count_cell");
 src_lang = document.getElementById("src_lang");
@@ -92,9 +95,8 @@ tgt_speak.addEventListener('click', (event) => {
 	}
 });
 
-//press button src_remove
-src_remove.addEventListener('click', (event) => {
-	if (src_textarea.value.length == 0){return;}
+//press button srctgt_remove
+srctgt_remove.addEventListener('click', (event) => {
 	console.log('src_remove');
 	src_textarea.value = "";
 	tgt_textarea.value = "";
@@ -103,15 +105,28 @@ src_remove.addEventListener('click', (event) => {
    	//clear_and_reset_timeout(true);
 });
 
-//press button tgt_remove
-tgt_remove.addEventListener('click', (event) => {
-	if (tgt_textarea.value.length == 0){return;}
-	console.log('tgt_remove');
-	tgt_textarea.value = "";
-	src_textarea.value = "";
-	update_counts();
-	//disable_textareas('tgt');
-   	//clear_and_reset_timeout(true);
+//press button src_freeze
+src_freeze.addEventListener('click', (event) => {
+	if (src_freeze.innerHTML == 'check_box_outline_blank') {
+		src_freeze.innerHTML = 'check_box';
+		console.log('src freeze');
+	}
+	else {
+		src_freeze.innerHTML = 'check_box_outline_blank';
+		console.log('src unfreeze');
+	}
+});
+
+//press button tgt_freeze
+tgt_freeze.addEventListener('click', (event) => {
+	if (tgt_freeze.innerHTML == 'check_box_outline_blank') {
+		tgt_freeze.innerHTML = 'check_box';
+		console.log('tgt freeze');
+	}
+	else {
+		tgt_freeze.innerHTML = 'check_box_outline_blank';
+		console.log('tgt unfreeze');
+	}
 });
 
 
@@ -223,7 +238,7 @@ async function server_request_sync(){
     }
     params = { "src": src, "lang": tag, "tgt": tgt, "mode": "sync" }
     console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
+    response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
         alert("HTTP error: "+`${response.status}`);

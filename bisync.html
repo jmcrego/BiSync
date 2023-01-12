@@ -5,7 +5,6 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="./bisync.css" />
 	<!--https://fonts.google.com/icons!-->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,100..700,0..1,-50..200" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 	<!--https://www.w3schools.com/howto/howto_google_fonts.asp!-->
 	<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
@@ -46,7 +45,7 @@
 			</tr !-->
 			<tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
-					BiSync &nbsp; <input type="range" id="sync_time" value="1" min="0" max="5" step="1" list="sync_values" style="width: 160px;">
+					Delay &nbsp; <input type="range" id="sync_time" value="1" min="0" max="5" step="1" list="sync_values" style="width: 160px;">
 					&nbsp; <label id="sync_label" style="width: 50px;">1 sec</label>
 					<datalist id="sync_values">
 						<option value="0" label="OFF"></option>
@@ -59,24 +58,26 @@
 				</td>
 			</tr>
 		</table>
-		<br>
-		
+
 		<!-- ############### Main table #################### !--> 
+		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center;" title="Backward">skip_previous</span>
+		<span id="srctgt_clear" class="material-symbols-outlined" style="vertical-align: center;" title="Clear all">Close</span>
+		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center;" title="Forward">skip_next</span>
 		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
 			<!-- ############### (languages) #################### !--> 
 			<tr>
 				<td id="src_lang_cell">
-					<select id="src_lang" style="color:grey; font-size:14px;">
+					<select id="src_lang" style="color:grey; font-size:14px;" title="Language">
 						<option value="en">English</option>
 						<option value="fr">Français</option>
 					</select>
-					<span id="src_speak" class="material-symbols-rounded" style="vertical-align:bottom;">text_to_speech</span>
-					<span id="src_remove" class="material-symbols-outlined" style="vertical-align: bottom;">Close</span>
+					<span id="src_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen">volume_up</span>
+					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom;"  title="Freeze content">check_box_outline_blank</span>
 				</td>
 				<td id="tgt_lang_cell">
-					<span id="tgt_remove" class="material-symbols-outlined" style="vertical-align: bottom;">Close</span>
-					<span id="tgt_speak" class="material-symbols-rounded" style="vertical-align:bottom;">text_to_speech</span>
-					<select id="tgt_lang" style="color:grey; font-size:14px;">
+					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom;" title="Freeze content">check_box_outline_blank</span>
+					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen">volume_up</span>
+					<select id="tgt_lang" style="color:grey; font-size:14px;" title="Language">
 						<option value="fr">Français</option>
 						<option value="en">English</option>
 					</select>
