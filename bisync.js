@@ -138,17 +138,18 @@ tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); //
 tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 
 function cursor_moved(e,side) {
+	cursor_moved_side = side;
 	hide_menuselect();
 	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
 		return;
 	} 
-	if (side=='src') {
+	if (cursor_moved_side=='src') {
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
 		ta = src_textarea;
 		ta_value = src_textarea.value;
 	}
-	else if (side=='tgt') {
+	else if (cursor_moved_side=='tgt') {
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
 		ta = tgt_textarea;
@@ -157,7 +158,8 @@ function cursor_moved(e,side) {
 
 	if (Start != End) { //selection => gap
    		console.log('textarea cursor selects from ' + Start + ' to ' + End + ': ' + ta_value.substring(Start, End));
-   		server_request_gap(side);
+		cursor_moved_type = 'gap';
+   		server_request_gap();
 	}
 	else { //cursor moves => prefix (if begin of token)
 		nextChar = ' ';
@@ -166,7 +168,8 @@ function cursor_moved(e,side) {
 		if (Start > 0) {prevChar = ta_value.charAt(Start-1);} 
 		if (prevChar == ' ' && nextChar != ' '){
 			console.log('textarea cursor prefixes from ' + Start + ' char is '+ta_value.charAt(Start));
-	   		server_request_pref(side);
+			cursor_moved_type = 'pref';
+	   		server_request_pref();
 		}
 	}
 }
@@ -190,10 +193,10 @@ async function server_request_sync(){
     }
     params = { "src": src, "lang": tag, "tgt": tgt, "mode": "sync" }
     console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
-        //alert("HTTP error: "+`${response.status}`);
+        alert("HTTP error: "+`${response.status}`);
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
@@ -211,8 +214,8 @@ async function server_request_sync(){
     disable_textareas('none');
 }
 
-async function server_request_gap(side){
-	if (side=='src'){ // tgt ((t2s)) src_with_gap
+async function server_request_gap(){
+	if (cursor_moved_side == 'src'){ // tgt ((t2s)) src_with_gap
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
 		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
@@ -228,31 +231,20 @@ async function server_request_gap(side){
 	}
     params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
-        //alert("HTTP error: "+`${response.status}`);
+        alert("HTTP error: "+`${response.status}`);
         return;
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-    one_best = data['oraw'][0]
-    if (side == 'src'){ //outputs in source side
-		src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,one_best)
-		src_textarea_pre = src_textarea.value;
-		update_counts();
-    }
-    else{ //side=='tgt'
-		tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,one_best)
-		tgt_textarea_pre = tgt_textarea.value;
-		update_counts();
-    }
-	//optionsMenu(side,data['oraw']);
-    //disable_textareas('none');
+    optionsMenu(data['oraw']);
+    disable_textareas('none');
 }
 
-async function server_request_pref(side){
-	if (side=='src'){ // tgt ((t2s)) src_pref
+async function server_request_pref(){
+	if (cursor_moved_side == 'src'){ // tgt ((t2s)) src_pref
 		Start = src_textarea.selectionStart;
 		tgt_pref = src_textarea.value.substring(0,Start);
         lang = tag_t2s;
@@ -260,33 +252,22 @@ async function server_request_pref(side){
 	}
 	else{ //side=='tgt'// src ((s2t)) tgt_pref
 		Start = tgt_textarea.selectionStart;
-		tgt_pref = tgt_textarea.value.substring(0,Start)
+		tgt_pref = tgt_textarea.value.substring(0,Start);
         lang = tag_s2t;
         src = src_textarea.value;
 	}
-    params = { "src": src, "lang": lang, "tgt": tgt_pref, "mode": "pref"}
+    params = { "src": src, "lang": lang, "tgt": tgt_pref, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)})
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
-        //alert("HTTP error: "+`${response.status}`);
+        alert("HTTP error: "+`${response.status}`);
         return;
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-	one_best = data['oraw'][0]
-    if (side == 'src'){ 
-		src_textarea.value = src_textarea.value.substring(0,Start) + one_best;
-		src_textarea_pre = src_textarea.value
-		update_counts();
-    }
-    else{ //side=='tgt'
-		tgt_textarea.value = tgt_textarea.value.substring(0,Start) + one_best;
-		tgt_textarea_pre = tgt_textarea.value
-		update_counts();
-    }
-	//optionsMenu(side,data['oraw']);
-    //disable_textareas('none');
+	optionsMenu(data['oraw']);
+    disable_textareas('none');
 }
 
 //************************************************************************************
@@ -295,14 +276,34 @@ async function server_request_pref(side){
 
 //when one option is selected on the floating menuselect
 menuselect.onchange = function(){
+	resp = menuselect.options[menuselect.selectedIndex].text;
     menuselect.setAttribute("hidden", "hidden");
-    console.log('selected ' + menuselect.options[menuselect.selectedIndex].text)
-    //write result in corresponding textarea
+    console.log('selected ' + resp);
+    if (cursor_moved_type == 'gap') {
+	    if (cursor_moved_side == 'src'){
+			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+			src_textarea_pre = src_textarea.value;
+	    }
+    	else if (cursor_moved_side == 'tgt') {
+			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+			tgt_textarea_pre = tgt_textarea.value;
+    	}
+    }
+    else if (cursor_moved_type == 'pref') {
+    	if (cursor_moved_side == 'src'){ 
+			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
+			src_textarea_pre = src_textarea.value;
+	    }
+    	else if (cursor_moved_side=='tgt') {
+			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
+			tgt_textarea_pre = tgt_textarea.value;
+    	}
+    }
    	update_counts();
    	hide_menuselect();
 };
 
-function optionsMenu(side, options){
+function optionsMenu(options){
 	//remove previous select options
 	while (menuselect.options.length > 0) {menuselect.remove(0);}
 
@@ -313,12 +314,10 @@ function optionsMenu(side, options){
 	    opt.innerHTML = options[i];
     	menuselect.appendChild(opt);
 	}
-
     //positionning menu
 	//let {posX, posY} = getCaretTopPoint();
-
 	posY = -565;
-	if (side == 'src') {posX = 30;}
+	if (cursor_moved_side == 'src') {posX = 30;}
 	else {posX = -30 - menuselect.clientWidth;}
 
     menuselect.style.left = posX + 'px';
@@ -326,49 +325,6 @@ function optionsMenu(side, options){
     menuselect.removeAttribute("hidden"); //is visible
 }
 
-function getCaretTopPoint () {
-	const sel = document.getSelection();
-    const r = sel.getRangeAt(0);
-    let rect;
-    let r2;
-    let x;
-    let y;
-    // supposed to be textNode in most cases
-    // but div[contenteditable] when empty
-    const node = r.startContainer;
-    const offset = r.startOffset;
-    if (offset > 0) {
-        // new range, don't influence DOM state
-        r2 = document.createRange()
-        r2.setStart(node, (offset - 1))
-        r2.setEnd(node, offset)
-        // https://developer.mozilla.org/en-US/docs/Web/API/range.getBoundingClientRect
-        // IE9, Safari?(but look good in Safari 8)
-        rect = r2.getBoundingClientRect()
-        x = rect.right;
-        y = rect.top;
-    } else if (offset < node.length) {
-        r2 = document.createRange()
-        // similar but select next on letter
-        r2.setStart(node, offset)
-        r2.setEnd(node, (offset + 1))
-        rect = r2.getBoundingClientRect()
-		x = rect.left;
-		y = rect.top;
-    } else { // textNode has length
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element.getBoundingClientRect
-        rect = node.getBoundingClientRect()
-        const styles = getComputedStyle(node)
-        const lineHeight = parseInt(styles.lineHeight)
-        const fontSize = parseInt(styles.fontSize)
-        // roughly half the whitespace... but not exactly
-        const delta = (lineHeight - fontSize) / 2
-        x = rect.left;
-        y = (rect.top + delta);
-    }
-    console.log('caret position ['+x+', '+y+']');
-    return {x, y};
-}
 
 //************************************************************************************
 //*** other **************************************************************************
