@@ -20,6 +20,8 @@ menuselect = document.getElementById("menuselect");
 timeoutID = null;
 src_textarea_pre = '';
 tgt_textarea_pre = '';
+let mousePosX = 0;
+let mousePosY = 0;
 disabled_color = '#FAFAFA';
 src_textarea_is_modified = false;
 tgt_textarea_is_modified = false;
@@ -46,7 +48,13 @@ document.addEventListener("DOMContentLoaded", reset_default());
 //hide menuselect when escape released
 document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {hide_menuselect();}});
 //hide menuselect when click outside menuselect
-document.addEventListener('click', (event) => {if (!menuselect.contains(event.target)) {hide_menuselect();}}); 
+document.addEventListener('click', (event) => {
+	mousePosX = event.clientX;
+	mousePosY = event.clientY;
+	if (!menuselect.contains(event.target)) {
+		hide_menuselect();
+	}
+});
 
 //change of source language
 src_lang.addEventListener('change', (event) => {reset_default();});
@@ -323,13 +331,9 @@ function optionsMenu(options){
     	menuselect.appendChild(opt);
 	}
     //positionning menu
-	//let {posX, posY} = getCaretTopPoint();
-	posY = -565;
-	if (cursor_moved_side == 'src') {posX = 30;}
-	else {posX = -30 - menuselect.clientWidth;}
-
-    menuselect.style.left = posX + 'px';
-    menuselect.style.top  = posY + 'px';
+	menuselect.style.left = mousePosX + 'px';
+    menuselect.style.top  = mousePosY + 20 + 'px';
+	menuselect.style.position = 'absolute';
     menuselect.removeAttribute("hidden"); //is visible
 }
 
