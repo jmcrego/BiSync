@@ -4,11 +4,18 @@ par_cl = '｠';
 address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
 console.log('Server address: ' + address_server);
 textareaMaxLen = 0; //0 for no limit
-textareaSingleLine = false;
+textareaSingleLine = true;
 src_textarea = document.getElementById("src_textarea");
 tgt_textarea = document.getElementById("tgt_textarea");
+src_speak = document.getElementById("src_speak");
+tgt_speak = document.getElementById("tgt_speak");
 src_count = document.getElementById("src_count");
 tgt_count = document.getElementById("tgt_count");
+srctgt_back = document.getElementById("srctgt_back");
+srctgt_clear = document.getElementById("srctgt_clear");
+srctgt_next = document.getElementById("srctgt_next");
+src_freeze = document.getElementById("src_freeze");
+tgt_freeze = document.getElementById("tgt_freeze");
 src_count_cell = document.getElementById("src_count_cell");
 tgt_count_cell = document.getElementById("tgt_count_cell");
 src_lang = document.getElementById("src_lang");
@@ -65,34 +72,68 @@ tgt_lang.addEventListener('change', (event) => {reset_default();});
 sync_time.addEventListener('change', (event) => {console.log('changed sync to '+sync_values.options[event.target.value].label); sync_label.innerHTML = sync_values.options[event.target.value].label;});
 
 //press button speak_src
-speak_src.addEventListener('click', (event) => {
+src_speak.addEventListener('click', (event) => {
 	if (src_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('speak_src resume');}
-		else {tts.pause();console.log('speak_src pause');}
+		if (tts.paused) {tts.resume();console.log('src_speak resume');}
+		else {tts.pause();console.log('src_speak pause');}
 	}
 	else{
 		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
 		utterance.lang = 'en-GB';
 		tts.speak(utterance);
-		console.log('speak_src speak');
+		console.log('src_speak speak');
 	}
 });
 
-//press button speak_tgt
-speak_tgt.addEventListener('click', (event) => {
+//press button tgt_speak
+tgt_speak.addEventListener('click', (event) => {
 	if (tgt_textarea.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('speak_tgt resume');}
-		else {tts.pause();console.log('speak_tgt pause');}
+		if (tts.paused) {tts.resume();console.log('tgt_speak resume');}
+		else {tts.pause();console.log('tgt_speak pause');}
 	}
 	else{
 		tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
 		utterance.lang = 'fr-FR';
 		tts.speak(utterance);
-		console.log('speak_tgt speak');
+		console.log('tgt_speak speak');
+	}
+});
+
+//press button srctgt_remove
+srctgt_clear.addEventListener('click', (event) => {
+	console.log('srctgt clear');
+	src_textarea.value = "";
+	tgt_textarea.value = "";
+	update_counts();
+	//disable_textareas('src');
+   	//clear_and_reset_timeout(true);
+});
+
+//press button src_freeze
+src_freeze.addEventListener('click', (event) => {
+	if (src_freeze.innerHTML == 'check_box_outline_blank') {
+		src_freeze.innerHTML = 'check_box';
+		console.log('src freeze');
+	}
+	else {
+		src_freeze.innerHTML = 'check_box_outline_blank';
+		console.log('src unfreeze');
+	}
+});
+
+//press button tgt_freeze
+tgt_freeze.addEventListener('click', (event) => {
+	if (tgt_freeze.innerHTML == 'check_box_outline_blank') {
+		tgt_freeze.innerHTML = 'check_box';
+		console.log('tgt freeze');
+	}
+	else {
+		tgt_freeze.innerHTML = 'check_box_outline_blank';
+		console.log('tgt unfreeze');
 	}
 });
 
@@ -205,14 +246,14 @@ async function server_request_sync(){
     }
     params = { "src": src, "lang": tag, "tgt": tgt, "mode": "sync" }
     console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
+    response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
         alert("HTTP error: "+`${response.status}`);
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-    one_best = data['oraw'][0]
+    one_best = data['oraw'][0];
     if (src_textarea.disabled){ //outputs in source side
 		src_textarea.value = one_best;
 		src_textarea_pre = src_textarea.value;
