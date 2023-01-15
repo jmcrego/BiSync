@@ -181,10 +181,12 @@ function reset_default(){
 //when src_textarea is modified
 src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
-    if (src_textarea.value.length && tgt_freeze.innerHTML == 'lock_open'){ 
-    	disable_textarea('tgt');
+    if (src_textarea.value.length){ 
 	   	src_textarea.value = clean_line(src_textarea.value); //disable the other textarea
-	   	clear_and_reset_timeout(true);
+	   	if (tgt_freeze.innerHTML == 'lock_open'){
+	    	disable_textarea('tgt');
+	   		clear_and_reset_timeout(true);
+	   	}
     }
     else{ //textarea fully deleted
     	enable_textarea('both');
@@ -197,10 +199,12 @@ src_textarea.addEventListener('input', (event) => {
 //when tgt_textarea is modified
 tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
-    if (tgt_textarea.value.length && src_freeze.innerHTML == 'lock_open'){ 
-    	disable_textarea('src');
+    if (tgt_textarea.value.length){ 
 	   	tgt_textarea.value = clean_line(tgt_textarea.value); //disable the other textarea
-	   	clear_and_reset_timeout(true);
+	   	if (src_freeze.innerHTML == 'lock_open'){
+	    	disable_textarea('src');
+	   		clear_and_reset_timeout(true);
+	   	}
     }
     else{ //textarea fully deleted
     	enable_textarea('both');
