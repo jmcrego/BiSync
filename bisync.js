@@ -1,52 +1,36 @@
 
 const tts = window.speechSynthesis;
-address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
-src_textarea = document.getElementById("src_textarea");
-tgt_textarea = document.getElementById("tgt_textarea");
-src_speak = document.getElementById("src_speak");
-tgt_speak = document.getElementById("tgt_speak");
-src_count = document.getElementById("src_count");
-tgt_count = document.getElementById("tgt_count");
-srctgt_back = document.getElementById("srctgt_back");
-srctgt_clear = document.getElementById("srctgt_clear");
-srctgt_next = document.getElementById("srctgt_next");
-src_freeze = document.getElementById("src_freeze");
-tgt_freeze = document.getElementById("tgt_freeze");
-src_count_cell = document.getElementById("src_count_cell");
-tgt_count_cell = document.getElementById("tgt_count_cell");
-src_lang = document.getElementById("src_lang");
-tgt_lang = document.getElementById("tgt_lang");
-sync_time = document.getElementById("sync_time");
-sync_label = document.getElementById("sync_label");
-sync_values = document.getElementById("sync_values");
-menuselect = document.getElementById("menuselect");
+let address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
+let src_textarea = document.getElementById("src_textarea");
+let tgt_textarea = document.getElementById("tgt_textarea");
+let src_speak = document.getElementById("src_speak");
+let tgt_speak = document.getElementById("tgt_speak");
+let src_count = document.getElementById("src_count");
+let tgt_count = document.getElementById("tgt_count");
+let srctgt_back = document.getElementById("srctgt_back");
+let srctgt_clear = document.getElementById("srctgt_clear");
+let srctgt_next = document.getElementById("srctgt_next");
+let src_freeze = document.getElementById("src_freeze");
+let tgt_freeze = document.getElementById("tgt_freeze");
+let src_count_cell = document.getElementById("src_count_cell");
+let tgt_count_cell = document.getElementById("tgt_count_cell");
+let src_lang = document.getElementById("src_lang");
+let tgt_lang = document.getElementById("tgt_lang");
+let sync_time = document.getElementById("sync_time");
+let sync_label = document.getElementById("sync_label");
+let sync_values = document.getElementById("sync_values");
+let menuselect = document.getElementById("menuselect");
 console.log('Server address: ' + address_server);
 
-par_op = '｟';
-par_cl = '｠';
-textareaMaxLen = 0; //0 for no limit
-textareaSingleLine = true;
-timeoutID = null;
+let par_op = '｟';
+let par_cl = '｠';
+let textareaMaxLen = 0; //0 for no limit
+let textareaSingleLine = true;
+let timeoutID = null;
 let mousePosX = 0;
 let mousePosY = 0;
-disabled_color = '#FAFAFA';
-
-function reset_default(){
-    src_textarea.disabled = false; //src_textarea is disabled when tgt_textarea is modified
-    src_textarea.value = '';
-    tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
-	src_freeze.innerHTML = 'lock_open';
-
-    tgt_textarea.disabled = false; //tgt_textarea is disabled when src_textarea is modified
-    tgt_textarea.value = '';
-    tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
-	tgt_freeze.innerHTML = 'lock_open';
-
-    update_counts();
-    if (tts.speaking) tts.cancel();
-    //sync_time.value = 1;
-    //sync_label.value = '1 (sec)';
-}
+let disabled_color = '#FAFAFA';
+let enabled_color = 'transparent';
 
 //when the initial HTML document has been completely loaded and parsed, without waiting for style sheets, images, and subframes to finish loading
 document.addEventListener("DOMContentLoaded", reset_default());
@@ -68,42 +52,17 @@ src_lang.addEventListener('change', (event) => {reset_default();});
 //change of target language
 tgt_lang.addEventListener('change', (event) => {reset_default();});
 
-sync_time.addEventListener('change', (event) => {console.log('changed sync to '+sync_values.options[event.target.value].label); sync_label.innerHTML = sync_values.options[event.target.value].label;});
+//change sync_time input range
+sync_time.addEventListener('change', (event) => {change_sync(event)});
 
 //press button srctgt_remove
 srctgt_clear.addEventListener('click', (event) => {console.log('srctgt clear'); reset_default();});
 
 //press button speak_src
-src_speak.addEventListener('click', (event) => {
-	if (src_textarea.value.length == 0){return;}
-	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('src_speak resume');}
-		else {tts.pause();console.log('src_speak pause');}
-	}
-	else{
-		tts.cancel();
-		const utterance = new SpeechSynthesisUtterance(src_textarea.value); // speak text
-		utterance.lang = 'en-GB';
-		tts.speak(utterance);
-		console.log('src_speak speak');
-	}
-});
+src_speak.addEventListener('click', (event) => {speak('src');});
 
 //press button tgt_speak
-tgt_speak.addEventListener('click', (event) => {
-	if (tgt_textarea.value.length == 0){return;}
-	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('tgt_speak resume');}
-		else {tts.pause();console.log('tgt_speak pause');}
-	}
-	else{
-		tts.cancel();
-		const utterance = new SpeechSynthesisUtterance(tgt_textarea.value); // speak text
-		utterance.lang = 'fr-FR';
-		tts.speak(utterance);
-		console.log('tgt_speak speak');
-	}
-});
+tgt_speak.addEventListener('click', (event) => {speak('tgt');});
 
 //press button src_freeze
 src_freeze.addEventListener('click', (event) => {toggle_freeze('src');});
@@ -111,31 +70,107 @@ src_freeze.addEventListener('click', (event) => {toggle_freeze('src');});
 //press button tgt_freeze
 tgt_freeze.addEventListener('click', (event) => {toggle_freeze('tgt');});
 
+function change_sync(event){
+	console.log('changed sync to '+sync_values.options[event.target.value].label); 
+	sync_label.innerHTML = sync_values.options[event.target.value].label;
+}
+
+function speak(ta, lang){
+	if (side == 'src'){
+		ta = src_textarea;
+		lang = 'en-GB';
+	}
+	else if (side == 'tgt'){
+		ta = tgt_textarea;
+		lang = 'fr-FR';
+	}
+	if (ta.value.length == 0){return;}
+	if (tts.speaking) {
+		if (tts.paused) {tts.resume();console.log('speak resume');}
+		else {tts.pause();console.log('speak pause');}
+	}
+	else{
+		tts.cancel();
+		const utterance = new SpeechSynthesisUtterance(ta.value); // speak text
+		utterance.lang = lang; //fr-FR or en-GB
+		tts.speak(utterance);
+		console.log('speak');
+	}
+}
+
 function toggle_freeze(side){
 	if (side == 'src'){
 		if (src_freeze.innerHTML == 'lock_open') {
 			src_freeze.innerHTML = 'lock';
-			disable_textareas('src')
+			disable_textarea('src')
 			console.log('src freeze');
 		}
 		else {
 			src_freeze.innerHTML = 'lock_open';
-			disable_textareas('none')
+			enable_textarea('src')
 			console.log('src unfreeze');
 		}
 	}
 	else if (side == 'tgt'){
 		if (tgt_freeze.innerHTML == 'lock_open') {
 			tgt_freeze.innerHTML = 'lock';
-			disable_textareas('tgt')
+			disable_textarea('tgt')
 			console.log('tgt freeze');
 		}
 		else {
 			tgt_freeze.innerHTML = 'lock_open';
-			disable_textareas('none')
+			enable_textarea('tgt')
 			console.log('tgt unfreeze');
 		}
 	}
+}
+
+function enable_textarea(side){
+	if (side == 'src' || side == 'both'){
+		if (src_freeze.innerHTML == 'lock_open'){
+		    src_textarea.disabled = false;
+    		src_textarea.style.background = enabled_color;
+    		src_count_cell.style.background = enabled_color;
+    		src_lang_cell.style.background = enabled_color;
+    	}
+	}
+	else if (side == 'tgt' || side == 'both'){
+		if (tgt_freeze.innerHTML == 'lock_open'){
+		    tgt_textarea.disabled = false;
+    		tgt_textarea.style.background = enabled_color;
+    		tgt_count_cell.style.background = enabled_color;
+    		tgt_lang_cell.style.background = enabled_color;
+    	}
+	}
+}
+
+
+function disable_textarea(side){
+	if (side == 'src' || side == 'both'){
+	    src_textarea.disabled = true;
+    	src_textarea.style.background = disabled_color;
+   		src_count_cell.style.background = disabled_color;
+   		src_lang_cell.style.background = disabled_color;
+	}
+	else if (side == 'tgt' || side == 'both'){
+	    tgt_textarea.disabled = true;
+    	tgt_textarea.style.background = disabled_color;
+   		tgt_count_cell.style.background = disabled_color;
+   		tgt_lang_cell.style.background = disabled_color;
+	}
+}
+
+function reset_default(){
+	//enable(both)
+	enable_textarea('both');
+    src_textarea.value = '';
+    tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
+	src_freeze.innerHTML = 'lock_open';
+    tgt_textarea.value = '';
+    tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
+	tgt_freeze.innerHTML = 'lock_open';
+    update_counts();
+    if (tts.speaking) tts.cancel();
 }
 
 
@@ -146,15 +181,13 @@ function toggle_freeze(side){
 //when src_textarea is modified
 src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
-    if (sync_time.value == 0) return;
-    //console.log('src_textarea modified');
-    if (src_textarea.value.length){ //the other textarea is disabled
-    	disable_textareas('tgt');
-	   	src_textarea.value = clean_line(src_textarea.value);
+    if (src_textarea.value.length && tgt_freeze.innerHTML == 'lock_open'){ 
+    	disable_textarea('tgt');
+	   	src_textarea.value = clean_line(src_textarea.value); //disable the other textarea
 	   	clear_and_reset_timeout(true);
     }
     else{ //textarea fully deleted
-    	disable_textareas('none');
+    	enable_textarea('both');
 	   	clear_and_reset_timeout(false);
     }
    	update_counts();
@@ -164,15 +197,13 @@ src_textarea.addEventListener('input', (event) => {
 //when tgt_textarea is modified
 tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
-    if (sync_time.value == 0) return;
-    //console.log('tgt_textarea modified');
-    if (tgt_textarea.value.length){ //the other textarea is disabled
-    	disable_textareas('src');
-	   	tgt_textarea.value = clean_line(tgt_textarea.value);
+    if (tgt_textarea.value.length && src_freeze.innerHTML == 'lock_open'){ 
+    	disable_textarea('src');
+	   	tgt_textarea.value = clean_line(tgt_textarea.value); //disable the other textarea
 	   	clear_and_reset_timeout(true);
     }
     else{ //textarea fully deleted
-    	disable_textareas('none');
+    	enable_textarea('both');
 	   	clear_and_reset_timeout(false);
     }
    	update_counts();
@@ -259,7 +290,8 @@ async function server_request_sync(){
 		tgt_textarea.value = one_best;
 		update_counts();
     }
-    disable_textareas('none');
+    enable_textarea('src');
+    enable_textarea('tgt');
 }
 
 async function server_request_gap(){
@@ -269,7 +301,7 @@ async function server_request_gap(){
 		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
         lang = tag_t2s;
         src = tgt_textarea.value;
-        disable_textareas('tgt');
+        disable_textarea('tgt');
 	}
 	else{ //side=='tgt'// src ((s2t)) tgt_with_gap
 		Start = tgt_textarea.selectionStart;
@@ -277,7 +309,7 @@ async function server_request_gap(){
 		tgt_with_gap = tgt_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + tgt_textarea.value.substring(End);
         lang = tag_s2t;
         src = src_textarea.value;
-        disable_textareas('src');
+        disable_textarea('src');
 	}
     params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
@@ -298,14 +330,14 @@ async function server_request_pref(){
 		tgt_pref = src_textarea.value.substring(0,Start);
         lang = tag_t2s;
         src = tgt_textarea.value;
-	    disable_textareas('tgt');
+	    disable_textarea('tgt');
 	}
 	else{ //side=='tgt'// src ((s2t)) tgt_pref
 		Start = tgt_textarea.selectionStart;
 		tgt_pref = tgt_textarea.value.substring(0,Start);
         lang = tag_s2t;
         src = src_textarea.value;
-	    disable_textareas('src');
+	    disable_textarea('src');
 	}
     params = { "src": src, "lang": lang, "tgt": tgt_pref, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
@@ -332,23 +364,26 @@ menuselect.onchange = function(){
     if (cursor_moved_type == 'gap') {
 	    if (cursor_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+		   	if (tgt_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+		   	if (src_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
     	}
     }
     else if (cursor_moved_type == 'pref') {
     	if (cursor_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
+		   	if (tgt_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
+		   	if (src_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
     	}
     }
     //disable_textareas('none');
    	update_counts();
    	hide_menuselect();
-	clear_and_reset_timeout(true);
 };
 
 function optionsMenu(options){
@@ -374,6 +409,7 @@ function optionsMenu(options){
 //*** other **************************************************************************
 //************************************************************************************
 
+/*
 function disable_textareas(side){
     //src_textarea.disabled
     if (side == 'src') src_textarea.disabled = true;
@@ -381,15 +417,15 @@ function disable_textareas(side){
     
     //src_textarea.style.background
     if (side == 'src') src_textarea.style.background = disabled_color;
-    else src_textarea.style.background = 'transparent';
+    else src_textarea.style.background = enabled_color;
 
     //src_count_cell.disabled
     if (side == 'src') src_count_cell.style.background = disabled_color;
-    else src_count_cell.style.background = 'transparent';
+    else src_count_cell.style.background = enabled_color;
 
     //src_lang_cell.disabled
     if (side == 'src') src_lang_cell.style.background = disabled_color;
-    else src_lang_cell.style.background = 'transparent';
+    else src_lang_cell.style.background = enabled_color;
 
 
     //tgt_textarea.disabled
@@ -398,17 +434,17 @@ function disable_textareas(side){
     
     //tgt_textarea.style.background
     if (side == 'tgt') tgt_textarea.style.background = disabled_color;
-    else tgt_textarea.style.background = 'transparent';
+    else tgt_textarea.style.background = enabled_color;
     
     //tgt_count_cell.disabled
     if (side == 'tgt') tgt_count_cell.style.background = disabled_color;
-    else tgt_count_cell.style.background = 'transparent';    
+    else tgt_count_cell.style.background = enabled_color;    
 
     //tgt_lang_cell.disabled
     if (side == 'tgt') tgt_lang_cell.style.background = disabled_color;
-    else tgt_lang_cell.style.background = 'transparent';
-
+    else tgt_lang_cell.style.background = enabled_color;
 }
+*/
 
 function update_counts(){
 	src_count.innerHTML = src_textarea.value.length;
@@ -439,7 +475,7 @@ function hide_menuselect(){
 	if (!menuselect.hasAttribute('hidden')){
 		menuselect.setAttribute("hidden", "hidden");
 		clear_and_reset_timeout(false);
-		disable_textareas('none');
+		enable_textarea('both');
 	}	
 }
 
