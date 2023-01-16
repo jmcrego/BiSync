@@ -70,6 +70,12 @@ src_freeze.addEventListener('click', (event) => {toggle_freeze('src');});
 //press button tgt_freeze
 tgt_freeze.addEventListener('click', (event) => {toggle_freeze('tgt');});
 
+//press button src_copy
+src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src_textarea.value);});
+
+//press button tgt_copy
+tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);});
+
 function change_sync(event){
 	console.log('changed sync to '+sync_values.options[event.target.value].label); 
 	sync_label.innerHTML = sync_values.options[event.target.value].label;
