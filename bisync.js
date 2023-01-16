@@ -16,9 +16,9 @@ let src_count_cell = document.getElementById("src_count_cell");
 let tgt_count_cell = document.getElementById("tgt_count_cell");
 let src_lang = document.getElementById("src_lang");
 let tgt_lang = document.getElementById("tgt_lang");
-let sync_time = document.getElementById("sync_time");
-let sync_label = document.getElementById("sync_label");
-let sync_values = document.getElementById("sync_values");
+let delay = document.getElementById("delay");
+let delay_label = document.getElementById("delay_label");
+let delay_values = document.getElementById("delay_values");
 let menuselect = document.getElementById("menuselect");
 console.log('Server address: ' + address_server);
 
@@ -52,8 +52,8 @@ src_lang.addEventListener('change', (event) => {reset_default();});
 //change of target language
 tgt_lang.addEventListener('change', (event) => {reset_default();});
 
-//change sync_time input range
-sync_time.addEventListener('change', (event) => {change_sync(event)});
+//change delay input range
+delay.addEventListener('change', (event) => {change_sync(event)});
 
 //press button srctgt_remove
 srctgt_clear.addEventListener('click', (event) => {console.log('srctgt clear'); reset_default();});
@@ -76,9 +76,17 @@ src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src
 //press button tgt_copy
 tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);});
 
+// Click down on src_textarea
+src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
+//src_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'src')); // Any key released (only arrows must be considered)
+
+// Click down on tgt_textarea
+tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
+//tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
+
 function change_sync(event){
-	console.log('changed sync to '+sync_values.options[event.target.value].label); 
-	sync_label.innerHTML = sync_values.options[event.target.value].label;
+	console.log('changed sync to '+delay_values.options[event.target.value].label); 
+	delay_label.innerHTML = delay_values.options[event.target.value].label;
 }
 
 function speak(side){
@@ -223,12 +231,6 @@ tgt_textarea.addEventListener('input', (event) => {
 //************************************************************************************
 //*** textareas cursor moved *********************************************************
 //************************************************************************************
-
-//when cursor moves in src_textarea => alternatives or paraphrases (if selection) 
-//src_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'src')); // Any key released (only arrows must be considered)
-//tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
-src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
-tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 
 function cursor_moved(e,side) {
 	cursor_moved_side = side;
@@ -479,8 +481,8 @@ function clear_and_reset_timeout(do_reset){
     if (timeoutID) { //clear if already set
 	   	clearTimeout(timeoutID);
     }
-    if (do_reset && sync_time.value > 0){ //set new timeout
-    	timeoutID = setTimeout(server_request_sync,sync_time.value*1000);
+    if (do_reset && delay.value > 0){ //set new timeout
+    	timeoutID = setTimeout(server_request_sync,delay.value*1000);
     }
 }
 
