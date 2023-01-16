@@ -71,12 +71,14 @@
 						<option value="en">English</option>
 						<option value="fr">Français</option>
 					</select>
+					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right"  title="Freeze left content">lock_open</span> 					
 				</td>
 				<td id="tgt_lang_cell">
 					<select id="tgt_lang" style="color:grey; font-size:14px;" title="Right language">
 						<option value="fr">Français</option>
 						<option value="en">English</option>
 					</select>
+					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left" title="Freeze right content">lock_open</span>
 				</td>
 			</tr>
 
@@ -93,14 +95,14 @@
 			<!-- ############### (counters) #################### !--> 
 			<tr width="100%">
 				<td id="src_count_cell">
-					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom;"  title="Freeze left content">lock_open</span> 
-					<span id="src_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen">volume_up</span>
-					<label id="src_count" ></label>
+					<span id="src_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen left content">volume_up</span>
+					<label id="src_count" title="Number of chars in left content"></label>
+					<span id="src_copy" class="material-symbols-outlined" style="vertical-align: bottom; float: right" title="Copy left content to clipboard">content_copy</span>
 				</td>
 				<td id="tgt_count_cell">
-					<label id="tgt_count"></label>
-					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen">volume_up</span>
-					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom;" title="Freeze right content">lock_open</span>
+					<label id="tgt_count" title="Number of chars in rigth content"></label>
+					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen left content">volume_up</span>
+					<span id="tgt_copy" class="material-symbols-outlined" style="vertical-align: bottom; float: left" title="Copy right content to clibpoard">content_copy</span>
 				</td>
 			</tr>      
 		</table>

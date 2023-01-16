@@ -75,7 +75,7 @@ function change_sync(event){
 	sync_label.innerHTML = sync_values.options[event.target.value].label;
 }
 
-function speak(ta, lang){
+function speak(side){
 	if (side == 'src'){
 		ta = src_textarea;
 		lang = 'en-GB';
@@ -182,9 +182,9 @@ function reset_default(){
 src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (src_textarea.value.length){ 
-	   	src_textarea.value = clean_line(src_textarea.value); //disable the other textarea
+	   	src_textarea.value = clean_line(src_textarea.value); 
 	   	if (tgt_freeze.innerHTML == 'lock_open'){
-	    	disable_textarea('tgt');
+	    	disable_textarea('tgt'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
     }
@@ -200,9 +200,9 @@ src_textarea.addEventListener('input', (event) => {
 tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (tgt_textarea.value.length){ 
-	   	tgt_textarea.value = clean_line(tgt_textarea.value); //disable the other textarea
+	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
 	   	if (src_freeze.innerHTML == 'lock_open'){
-	    	disable_textarea('src');
+	    	disable_textarea('src'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
     }
@@ -266,6 +266,9 @@ function cursor_moved(e,side) {
 //************************************************************************************
 
 async function server_request_sync(){
+	if (src_freeze == 'lock' || tgt_freeze == 'lock'){
+		return;		
+	}
     if (src_textarea.disabled){ //target-to-source
         src = tgt_textarea.value;
         tag = tag_t2s;
