@@ -60,9 +60,9 @@
 		</table>
 
 		<!-- ############### Main table #################### !--> 
-		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center;" title="Previous">skip_previous</span>
-		<span id="srctgt_clear" class="material-symbols-outlined" style="vertical-align: center;" title="Clear all">Close</span>
-		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center;" title="Next">skip_next</span>
+		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center;" title="Previous content in history">skip_previous</span>
+		<span id="srctgt_clear" class="material-symbols-outlined" style="vertical-align: center;" title="Clear left and right contents">Close</span>
+		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center;" title="Next content in history">skip_next</span>
 		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
 			<!-- ############### (languages) #################### !--> 
 			<tr>
@@ -71,14 +71,14 @@
 						<option value="en">English</option>
 						<option value="fr">Français</option>
 					</select>
-					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right"  title="Freeze left content">lock_open</span> 					
+					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right"  title="Freeze/unfreeze left content">lock_open</span> 					
 				</td>
 				<td id="tgt_lang_cell">
 					<select id="tgt_lang" style="color:grey; font-size:14px;" title="Right language">
 						<option value="fr">Français</option>
 						<option value="en">English</option>
 					</select>
-					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left" title="Freeze right content">lock_open</span>
+					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left" title="Freeze/unfreeze right content">lock_open</span>
 				</td>
 			</tr>
 
@@ -101,7 +101,7 @@
 				</td>
 				<td id="tgt_count_cell">
 					<label id="tgt_count" style="vertical-align:middle;" title="Number of chars in rigth content"></label>
-					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen left content">volume_up</span>
+					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom;" title="Listen right content">volume_up</span>
 					<span id="tgt_copy" class="material-symbols-outlined" style="vertical-align: bottom;" title="Copy right content to clibpoard">content_copy</span>
 				</td>
 			</tr>      
@@ -112,6 +112,18 @@
 
 		<!-- ############### floating select ####################################################### !-->
 		<select size="5" id="menuselect" hidden></select>
+
+		<table border="0" style="width:90%; table-layout: fixed; font-size: 12px; color:grey">
+			<tr>
+				<td>
+					<ul>
+						<li> Compose (or modify) text in the selected language on any of the text boxes. After a few seconds (delay) the other text box will display the corresponding translation. </li>
+						<li> Single-click on the begining of a word to obtain alternative translations starting on such word. </li>
+						<li> Click-select a sequence of words to obtain reformulations (paraphrases) for the selected sequence. </li>
+					</ul>
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript" src="./bisync.js"></script>
 	</center>

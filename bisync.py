@@ -11,7 +11,7 @@ from flask_cors import CORS
 #curl -X POST -H "Content-type: application/json" -d "{\"src\": \"This is my new sentence.\", \"lang\":\"｟fr｠\", \"tgt\":\"\", \"mode\":\"sync\"}" "http://127.0.0.1:5000/"
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(levelname)s %(message)s', datefmt='%Y-%m-%d_%H:%M:%S', level=getattr(logging, 'INFO', None), filename='./bisync.log')
 
-mdir = "./ct2_model_ckpt-300000"
+mdir = "./ct2_model_ckpt-376832"
 translator = ctranslate2.Translator(mdir, device="cpu")
 logging.info('loaded Model {}'.format(mdir))
 onmttok = pyonmttok.Tokenizer('aggressive', joiner_annotate=True, segment_numbers=True, bpe_model_path=mdir+"/bpe_32k")
@@ -38,14 +38,14 @@ def translate(src, lang, tgt, mode):
             operation = '｟INS｠'
             iraw = src + ' ' + lang #+ ' ' + tgt + ' ' + operation
         itok = onmttok(iraw)
-        results = translator.translate_batch([itok])
+        results = translator.translate_batch([itok], disable_unk=True)
         otok = results[0].hypotheses
         oraw = [onmttok.detokenize(t) for t in otok]
 
     elif mode == 'gap':
         iraw = src + ' ' + lang + ' ' + tgt
         itok = onmttok(iraw)
-        results = translator.translate_batch([itok], beam_size=10, num_hypotheses=10, return_alternatives=True)
+        results = translator.translate_batch([itok], beam_size=5, num_hypotheses=5, return_alternatives=True, disable_unk=True)
         otok = results[0].hypotheses
         oraw = [onmttok.detokenize(t) for t in otok]
 
@@ -54,7 +54,7 @@ def translate(src, lang, tgt, mode):
         itok = onmttok(iraw)
         praw = tgt
         ptok = onmttok(praw)
-        results = translator.translate_batch([itok], target_prefix=[ptok], beam_size=10, num_hypotheses=10, return_alternatives=True)
+        results = translator.translate_batch([itok], target_prefix=[ptok], beam_size=5, num_hypotheses=5, return_alternatives=True, disable_unk=True)
         otok = results[0].hypotheses
         oraw = [onmttok.detokenize(t[len(ptok):]) for t in otok]
 

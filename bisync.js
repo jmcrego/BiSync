@@ -179,10 +179,9 @@ function reset_default(){
 	enable_textarea('both');
     src_textarea.value = '';
     tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
-	src_freeze.innerHTML = 'lock_open';
     tgt_textarea.value = '';
     tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
-	tgt_freeze.innerHTML = 'lock_open';
+    enable_textarea('both');
     update_counts();
     if (tts.speaking) tts.cancel();
 }
