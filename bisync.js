@@ -8,10 +8,12 @@ let tgt_speak = document.getElementById("tgt_speak");
 let src_count = document.getElementById("src_count");
 let tgt_count = document.getElementById("tgt_count");
 let srctgt_back = document.getElementById("srctgt_back");
-let srctgt_clear = document.getElementById("srctgt_clear");
+let reset_all = document.getElementById("reset_all");
 let srctgt_next = document.getElementById("srctgt_next");
 let src_freeze = document.getElementById("src_freeze");
 let tgt_freeze = document.getElementById("tgt_freeze");
+let src_clear = document.getElementById("src_clear");
+let tgt_clear = document.getElementById("tgt_clear");
 let src_count_cell = document.getElementById("src_count_cell");
 let tgt_count_cell = document.getElementById("tgt_count_cell");
 let src_lang = document.getElementById("src_lang");
@@ -55,8 +57,14 @@ tgt_lang.addEventListener('change', (event) => {reset_default();});
 //change delay input range
 delay.addEventListener('change', (event) => {change_sync(event)});
 
-//press button srctgt_remove
-srctgt_clear.addEventListener('click', (event) => {console.log('srctgt clear'); reset_default();});
+//press button reset_all
+reset_all.addEventListener('click', (event) => {console.log('reset all'); reset_default();});
+
+//press button src_clear
+src_clear.addEventListener('click', (event) => {console.log('src clear'); oneside_clear('src');});
+
+//press button tgt_clear
+tgt_clear.addEventListener('click', (event) => {console.log('tgt clear'); oneside_clear('tgt');});
 
 //press button speak_src
 src_speak.addEventListener('click', (event) => {speak('src');});
@@ -186,6 +194,24 @@ function reset_default(){
     if (tts.speaking) tts.cancel();
 }
 
+function oneside_clear(side){
+	if (side == 'src' && src_freeze.innerHTML == 'lock_open'){
+	    src_textarea.value = '';
+		enable_textarea('tgt');
+		disable_textarea('src');
+	}
+	else if (side == 'tgt' && tgt_freeze.innerHTML == 'lock_open'){
+	    tgt_textarea.value = '';
+		enable_textarea('src');
+		disable_textarea('tgt');
+	}
+	else{
+		return;
+	}
+	clear_and_reset_timeout(true);
+    update_counts();
+    if (tts.speaking) tts.cancel();
+}
 
 //************************************************************************************
 //*** textareas modified *************************************************************

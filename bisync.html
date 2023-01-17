@@ -60,9 +60,9 @@
 		</table>
 
 		<!-- ############### Main table #################### !--> 
-		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Previous content in history">skip_previous</span>
-		<span id="srctgt_clear" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Clear left and right contents">Close</span>
-		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Next content in history">skip_next</span>
+		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Undo contents in history">undo</span>
+		<span id="reset_all" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Restart contents">restart_alt</span>
+		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Redo contents in history">redo</span>
 		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
 			<!-- ############### (languages) #################### !--> 
 			<tr>
@@ -71,7 +71,9 @@
 						<option value="en">English</option>
 						<option value="fr">Français</option>
 					</select>
-					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right; cursor: pointer;"  title="Freeze/unfreeze left content">lock_open</span> 					
+					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right; cursor: pointer;"  title="Freeze/unfreeze left content">lock_open</span>
+					<span id="src_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:right; cursor: pointer;" title="Clear left content">Close</span>
+		
 				</td>
 				<td id="tgt_lang_cell">
 					<select id="tgt_lang" style="color:grey; font-size:14px; cursor: pointer;" title="Right language">
@@ -79,6 +81,7 @@
 						<option value="en">English</option>
 					</select>
 					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left; cursor: pointer;" title="Freeze/unfreeze right content">lock_open</span>
+					<span id="tgt_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:left; cursor: pointer;" title="Clear right content">Close</span>
 				</td>
 			</tr>
 
@@ -97,10 +100,10 @@
 				<td id="src_count_cell">
 					<span id="src_copy" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;" title="Copy left content to clipboard">content_copy</span>
 					<span id="src_speak" class="material-symbols-outlined" style="vertical-align:bottom; cursor: pointer;" title="Listen left content">volume_up</span>
-					<label id="src_count" style="vertical-align:middle;" title="Number of chars in left content"></label>
+					<label id="src_count" style="vertical-align:middle;"></label>
 				</td>
 				<td id="tgt_count_cell">
-					<label id="tgt_count" style="vertical-align:middle;" title="Number of chars in rigth content"></label>
+					<label id="tgt_count" style="vertical-align:middle;"></label>
 					<span id="tgt_speak" class="material-symbols-outlined" style="vertical-align:bottom; cursor: pointer;" title="Listen right content">volume_up</span>
 					<span id="tgt_copy" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;" title="Copy right content to clibpoard">content_copy</span>
 				</td>
