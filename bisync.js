@@ -198,17 +198,22 @@ function oneside_clear(side){
 	if (side == 'src' && src_freeze.innerHTML == 'lock_open'){
 	    src_textarea.value = '';
 		enable_textarea('tgt');
-		disable_textarea('src');
+		if (tgt_textarea.value.length) {
+			disable_textarea('src');
+			clear_and_reset_timeout(true);
+		}
 	}
 	else if (side == 'tgt' && tgt_freeze.innerHTML == 'lock_open'){
 	    tgt_textarea.value = '';
 		enable_textarea('src');
-		disable_textarea('tgt');
+		if (src_textarea.value.length) {
+			disable_textarea('tgt');
+			clear_and_reset_timeout(true);
+		}
 	}
 	else{
 		return;
 	}
-	clear_and_reset_timeout(true);
     update_counts();
     if (tts.speaking) tts.cancel();
 }
