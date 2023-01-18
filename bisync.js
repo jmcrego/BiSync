@@ -1,6 +1,8 @@
 
 const tts = window.speechSynthesis;
 let address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
+let IP = document.getElementById("IP");
+let PORT = document.getElementById("PORT");
 let src_textarea = document.getElementById("src_textarea");
 let tgt_textarea = document.getElementById("tgt_textarea");
 let src_speak = document.getElementById("src_speak");
@@ -33,6 +35,8 @@ let mousePosX = 0;
 let mousePosY = 0;
 let disabled_color = '#FAFAFA';
 let enabled_color = 'transparent';
+let src_is_locked = false;
+let tgt_is_locked = false;
 
 //when the initial HTML document has been completely loaded and parsed, without waiting for style sheets, images, and subframes to finish loading
 document.addEventListener("DOMContentLoaded", reset_default());
@@ -47,6 +51,10 @@ document.addEventListener('click', (event) => {
 		hide_menuselect();
 	}
 });
+
+//change of address
+IP.addEventListener('change', (event) => {address_server = "http://" + IP.value + ":" + PORT.value + "/"; console.log('address: '+address_server)});
+PORT.addEventListener('change', (event) => {address_server = "http://" + IP.value + ":" + PORT.value + "/"; console.log('address: '+address_server)});
 
 //change of source language
 src_lang.addEventListener('change', (event) => {reset_default();});
@@ -79,10 +87,10 @@ src_freeze.addEventListener('click', (event) => {toggle_freeze('src');});
 tgt_freeze.addEventListener('click', (event) => {toggle_freeze('tgt');});
 
 //press button src_copy
-src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src_textarea.value);});
+src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src_textarea.value);console.log('copy src');});
 
 //press button tgt_copy
-tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);});
+tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);console.log('copy tgt');});
 
 // Click down on src_textarea
 src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
@@ -122,25 +130,25 @@ function speak(side){
 
 function toggle_freeze(side){
 	if (side == 'src'){
-		if (src_freeze.innerHTML == 'lock_open') {
-			src_freeze.innerHTML = 'lock';
+		if (!src_is_locked) {
+			src_is_locked = true;
 			disable_textarea('src')
 			console.log('src freeze');
 		}
 		else {
-			src_freeze.innerHTML = 'lock_open';
+			src_is_locked = false;
 			enable_textarea('src')
 			console.log('src unfreeze');
 		}
 	}
 	else if (side == 'tgt'){
-		if (tgt_freeze.innerHTML == 'lock_open') {
-			tgt_freeze.innerHTML = 'lock';
+		if (!tgt_is_locked) {
+			tgt_is_locked = true;
 			disable_textarea('tgt')
 			console.log('tgt freeze');
 		}
 		else {
-			tgt_freeze.innerHTML = 'lock_open';
+			tgt_is_locked = false;
 			enable_textarea('tgt')
 			console.log('tgt unfreeze');
 		}
@@ -149,7 +157,7 @@ function toggle_freeze(side){
 
 function enable_textarea(side){
 	if (side == 'src' || side == 'both'){
-		if (src_freeze.innerHTML == 'lock_open'){
+		if (!src_is_locked){
 		    src_textarea.disabled = false;
     		src_textarea.style.background = enabled_color;
     		src_count_cell.style.background = enabled_color;
@@ -157,7 +165,7 @@ function enable_textarea(side){
     	}
 	}
 	else if (side == 'tgt' || side == 'both'){
-		if (tgt_freeze.innerHTML == 'lock_open'){
+		if (!tgt_is_locked){
 		    tgt_textarea.disabled = false;
     		tgt_textarea.style.background = enabled_color;
     		tgt_count_cell.style.background = enabled_color;
@@ -192,10 +200,12 @@ function reset_default(){
     enable_textarea('both');
     update_counts();
     if (tts.speaking) tts.cancel();
+    src_is_locked = false;
+    tgt_is_locked = false;
 }
 
 function oneside_clear(side){
-	if (side == 'src' && src_freeze.innerHTML == 'lock_open'){
+	if (side == 'src' && !src_is_locked){
 	    src_textarea.value = '';
 		enable_textarea('tgt');
 		if (tgt_textarea.value.length) {
@@ -203,7 +213,7 @@ function oneside_clear(side){
 			clear_and_reset_timeout(true);
 		}
 	}
-	else if (side == 'tgt' && tgt_freeze.innerHTML == 'lock_open'){
+	else if (side == 'tgt' && !tgt_is_locked){
 	    tgt_textarea.value = '';
 		enable_textarea('src');
 		if (src_textarea.value.length) {
@@ -227,7 +237,7 @@ src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (src_textarea.value.length){ 
 	   	src_textarea.value = clean_line(src_textarea.value); 
-	   	if (tgt_freeze.innerHTML == 'lock_open'){
+	   	if (!tgt_is_locked){
 	    	disable_textarea('tgt'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
@@ -245,7 +255,7 @@ tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (tgt_textarea.value.length){ 
 	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
-	   	if (src_freeze.innerHTML == 'lock_open'){
+	   	if (!src_is_locked){
 	    	disable_textarea('src'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
@@ -304,7 +314,7 @@ function cursor_moved(e,side) {
 //************************************************************************************
 
 async function server_request_sync(){
-	if (src_freeze == 'lock' || tgt_freeze == 'lock'){
+	if (src_is_locked || tgt_is_locked){
 		return;		
 	}
     if (src_textarea.disabled){ //target-to-source
@@ -409,21 +419,21 @@ menuselect.onchange = function(){
     if (cursor_moved_type == 'gap') {
 	    if (cursor_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
-		   	if (tgt_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
+		   	if (!tgt_is_locked){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
-		   	if (src_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
+		   	if (!src_is_locked){ clear_and_reset_timeout(true); }
     	}
     }
     else if (cursor_moved_type == 'pref') {
     	if (cursor_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
-		   	if (tgt_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
+		   	if (!tgt_is_locked){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
-		   	if (src_freeze.innerHTML == 'lock_open'){ clear_and_reset_timeout(true); }
+		   	if (!src_is_locked){ clear_and_reset_timeout(true); }
     	}
     }
     //disable_textareas('none');

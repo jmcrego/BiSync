@@ -60,9 +60,10 @@
 		</table>
 
 		<!-- ############### Main table #################### !--> 
-		<span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Undo contents in history">undo</span>
+		<!--span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Undo contents in history">undo</span!-->
+		<!--span id="settings" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Settings">settings</span!-->
 		<span id="reset_all" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Restart contents">restart_alt</span>
-		<span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Redo contents in history">redo</span>
+		<!--span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Redo contents in history">redo</span!-->
 		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
 			<!-- ############### (languages) #################### !--> 
 			<tr>
@@ -71,7 +72,8 @@
 						<option value="en">English</option>
 						<option value="fr">Français</option>
 					</select>
-					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right; cursor: pointer;"  title="Freeze/unfreeze left content">lock_open</span>
+					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right; cursor: pointer;"  title="Freeze/unfreeze left content">lock</span>
+					&nbsp;
 					<span id="src_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:right; cursor: pointer;" title="Clear left content">Close</span>
 		
 				</td>
@@ -80,7 +82,8 @@
 						<option value="fr">Français</option>
 						<option value="en">English</option>
 					</select>
-					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left; cursor: pointer;" title="Freeze/unfreeze right content">lock_open</span>
+					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left; cursor: pointer;" title="Freeze/unfreeze right content">lock</span>
+					&nbsp;
 					<span id="tgt_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:left; cursor: pointer;" title="Clear right content">Close</span>
 				</td>
 			</tr>
@@ -118,11 +121,22 @@
 
 		<table border="0" style="width:90%; table-layout: fixed; font-size: 12px; color:grey">
 			<tr>
-				<td>
-					<ul>
-						<li> Compose (or modify) text in the selected language on any of the text boxes. After a few seconds (delay) the other text box will display the corresponding translation. </li>
-						<li> Single-click on the begining of a word to obtain alternative translations starting on such word. </li>
-						<li> Click-select a sequence of words to obtain reformulations (paraphrases) for the selected sequence. </li>
+				<td style="vertical-align:top;">
+						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
+						Compose or modify text in the selected language on the left (or right) text box. The right (or left) text box will display the corresponding translation. <br>
+						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
+						Single-click on the begining of a word to obtain alternative translations starting on such word. <br>
+						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
+						Click-select a sequence of words to obtain reformulations (paraphrases) for the selected sequence. <br>
+					</ul>
+				</td>
+				<td style="width:200px; text-align: right;">
+						Restart <span class="material-symbols-outlined" style="vertical-align: bottom">restart_alt</span><br>
+						<!--span class="material-symbols-outlined" style="vertical-align: bottom">undo/redo</span> Undo/Redo<br!-->
+						Freeze text <span class="material-symbols-outlined" style="vertical-align: bottom">lock</span><br>
+						Clear text <span class="material-symbols-outlined" style="vertical-align: bottom">Close</span><br>
+						Copy text to clipboard <span class="material-symbols-outlined" style="vertical-align: bottom">content_copy</span><br>
+						Listen text <span class="material-symbols-outlined" style="vertical-align: bottom">volume_up</span><br>
 					</ul>
 				</td>
 			</tr>
