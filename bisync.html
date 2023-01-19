@@ -28,8 +28,8 @@
 	</table>
   
 	<center>
-	  	<!-- ############### Parameters (IP, Port, Delay) ############################################# !--> 
-		<table id="pars_table" border="0">
+	  	<!-- ############### Parameters (IP, Port, Delay, Alternatives) ############################################# !--> 
+		<table id="pars_table" border="0" hidden="hidden">
 			<tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
 					IP &nbsp;<input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1">&nbsp;&nbsp; Port &nbsp;<input type="text" id="PORT" maxlength="4" size="4" value="5000">
@@ -45,15 +45,37 @@
 			</tr !-->
 			<tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
-					Delay &nbsp; <input type="range" id="delay" value="1" min="0" max="5" step="1" list="delay_values" style="width: 160px;">
-					&nbsp; <label id="delay_label" style="width: 50px;">1 sec</label>
+					Delay (sec) &nbsp; <input type="range" id="delay" value="1" min="0" max="5" step="1" list="delay_values" style="width: 150px;">
+					&nbsp; <label id="delay_label" style="width: 50px;">1</label>
 					<datalist id="delay_values">
 						<option value="0" label="OFF"></option>
-						<option value="1" label="1 sec"></option>
-						<option value="2" label="2 sec"></option>
-						<option value="3" label="3 sec"></option>
-						<option value="4" label="4 sec"></option>
-						<option value="5" label="5 sec"></option>
+						<option value="1" label="1"></option>
+						<option value="2" label="2"></option>
+						<option value="3" label="3"></option>
+						<option value="4" label="4"></option>
+						<option value="5" label="5"></option>
+					</datalist>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:left; font-size:16px; color: #336699">
+					Alternatives <input type="range" id="alt" value="5" min="0" max="13" step="1" list="alt_values" style="width: 150px;">
+					&nbsp; <label id="alt_label" style="width: 50px;">5</label>
+					<datalist id="alt_values">
+						<option value="0" label="0"></option>
+						<option value="1" label="1"></option>
+						<option value="2" label="2"></option>
+						<option value="3" label="3"></option>
+						<option value="4" label="4"></option>
+						<option value="5" label="5"></option>
+						<option value="6" label="6"></option>
+						<option value="7" label="7"></option>
+						<option value="8" label="8"></option>
+						<option value="9" label="9"></option>
+						<option value="10" label="10"></option>
+						<option value="11" label="11"></option>
+						<option value="12" label="12"></option>
+						<option value="13" label="13"></option>
 					</datalist>
 				</td>
 			</tr>
@@ -61,7 +83,7 @@
 
 		<!-- ############### Main table #################### !--> 
 		<!--span id="srctgt_back" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Undo contents in history">undo</span!-->
-		<!--span id="settings" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Settings">settings</span!-->
+		<span id="settings" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Show/hide settings">settings</span>
 		<span id="reset_all" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Restart contents">restart_alt</span>
 		<!--span id="srctgt_next" class="material-symbols-outlined" style="vertical-align: center; cursor: pointer;" title="Redo contents in history">redo</span!-->
 		<table cellspacing="0" border="0" bordercolor="#00FFFF" style="border-collapse:collapse; width:90%; table-layout: fixed; box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 2px; min-width:1000px;">
@@ -73,7 +95,6 @@
 						<option value="fr">Français</option>
 					</select>
 					<span id="src_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: right; cursor: pointer;"  title="Freeze/unfreeze left content">lock</span>
-					&nbsp;
 					<span id="src_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:right; cursor: pointer;" title="Clear left content">Close</span>
 		
 				</td>
@@ -83,7 +104,6 @@
 						<option value="en">English</option>
 					</select>
 					<span id="tgt_freeze" class="material-symbols-outlined" style="vertical-align: bottom; float: left; cursor: pointer;" title="Freeze/unfreeze right content">lock</span>
-					&nbsp;
 					<span id="tgt_clear" class="material-symbols-outlined" style="vertical-align: bottom; float:left; cursor: pointer;" title="Clear right content">Close</span>
 				</td>
 			</tr>
@@ -131,11 +151,12 @@
 					</ul>
 				</td>
 				<td style="width:200px; text-align: right;">
+						Show/hide settings <span class="material-symbols-outlined" style="vertical-align: bottom">settings</span><br>
 						Restart <span class="material-symbols-outlined" style="vertical-align: bottom">restart_alt</span><br>
 						<!--span class="material-symbols-outlined" style="vertical-align: bottom">undo/redo</span> Undo/Redo<br!-->
-						Freeze text <span class="material-symbols-outlined" style="vertical-align: bottom">lock</span><br>
 						Clear text <span class="material-symbols-outlined" style="vertical-align: bottom">Close</span><br>
-						Copy text to clipboard <span class="material-symbols-outlined" style="vertical-align: bottom">content_copy</span><br>
+						Freeze/unfreeze text <span class="material-symbols-outlined" style="vertical-align: bottom">lock</span><br>
+						Copy to clipboard <span class="material-symbols-outlined" style="vertical-align: bottom">content_copy</span><br>
 						Listen text <span class="material-symbols-outlined" style="vertical-align: bottom">volume_up</span><br>
 					</ul>
 				</td>

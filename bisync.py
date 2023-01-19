@@ -24,13 +24,13 @@ CORS(app)
 def sync_request():
     req = request.json
     logging.info('REQUEST: {}'.format(req))
-    oraw = translate(req['src'], req['lang'], req['tgt'], req['mode'])
+    oraw = translate(req['src'], req['lang'], req['tgt'], req['mode'], int(req['alt']))
     res = {"oraw" : oraw}
     logging.info('RESPONSE: {}'.format(res))
     return jsonify(res);
 
 
-def translate(src, lang, tgt, mode):
+def translate(src, lang, tgt, mode, alt):
     if mode == 'sync':
         if len(tgt) == 0:
             iraw = src + ' ' + lang
@@ -45,7 +45,7 @@ def translate(src, lang, tgt, mode):
     elif mode == 'gap':
         iraw = src + ' ' + lang + ' ' + tgt
         itok = onmttok(iraw)
-        results = translator.translate_batch([itok], beam_size=5, num_hypotheses=5, return_alternatives=True, disable_unk=True)
+        results = translator.translate_batch([itok], beam_size=alt, num_hypotheses=alt, return_alternatives=True, disable_unk=True)
         otok = results[0].hypotheses
         oraw = [onmttok.detokenize(t) for t in otok]
 
@@ -54,7 +54,7 @@ def translate(src, lang, tgt, mode):
         itok = onmttok(iraw)
         praw = tgt
         ptok = onmttok(praw)
-        results = translator.translate_batch([itok], target_prefix=[ptok], beam_size=5, num_hypotheses=5, return_alternatives=True, disable_unk=True)
+        results = translator.translate_batch([itok], target_prefix=[ptok], beam_size=alt, num_hypotheses=alt, return_alternatives=True, disable_unk=True)
         otok = results[0].hypotheses
         oraw = [onmttok.detokenize(t[len(ptok):]) for t in otok]
 

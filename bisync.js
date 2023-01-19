@@ -11,6 +11,8 @@ let src_count = document.getElementById("src_count");
 let tgt_count = document.getElementById("tgt_count");
 let srctgt_back = document.getElementById("srctgt_back");
 let reset_all = document.getElementById("reset_all");
+let settings = document.getElementById("settings");
+let pars_table = document.getElementById("pars_table");
 let srctgt_next = document.getElementById("srctgt_next");
 let src_freeze = document.getElementById("src_freeze");
 let tgt_freeze = document.getElementById("tgt_freeze");
@@ -23,6 +25,9 @@ let tgt_lang = document.getElementById("tgt_lang");
 let delay = document.getElementById("delay");
 let delay_label = document.getElementById("delay_label");
 let delay_values = document.getElementById("delay_values");
+let alt = document.getElementById("alt");
+let alt_label = document.getElementById("alt_label");
+let alt_values = document.getElementById("alt_values");
 let menuselect = document.getElementById("menuselect");
 console.log('Server address: ' + address_server);
 
@@ -65,6 +70,16 @@ tgt_lang.addEventListener('change', (event) => {reset_default();});
 //change delay input range
 delay.addEventListener('change', (event) => {change_sync(event)});
 
+//change alt range
+alt.addEventListener('change', (event) => {change_alt(event)});
+
+//press settings
+settings.addEventListener('click', (event) => {
+	console.log('settings'); 
+	if (pars_table.getAttribute("hidden") == "hidden") {pars_table.removeAttribute("hidden");}
+	else {pars_table.setAttribute("hidden", "hidden");}
+});
+
 //press button reset_all
 reset_all.addEventListener('click', (event) => {console.log('reset all'); reset_default();});
 
@@ -103,6 +118,11 @@ tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); //
 function change_sync(event){
 	console.log('changed sync to '+delay_values.options[event.target.value].label); 
 	delay_label.innerHTML = delay_values.options[event.target.value].label;
+}
+
+function change_alt(event){
+	console.log('changed alt to '+(parseInt(alt_values.options[event.target.value].label)+2)); 
+	alt_label.innerHTML = parseInt(alt_values.options[event.target.value].label)+2;
 }
 
 function speak(side){
@@ -155,6 +175,18 @@ function toggle_freeze(side){
 	}
 }
 
+function unfreeze(side){
+	if (side == 'src' || side == 'both'){
+		src_textarea.disabled = false;
+    	src_textarea.style.background = enabled_color;
+    }
+	else if (side == 'tgt' || side == 'both'){
+		tgt_textarea.disabled = false;
+    	tgt_textarea.style.background = enabled_color;
+    }
+}
+
+
 function enable_textarea(side){
 	if (side == 'src' || side == 'both'){
 		if (!src_is_locked){
@@ -192,6 +224,7 @@ function disable_textarea(side){
 
 function reset_default(){
 	//enable(both)
+	unfreeze('both');
 	enable_textarea('both');
     src_textarea.value = '';
     tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
@@ -327,7 +360,7 @@ async function server_request_sync(){
         tag = tag_s2t;
         tgt = tgt_textarea.value;
     }
-    params = { "src": src, "lang": tag, "tgt": tgt, "mode": "sync" }
+    params = { "src": src, "lang": tag, "tgt": tgt, "alt": alt_label.innerHTML, "mode": "sync"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -366,7 +399,8 @@ async function server_request_gap(){
         src = src_textarea.value;
         disable_textarea('src');
 	}
-    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "mode": "gap"}
+    console.log("alt: "+alt_label.innerHTML);
+    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "alt": alt_label.innerHTML, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -394,7 +428,8 @@ async function server_request_pref(){
         src = src_textarea.value;
 	    disable_textarea('src');
 	}
-    params = { "src": src, "lang": lang, "tgt": tgt_pref, "mode": "pref"};
+    console.log("alt: "+alt_label.innerHTML);
+    params = { "src": src, "lang": lang, "tgt": tgt_pref, "alt": alt_label.innerHTML, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
