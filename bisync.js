@@ -22,12 +22,12 @@ let src_count_cell = document.getElementById("src_count_cell");
 let tgt_count_cell = document.getElementById("tgt_count_cell");
 let src_lang = document.getElementById("src_lang");
 let tgt_lang = document.getElementById("tgt_lang");
-let delay = document.getElementById("delay");
-let delay_label = document.getElementById("delay_label");
-let delay_values = document.getElementById("delay_values");
 let alt = document.getElementById("alt");
-let alt_label = document.getElementById("alt_label");
-let alt_values = document.getElementById("alt_values");
+let alt_incr = document.getElementById("alt_incr");
+let alt_decr = document.getElementById("alt_decr");
+let delay = document.getElementById("delay");
+let delay_incr = document.getElementById("delay_incr");
+let delay_decr = document.getElementById("delay_decr");
 let menuselect = document.getElementById("menuselect");
 console.log('Server address: ' + address_server);
 
@@ -67,11 +67,57 @@ src_lang.addEventListener('change', (event) => {reset_default();});
 //change of target language
 tgt_lang.addEventListener('change', (event) => {reset_default();});
 
-//change delay input range
-delay.addEventListener('change', (event) => {change_sync(event)});
+//click alt_incr
+alt_incr.addEventListener('click', (event) => {
+	if (alt.innerHTML == '15'){
+		console.log('cannot alt incr (maximum value)'); 		
+	}
+	else{
+		alt.innerHTML = parseInt(alt.innerHTML) + 1;
+		console.log('incr alt to '+alt.innerHTML); 
+	}
+});
 
-//change alt range
-alt.addEventListener('change', (event) => {change_alt(event)});
+//click alt_decr
+alt_decr.addEventListener('click', (event) => {
+	if (alt.innerHTML == '2'){
+		console.log('cannot alt decr (minimum value)'); 		
+	}
+	else{
+		alt.innerHTML = parseInt(alt.innerHTML) - 1;
+		console.log('incr alt to '+alt.innerHTML); 
+	}
+});
+
+//click delay_incr
+delay_incr.addEventListener('click', (event) => {
+	if (delay.innerHTML == 'OFF'){
+		delay.innerHTML = 1;
+		console.log('incr delay to '+delay.innerHTML); 
+	}
+	else if (delay.innerHTML == "5"){
+		console.log('cannot delay incr (maximum value)'); 				
+	}
+	else{
+		delay.innerHTML = parseInt(delay.innerHTML) + 1;
+		console.log('incr delay to '+delay.innerHTML); 
+	}
+});
+
+//click delay_decr
+delay_decr.addEventListener('click', (event) => {
+	if (delay.innerHTML == '1'){
+		delay.innerHTML = "OFF";
+		console.log('decr delay to '+delay.innerHTML); 
+	}
+	else if (delay.innerHTML == "OFF"){
+		console.log('cannot delay decr (minimum value)'); 				
+	}
+	else{
+		delay.innerHTML = parseInt(delay.innerHTML) - 1;
+		console.log('decr delay to '+delay.innerHTML); 
+	}
+});
 
 //press settings
 settings.addEventListener('click', (event) => {
@@ -114,16 +160,6 @@ src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); //
 // Click down on tgt_textarea
 tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 //tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
-
-function change_sync(event){
-	console.log('changed sync to '+delay_values.options[event.target.value].label); 
-	delay_label.innerHTML = delay_values.options[event.target.value].label;
-}
-
-function change_alt(event){
-	console.log('changed alt to '+(parseInt(alt_values.options[event.target.value].label)+2)); 
-	alt_label.innerHTML = parseInt(alt_values.options[event.target.value].label)+2;
-}
 
 function speak(side){
 	if (side == 'src'){
@@ -360,7 +396,7 @@ async function server_request_sync(){
         tag = tag_s2t;
         tgt = tgt_textarea.value;
     }
-    params = { "src": src, "lang": tag, "tgt": tgt, "alt": alt_label.innerHTML, "mode": "sync"}
+    params = { "src": src, "lang": tag, "tgt": tgt, "alt": alt.innerHTML, "mode": "sync"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -399,8 +435,7 @@ async function server_request_gap(){
         src = src_textarea.value;
         disable_textarea('src');
 	}
-    console.log("alt: "+alt_label.innerHTML);
-    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "alt": alt_label.innerHTML, "mode": "gap"}
+    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "alt": alt.innerHTML, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -428,8 +463,7 @@ async function server_request_pref(){
         src = src_textarea.value;
 	    disable_textarea('src');
 	}
-    console.log("alt: "+alt_label.innerHTML);
-    params = { "src": src, "lang": lang, "tgt": tgt_pref, "alt": alt_label.innerHTML, "mode": "pref"};
+    params = { "src": src, "lang": lang, "tgt": tgt_pref, "alt": alt.innerHTML, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -556,8 +590,8 @@ function clear_and_reset_timeout(do_reset){
     if (timeoutID) { //clear if already set
 	   	clearTimeout(timeoutID);
     }
-    if (do_reset && delay.value > 0){ //set new timeout
-    	timeoutID = setTimeout(server_request_sync,delay.value*1000);
+    if (do_reset && delay.innerHTML != "OFF"){ //set new timeout
+    	timeoutID = setTimeout(server_request_sync,parseInt(delay.innerHTML)*1000);
     }
 }
 

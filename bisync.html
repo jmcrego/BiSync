@@ -43,7 +43,7 @@
 					</p>
 				</td>
 			</tr !-->
-			<tr>
+			<!--tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
 					Delay (sec) &nbsp; <input type="range" id="delay" value="1" min="0" max="5" step="1" list="delay_values" style="width: 150px;">
 					&nbsp; <label id="delay_label" style="width: 50px;">1</label>
@@ -56,8 +56,8 @@
 						<option value="5" label="5"></option>
 					</datalist>
 				</td>
-			</tr>
-			<tr>
+			</tr!-->
+			<!--tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
 					Alternatives <input type="range" id="alt" value="5" min="0" max="13" step="1" list="alt_values" style="width: 150px;">
 					&nbsp; <label id="alt_label" style="width: 50px;">5</label>
@@ -77,6 +77,22 @@
 						<option value="12" label="12"></option>
 						<option value="13" label="13"></option>
 					</datalist>
+				</td>
+			</tr!-->
+			<tr>
+				<td style="text-align:left; font-size:16px; color: #336699">
+					<span style="display: inline-block; width:100px">Alternatives</span>
+					<span id="alt_decr" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;">arrow_left</span>
+					<span id="alt" style="border: 0px solid black; border-radius: 3px 3px 3px; text-align: center; display: inline-block; width:30px">5</span>
+					<span id="alt_incr" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;">arrow_right</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:left; font-size:16px; color: #336699">
+					<span style="display: inline-block; width:100px">Delay (sec)</span>
+					<span id="delay_decr" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;">arrow_left</span>
+					<span id="delay" style="border: 0px solid black; border-radius: 3px 3px 3px; text-align: center; display: inline-block; width:30px">1</span>
+					<span id="delay_incr" class="material-symbols-outlined" style="vertical-align: bottom; cursor: pointer;">arrow_right</span>
 				</td>
 			</tr>
 		</table>
