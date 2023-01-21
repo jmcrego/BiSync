@@ -118,9 +118,9 @@ button {
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
-  vertical-align: middle;
+  vertical-align: top;
   height: 25px;
-  width: 25px;
+  width: 20px;
 }
 
 button:hover {
