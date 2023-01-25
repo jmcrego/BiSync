@@ -7,11 +7,14 @@ from flask_cors import CORS
 ### run this script on the server:
 # export FLASK_APP=bisync.py
 # flask run --host=0.0.0.0 --port=5000
+# or
+# flask run --host=127.0.0.1 --port=5000
 ### to test, you can send client data using:
 #curl -X POST -H "Content-type: application/json" -d "{\"src\": \"This is my new sentence.\", \"lang\":\"｟fr｠\", \"tgt\":\"\", \"mode\":\"sync\"}" "http://127.0.0.1:5000/"
+
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(levelname)s %(message)s', datefmt='%Y-%m-%d_%H:%M:%S', level=getattr(logging, 'INFO', None), filename='./bisync.log')
 
-mdir = "./ct2_model_ckpt-671744"
+mdir = "./ct2_model_ckpt-900000"
 translator = ctranslate2.Translator(mdir, device="cpu")
 logging.info('loaded Model {}'.format(mdir))
 onmttok = pyonmttok.Tokenizer('aggressive', joiner_annotate=True, segment_numbers=True, bpe_model_path=mdir+"/bpe_32k")

@@ -9,11 +9,9 @@ let src_speak = document.getElementById("src_speak");
 let tgt_speak = document.getElementById("tgt_speak");
 let src_count = document.getElementById("src_count");
 let tgt_count = document.getElementById("tgt_count");
-let srctgt_back = document.getElementById("srctgt_back");
 let reset_all = document.getElementById("reset_all");
 let settings = document.getElementById("settings");
 let pars_table = document.getElementById("pars_table");
-let srctgt_next = document.getElementById("srctgt_next");
 let src_freeze = document.getElementById("src_freeze");
 let tgt_freeze = document.getElementById("tgt_freeze");
 let src_clear = document.getElementById("src_clear");
@@ -22,6 +20,7 @@ let src_count_cell = document.getElementById("src_count_cell");
 let tgt_count_cell = document.getElementById("tgt_count_cell");
 let src_lang = document.getElementById("src_lang");
 let tgt_lang = document.getElementById("tgt_lang");
+let langs = document.getElementById("langs");
 let alt = document.getElementById("alt");
 let alt_incr = document.getElementById("alt_incr");
 let alt_decr = document.getElementById("alt_decr");
@@ -40,19 +39,29 @@ let mousePosX = 0;
 let mousePosY = 0;
 let disabled_color = '#FAFAFA';
 let enabled_color = 'transparent';
-let src_is_locked = false;
-let tgt_is_locked = false;
+let src_is_freezed = false;
+let tgt_is_freezed = false;
+
+src_lang.innerHTML = 'English';
+tgt_lang.innerHTML = 'Français';
 
 //when the initial HTML document has been completely loaded and parsed, without waiting for style sheets, images, and subframes to finish loading
 document.addEventListener("DOMContentLoaded", reset_default());
 
 //hide menuselect when escape released
-document.addEventListener('keyup', (event) => {if (event.keyCode == 27) {hide_menuselect();}});
+document.addEventListener('keyup', (event) => {
+	if (event.keyCode == 27) {
+		console.log('keyup 27 (hide_menuselect)')
+		hide_menuselect();
+	}
+});
+
 //hide menuselect when click outside menuselect
 document.addEventListener('click', (event) => {
 	mousePosX = event.clientX;
 	mousePosY = event.clientY;
-	if (!menuselect.contains(event.target)) {
+	if (!menuselect.hasAttribute("hidden") && !menuselect.contains(event.target)) {
+		console.log('click (hide_menuselect)')
 		hide_menuselect();
 	}
 });
@@ -61,11 +70,8 @@ document.addEventListener('click', (event) => {
 IP.addEventListener('change', (event) => {address_server = "http://" + IP.value + ":" + PORT.value + "/"; console.log('address: '+address_server)});
 PORT.addEventListener('change', (event) => {address_server = "http://" + IP.value + ":" + PORT.value + "/"; console.log('address: '+address_server)});
 
-//change of source language
-src_lang.addEventListener('change', (event) => {reset_default();});
-
-//change of target language
-tgt_lang.addEventListener('change', (event) => {reset_default();});
+//change of languages
+langs.addEventListener('change', (event) => {reset_default();});
 
 //click alt_incr
 alt_incr.addEventListener('click', (event) => {
@@ -121,19 +127,19 @@ delay_decr.addEventListener('click', (event) => {
 
 //press settings
 settings.addEventListener('click', (event) => {
+	if (pars_table.getAttribute("hidden") == "hidden") {
+		pars_table.removeAttribute("hidden");
+		settings.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
+	}
+	else {
+		pars_table.setAttribute("hidden", "hidden");
+		settings.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
+	}
 	console.log('settings'); 
-	if (pars_table.getAttribute("hidden") == "hidden") {pars_table.removeAttribute("hidden");}
-	else {pars_table.setAttribute("hidden", "hidden");}
 });
 
 //press button reset_all
 reset_all.addEventListener('click', (event) => {console.log('reset all'); reset_default();});
-
-//press button src_clear
-src_clear.addEventListener('click', (event) => {console.log('src clear'); oneside_clear('src');});
-
-//press button tgt_clear
-tgt_clear.addEventListener('click', (event) => {console.log('tgt clear'); oneside_clear('tgt');});
 
 //press button speak_src
 src_speak.addEventListener('click', (event) => {speak('src');});
@@ -161,6 +167,35 @@ src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); //
 tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
 //tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
 
+function reset_default(){
+	enable_textarea('both');
+    src_textarea.value = '';
+    tgt_textarea.value = '';
+    if (langs.options[langs.selectedIndex].value == 'enfr'){
+	    tag_s2t = par_op + 'fr' + par_cl;
+    	tag_t2s = par_op + 'en' + par_cl;
+    	src_lang.innerHTML = 'English';
+    	tgt_lang.innerHTML = 'Français';
+
+    }
+    else if (langs.options[langs.selectedIndex].value == 'defr'){
+	    tag_s2t = par_op + 'fr' + par_cl;
+    	tag_t2s = par_op + 'de' + par_cl;
+    	src_lang.innerHTML = 'Deutsch';
+    	tgt_lang.innerHTML = 'Français';
+    }
+    else if (langs.options[langs.selectedIndex].value == 'esfr'){
+	    tag_s2t = par_op + 'fr' + par_cl;
+    	tag_t2s = par_op + 'es' + par_cl;
+    	src_lang.innerHTML = 'Español';
+    	tgt_lang.innerHTML = 'Français';
+    }
+    update_counts();
+    if (tts.speaking) tts.cancel();
+    src_is_freezed = false;
+    tgt_is_freezed = false;
+}
+
 function speak(side){
 	if (side == 'src'){
 		ta = src_textarea;
@@ -172,11 +207,13 @@ function speak(side){
 	}
 	if (ta.value.length == 0){return;}
 	if (tts.speaking) {
-		if (tts.paused) {tts.resume();console.log('speak resume');}
-		else {tts.pause();console.log('speak pause');}
+		//if (tts.paused) {tts.resume();console.log('speak resume');}
+		//else {tts.pause();console.log('speak pause');}
+		tts.cancel();
+		console.log('speak stop');
 	}
 	else{
-		tts.cancel();
+		//tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(ta.value); // speak text
 		utterance.lang = lang; //fr-FR or en-GB
 		tts.speak(utterance);
@@ -184,60 +221,56 @@ function speak(side){
 	}
 }
 
-function toggle_freeze(side){
+function toggle_freeze(side){	
 	if (side == 'src'){
-		if (!src_is_locked) {
-			src_is_locked = true;
+		if (!src_is_freezed) {
+			src_is_freezed = true;
+			src_freeze.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 			disable_textarea('src')
-			console.log('src freeze');
 		}
 		else {
-			src_is_locked = false;
+			src_is_freezed = false;
+			src_freeze.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 			enable_textarea('src')
-			console.log('src unfreeze');
 		}
 	}
 	else if (side == 'tgt'){
-		if (!tgt_is_locked) {
-			tgt_is_locked = true;
+		if (!tgt_is_freezed) {
+			tgt_is_freezed = true;
+			tgt_freeze.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 			disable_textarea('tgt')
-			console.log('tgt freeze');
 		}
 		else {
-			tgt_is_locked = false;
+			tgt_is_freezed = false;
+			tgt_freeze.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 			enable_textarea('tgt')
-			console.log('tgt unfreeze');
 		}
 	}
 }
 
-function unfreeze(side){
-	if (side == 'src' || side == 'both'){
-		src_textarea.disabled = false;
-    	src_textarea.style.background = enabled_color;
-    }
-	else if (side == 'tgt' || side == 'both'){
-		tgt_textarea.disabled = false;
-    	tgt_textarea.style.background = enabled_color;
-    }
-}
-
-
 function enable_textarea(side){
 	if (side == 'src' || side == 'both'){
-		if (!src_is_locked){
+		if (!src_is_freezed){
 		    src_textarea.disabled = false;
     		src_textarea.style.background = enabled_color;
     		src_count_cell.style.background = enabled_color;
     		src_lang_cell.style.background = enabled_color;
+			console.log('src enable');
+    	}
+    	else{
+    		console.log('src not enabled due to src_is_freezed')
     	}
 	}
-	else if (side == 'tgt' || side == 'both'){
-		if (!tgt_is_locked){
+	if (side == 'tgt' || side == 'both'){
+		if (!tgt_is_freezed){
 		    tgt_textarea.disabled = false;
     		tgt_textarea.style.background = enabled_color;
     		tgt_count_cell.style.background = enabled_color;
     		tgt_lang_cell.style.background = enabled_color;
+			console.log('tgt enable');
+    	}
+    	else{
+    		console.log('tgt not enabled due to tgt_is_freezed')
     	}
 	}
 }
@@ -249,52 +282,15 @@ function disable_textarea(side){
     	src_textarea.style.background = disabled_color;
    		src_count_cell.style.background = disabled_color;
    		src_lang_cell.style.background = disabled_color;
+		console.log('src disable');
 	}
-	else if (side == 'tgt' || side == 'both'){
+	if (side == 'tgt' || side == 'both'){
 	    tgt_textarea.disabled = true;
     	tgt_textarea.style.background = disabled_color;
    		tgt_count_cell.style.background = disabled_color;
    		tgt_lang_cell.style.background = disabled_color;
+		console.log('tgt disable');
 	}
-}
-
-function reset_default(){
-	//enable(both)
-	unfreeze('both');
-	enable_textarea('both');
-    src_textarea.value = '';
-    tag_s2t = par_op + tgt_lang.options[tgt_lang.selectedIndex].value + par_cl;
-    tgt_textarea.value = '';
-    tag_t2s = par_op + src_lang.options[src_lang.selectedIndex].value + par_cl;
-    enable_textarea('both');
-    update_counts();
-    if (tts.speaking) tts.cancel();
-    src_is_locked = false;
-    tgt_is_locked = false;
-}
-
-function oneside_clear(side){
-	if (side == 'src' && !src_is_locked){
-	    src_textarea.value = '';
-		enable_textarea('tgt');
-		if (tgt_textarea.value.length) {
-			disable_textarea('src');
-			clear_and_reset_timeout(true);
-		}
-	}
-	else if (side == 'tgt' && !tgt_is_locked){
-	    tgt_textarea.value = '';
-		enable_textarea('src');
-		if (src_textarea.value.length) {
-			disable_textarea('tgt');
-			clear_and_reset_timeout(true);
-		}
-	}
-	else{
-		return;
-	}
-    update_counts();
-    if (tts.speaking) tts.cancel();
 }
 
 //************************************************************************************
@@ -306,7 +302,7 @@ src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (src_textarea.value.length){ 
 	   	src_textarea.value = clean_line(src_textarea.value); 
-	   	if (!tgt_is_locked){
+	   	if (!tgt_is_freezed){
 	    	disable_textarea('tgt'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
@@ -324,7 +320,7 @@ tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
     if (tgt_textarea.value.length){ 
 	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
-	   	if (!src_is_locked){
+	   	if (!src_is_freezed){
 	    	disable_textarea('src'); //disable the other textarea
 	   		clear_and_reset_timeout(true);
 	   	}
@@ -383,7 +379,7 @@ function cursor_moved(e,side) {
 //************************************************************************************
 
 async function server_request_sync(){
-	if (src_is_locked || tgt_is_locked){
+	if (src_is_freezed || tgt_is_freezed){
 		return;		
 	}
     if (src_textarea.disabled){ //target-to-source
@@ -488,21 +484,21 @@ menuselect.onchange = function(){
     if (cursor_moved_type == 'gap') {
 	    if (cursor_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
-		   	if (!tgt_is_locked){ clear_and_reset_timeout(true); }
+		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
-		   	if (!src_is_locked){ clear_and_reset_timeout(true); }
+		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
     	}
     }
     else if (cursor_moved_type == 'pref') {
     	if (cursor_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
-		   	if (!tgt_is_locked){ clear_and_reset_timeout(true); }
+		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
-		   	if (!src_is_locked){ clear_and_reset_timeout(true); }
+		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
     	}
     }
     //disable_textareas('none');
@@ -533,42 +529,6 @@ function optionsMenu(options){
 //*** other **************************************************************************
 //************************************************************************************
 
-/*
-function disable_textareas(side){
-    //src_textarea.disabled
-    if (side == 'src') src_textarea.disabled = true;
-    else src_textarea.disabled = false;
-    
-    //src_textarea.style.background
-    if (side == 'src') src_textarea.style.background = disabled_color;
-    else src_textarea.style.background = enabled_color;
-
-    //src_count_cell.disabled
-    if (side == 'src') src_count_cell.style.background = disabled_color;
-    else src_count_cell.style.background = enabled_color;
-
-    //src_lang_cell.disabled
-    if (side == 'src') src_lang_cell.style.background = disabled_color;
-    else src_lang_cell.style.background = enabled_color;
-
-
-    //tgt_textarea.disabled
-    if (side == 'tgt') tgt_textarea.disabled = true;
-    else tgt_textarea.disabled = false;
-    
-    //tgt_textarea.style.background
-    if (side == 'tgt') tgt_textarea.style.background = disabled_color;
-    else tgt_textarea.style.background = enabled_color;
-    
-    //tgt_count_cell.disabled
-    if (side == 'tgt') tgt_count_cell.style.background = disabled_color;
-    else tgt_count_cell.style.background = enabled_color;    
-
-    //tgt_lang_cell.disabled
-    if (side == 'tgt') tgt_lang_cell.style.background = disabled_color;
-    else tgt_lang_cell.style.background = enabled_color;
-}
-*/
 
 function update_counts(){
 	src_count.innerHTML = src_textarea.value.length;

@@ -4,10 +4,11 @@ html * {
 
 #pars_table {
     margin: 10px; 
-    background-color:white; 
+    background-color: white; 
     padding: 5px; 
     border-top: solid #336699; 
     border-bottom: solid #336699;
+    user-select: none;
 }
 
 #src_textarea, #tgt_textarea {
@@ -42,7 +43,7 @@ html * {
 #src_count_cell {
     padding-left: 5px;
     text-align: left;
-    vertical-align: top; 
+    vertical-align: top;
     font-size: 14px; 
     font-family: courier; 
     width: 150px; 
@@ -65,6 +66,7 @@ html * {
     background-color: transparent; 
     padding: 5px; 
     font-size: 16px; 
+    color: grey;
     -moz-appearance: listbox; 
     -webkit-appearance: none
 }
@@ -103,12 +105,34 @@ option:hover {
   'opsz' 24
 }
 
+#langs {
+    display: inline-block; 
+    font-size:16px; 
+    cursor: pointer;
+    font-family: courier; 
+}
+
+#alt, #delay{
+    border: 0px solid black; 
+    border-radius: 3px 3px 3px; 
+    text-align: center; 
+    display: inline-block; 
+    width:30px; color:black; 
+    font-family: courier;
+}
+
+#alt_decr, #alt_incr, #delay_incr, #delay_decr{
+    padding: 2px; 
+    color:grey;
+}
 
 button {
   background-color: #fff;
-  border: 1px solid #d5d9d9;
-  border-radius: 8px;
+  border: 1px solid grey; /*#d5d9d9;*/
+  border-radius: 3px;
+  /*
   box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  */
   box-sizing: border-box;
   color: #0f1111;
   cursor: pointer;
