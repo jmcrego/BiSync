@@ -13,6 +13,7 @@ html * {
 
 #src_textarea, #tgt_textarea {
     resize: none;
+    font-family: Poppins;
     font-size: 22px;
     border-radius: 0px;
     background: transparent; 
@@ -27,7 +28,6 @@ html * {
     overflow: hidden;
     white-space: pre-wrap;
     position: absolute;
-    font-family: Poppins;
 }
 
 #menuselect {
