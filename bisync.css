@@ -55,7 +55,15 @@ html * {
     background-color: white;
     border: 1px solid #aaa;
     position: relative;
-    /*border-left: thick double #32a1ce;*/
+    /*border-radius: 3px 3px 3px;*/
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 1px 4px 1px;
+}
+option { 
+    padding: 0px 10px; 
+    border-top: 1px solid lightgrey; 
+}
+option:hover { 
+    background-color: #EDFC92; 
 }
 
 #src_count_cell {
@@ -105,14 +113,6 @@ html * {
 #footnote {
     font-size:12px; 
     color:#336699;
-}
-
-option { 
-    padding: 0px 10px; 
-    border-top: 1px solid lightgrey; 
-}
-option:hover { 
-    background-color: #EDFC92; 
 }
 
 .material-symbols-outlined {
