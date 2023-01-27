@@ -50,7 +50,7 @@ html * {
 #menuselect {
     z-index: 2; /* move menuselect over both div and textarea */
     padding: 0px;
-    font-size: 18px;
+    font-size: 16px;
     border-radius: 0px;
     background-color: white;
     border: 1px solid #aaa;
@@ -108,7 +108,7 @@ html * {
 }
 
 option { 
-    padding: 10px; 
+    padding: 0px 10px; 
     border-top: 1px solid lightgrey; 
 }
 option:hover { 

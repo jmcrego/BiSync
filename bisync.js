@@ -63,7 +63,6 @@ document.addEventListener('click', (event) => {
 	mousePosX = event.clientX;
 	mousePosY = event.clientY;
 	if (!menuselect.hasAttribute("hidden") && !menuselect.contains(event.target)) {
-		//console.log('click (hide_menuselect)')
 		hide_menuselect();
 	}
 });
