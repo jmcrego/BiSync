@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", reset_default());
 //hide menuselect when escape released
 document.addEventListener('keyup', (event) => {
 	if (event.keyCode == 27) {
-		console.log('keyup 27 (hide_menuselect)')
+		//console.log('keyup 27 (hide_menuselect)')
 		hide_menuselect();
 	}
 });
@@ -63,7 +63,7 @@ document.addEventListener('click', (event) => {
 	mousePosX = event.clientX;
 	mousePosY = event.clientY;
 	if (!menuselect.hasAttribute("hidden") && !menuselect.contains(event.target)) {
-		console.log('click (hide_menuselect)')
+		//console.log('click (hide_menuselect)')
 		hide_menuselect();
 	}
 });
@@ -78,22 +78,22 @@ langs.addEventListener('change', (event) => {reset_default();});
 //click alt_incr
 alt_incr.addEventListener('click', (event) => {
 	if (alt.innerHTML == '15'){
-		console.log('cannot alt incr (maximum value)'); 		
+		//console.log('cannot alt incr (maximum value)'); 		
 	}
 	else{
 		alt.innerHTML = parseInt(alt.innerHTML) + 1;
-		console.log('incr alt to '+alt.innerHTML); 
+		//console.log('incr alt to '+alt.innerHTML); 
 	}
 });
 
 //click alt_decr
 alt_decr.addEventListener('click', (event) => {
 	if (alt.innerHTML == '2'){
-		console.log('cannot alt decr (minimum value)'); 		
+		//console.log('cannot alt decr (minimum value)'); 		
 	}
 	else{
 		alt.innerHTML = parseInt(alt.innerHTML) - 1;
-		console.log('incr alt to '+alt.innerHTML); 
+		//console.log('incr alt to '+alt.innerHTML); 
 	}
 });
 
@@ -101,14 +101,14 @@ alt_decr.addEventListener('click', (event) => {
 delay_incr.addEventListener('click', (event) => {
 	if (delay.innerHTML == 'OFF'){
 		delay.innerHTML = 1;
-		console.log('incr delay to '+delay.innerHTML); 
+		//console.log('incr delay to '+delay.innerHTML); 
 	}
 	else if (delay.innerHTML == "5"){
-		console.log('cannot delay incr (maximum value)'); 				
+		//console.log('cannot delay incr (maximum value)'); 				
 	}
 	else{
 		delay.innerHTML = parseInt(delay.innerHTML) + 1;
-		console.log('incr delay to '+delay.innerHTML); 
+		//console.log('incr delay to '+delay.innerHTML); 
 	}
 });
 
@@ -116,14 +116,14 @@ delay_incr.addEventListener('click', (event) => {
 delay_decr.addEventListener('click', (event) => {
 	if (delay.innerHTML == '1'){
 		delay.innerHTML = "OFF";
-		console.log('decr delay to '+delay.innerHTML); 
+		//console.log('decr delay to '+delay.innerHTML); 
 	}
 	else if (delay.innerHTML == "OFF"){
-		console.log('cannot delay decr (minimum value)'); 				
+		//console.log('cannot delay decr (minimum value)'); 				
 	}
 	else{
 		delay.innerHTML = parseInt(delay.innerHTML) - 1;
-		console.log('decr delay to '+delay.innerHTML); 
+		//console.log('decr delay to '+delay.innerHTML); 
 	}
 });
 
@@ -137,11 +137,11 @@ settings.addEventListener('click', (event) => {
 		pars_table.setAttribute("hidden", "hidden");
 		settings.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 	}
-	console.log('settings'); 
+	//console.log('settings'); 
 });
 
 //press button reset_all
-reset_all.addEventListener('click', (event) => {console.log('reset all'); reset_default();});
+reset_all.addEventListener('click', (event) => {reset_default();});
 
 //press button speak_src
 src_speak.addEventListener('click', (event) => {speak('src');});
@@ -156,10 +156,10 @@ src_freeze.addEventListener('click', (event) => {toggle_freeze('src');});
 tgt_freeze.addEventListener('click', (event) => {toggle_freeze('tgt');});
 
 //press button src_copy
-src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src_textarea.value);console.log('copy src');});
+src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src_textarea.value);});
 
 //press button tgt_copy
-tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);console.log('copy tgt');});
+tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);});
 
 // Click down on src_textarea
 src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
@@ -219,14 +219,14 @@ function speak(side){
 		//if (tts.paused) {tts.resume();console.log('speak resume');}
 		//else {tts.pause();console.log('speak pause');}
 		tts.cancel();
-		console.log('speak stop');
+		//console.log('speak stop');
 	}
 	else{
 		//tts.cancel();
 		const utterance = new SpeechSynthesisUtterance(ta.value); // speak text
 		utterance.lang = lang; //fr-FR or en-GB
 		tts.speak(utterance);
-		console.log('speak');
+		//console.log('speak');
 	}
 }
 
@@ -265,10 +265,10 @@ function enable_textarea(side){
     		src_div.style.background = enabled_color;
     		src_count_cell.style.background = enabled_color;
     		src_lang_cell.style.background = enabled_color;
-			console.log('src enable');
+			//console.log('src enable');
     	}
     	else{
-    		console.log('src not enabled due to src_is_freezed')
+    		//console.log('src not enabled due to src_is_freezed')
     	}
 	}
 	if (side == 'tgt' || side == 'both'){
@@ -278,10 +278,10 @@ function enable_textarea(side){
     		tgt_div.style.background = enabled_color;
     		tgt_count_cell.style.background = enabled_color;
     		tgt_lang_cell.style.background = enabled_color;
-			console.log('tgt enable');
+			//console.log('tgt enable');
     	}
     	else{
-    		console.log('tgt not enabled due to tgt_is_freezed')
+    		//console.log('tgt not enabled due to tgt_is_freezed')
     	}
 	}
 }
@@ -294,7 +294,7 @@ function disable_textarea(side){
     	src_div.style.background = disabled_color;
    		src_count_cell.style.background = disabled_color;
    		src_lang_cell.style.background = disabled_color;
-		console.log('src disable');
+		//console.log('src disable');
 	}
 	if (side == 'tgt' || side == 'both'){
 	    tgt_textarea.disabled = true;
@@ -302,7 +302,7 @@ function disable_textarea(side){
     	tgt_div.style.background = disabled_color;
    		tgt_count_cell.style.background = disabled_color;
    		tgt_lang_cell.style.background = disabled_color;
-		console.log('tgt disable');
+		//console.log('tgt disable');
 	}
 }
 
@@ -603,7 +603,6 @@ function update_counts(){
 	while (src_textarea.clientHeight < src_textarea.scrollHeight ||  tgt_textarea.clientHeight < tgt_textarea.scrollHeight){
 		size = parseInt(window.getComputedStyle(src_textarea,null).getPropertyValue("font-size").slice(0, -2));
 		if (size < 15) break;
-		console.log('size='+size);
 		src_textarea.style.fontSize = (size - 1) + 'px';
 		src_div.style.fontSize      = (size - 1) + 'px';
 		tgt_textarea.style.fontSize = (size - 1) + 'px';
