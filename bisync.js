@@ -162,12 +162,12 @@ src_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(src
 tgt_copy.addEventListener('click', (event) => {navigator.clipboard.writeText(tgt_textarea.value);});
 
 // Click down on src_textarea
-src_textarea.addEventListener('click',(event) => cursor_moved(event, 'src')); // Click down (only left button must be considered)
-//src_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'src')); // Any key released (only arrows must be considered)
+src_textarea.addEventListener('click',(event) => caret_moved(event, 'src')); // Click down (only left button must be considered)
+//src_textarea.addEventListener('keyup',(event) => caret_moved(event, 'src')); // Any key released (only arrows must be considered)
 
 // Click down on tgt_textarea
-tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); // Click down (only left button must be considered)
-//tgt_textarea.addEventListener('keyup',(event) => cursor_moved(event, 'tgt')); // Any key released (only arrows must be considered)
+tgt_textarea.addEventListener('click',(event) => caret_moved(event, 'tgt')); // Click down (only left button must be considered)
+//tgt_textarea.addEventListener('keyup',(event) => caret_moved(event, 'tgt')); // Any key released (only arrows must be considered)
 
 function reset_default(){
 	enable_textarea('both');
@@ -385,22 +385,22 @@ function sync_scroll(side){
 }
 
 //************************************************************************************
-//*** textareas cursor moved *********************************************************
+//*** textareas caret moved *********************************************************
 //************************************************************************************
 
-function cursor_moved(e,side) {
-	cursor_moved_side = side;
+function caret_moved(e,side) {
+	caret_moved_side = side;
 	hide_menuselect();
 	if (e.key != 'ArrowDown' && e.key != 'ArrowUp' && e.key != 'ArrowLeft' && e.key != 'ArrowRight' && e.button != 0) {
 		return;
 	} 
-	if (cursor_moved_side=='src') {
+	if (caret_moved_side=='src') {
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
 		ta = src_textarea;
 		ta_value = src_textarea.value;
 	}
-	else if (cursor_moved_side=='tgt') {
+	else if (caret_moved_side=='tgt') {
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
 		ta = tgt_textarea;
@@ -408,18 +408,18 @@ function cursor_moved(e,side) {
 	}
 
 	if (Start != End) { //selection => gap
-   		console.log('textarea cursor selects from ' + Start + ' to ' + End + ': ' + ta_value.substring(Start, End));
-		cursor_moved_type = 'gap';
+   		console.log('textarea caret selects from ' + Start + ' to ' + End + ': ' + ta_value.substring(Start, End));
+		caret_moved_type = 'gap';
    		server_request_gap();
 	}
-	else { //cursor moves => prefix (if begin of token)
+	else { //caret moves => prefix (if begin of token)
 		nextChar = ' ';
 		prevChar = ' ';
 		if (Start < ta_value.length) {nextChar = ta_value.charAt(Start);} 
 		if (Start > 0) {prevChar = ta_value.charAt(Start-1);} 
 		if (prevChar == ' ' && nextChar != ' '){
-			console.log('textarea cursor prefixes from ' + Start + ' char is '+ta_value.charAt(Start));
-			cursor_moved_type = 'pref';
+			console.log('textarea caret prefixes from ' + Start + ' char is '+ta_value.charAt(Start));
+			caret_moved_type = 'pref';
 	   		server_request_pref();
 		}
 	}
@@ -470,7 +470,7 @@ async function server_request_sync(){
 }
 
 async function server_request_gap(){
-	if (cursor_moved_side == 'src'){ // tgt ((t2s)) src_with_gap
+	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_with_gap
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
 		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
@@ -500,7 +500,7 @@ async function server_request_gap(){
 }
 
 async function server_request_pref(){
-	if (cursor_moved_side == 'src'){ // tgt ((t2s)) src_pref
+	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_pref
 		Start = src_textarea.selectionStart;
 		tgt_pref = src_textarea.value.substring(0,Start);
         lang = tag_t2s;
@@ -536,28 +536,28 @@ menuselect.onchange = function(){
 	resp = menuselect.options[menuselect.selectedIndex].text;
     menuselect.setAttribute("hidden", "hidden");
     console.log('selected ' + resp);
-    if (cursor_moved_type == 'gap') {
-	    if (cursor_moved_side == 'src'){
+    if (caret_moved_type == 'gap') {
+	    if (caret_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
 		   	sync_div('src');
 		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
-    	else if (cursor_moved_side == 'tgt') {
+    	else if (caret_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
 		   	sync_div('tgt');
 		   	//sync_scroll('tgt');
 		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
     	}
     }
-    else if (cursor_moved_type == 'pref') {
-    	if (cursor_moved_side == 'src'){ 
+    else if (caret_moved_type == 'pref') {
+    	if (caret_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
 		   	sync_div('src');
 		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
-    	else if (cursor_moved_side=='tgt') {
+    	else if (caret_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
 		   	sync_div('tgt');
 		   	//sync_scroll('tgt');
