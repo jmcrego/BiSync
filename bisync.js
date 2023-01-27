@@ -5,6 +5,8 @@ let IP = document.getElementById("IP");
 let PORT = document.getElementById("PORT");
 let src_textarea = document.getElementById("src_textarea");
 let tgt_textarea = document.getElementById("tgt_textarea");
+let src_div = document.getElementById("src_div");
+let tgt_div = document.getElementById("tgt_div");
 let src_speak = document.getElementById("src_speak");
 let tgt_speak = document.getElementById("tgt_speak");
 let src_count = document.getElementById("src_count");
@@ -170,13 +172,16 @@ tgt_textarea.addEventListener('click',(event) => cursor_moved(event, 'tgt')); //
 function reset_default(){
 	enable_textarea('both');
     src_textarea.value = '';
+    sync_div('src');
+ 	//sync_scroll('src');
     tgt_textarea.value = '';
+    sync_div('tgt');
+    //sync_scroll('tgt');
     if (langs.options[langs.selectedIndex].value == 'enfr'){
 	    tag_s2t = par_op + 'fr' + par_cl;
     	tag_t2s = par_op + 'en' + par_cl;
     	src_lang.innerHTML = 'English';
     	tgt_lang.innerHTML = 'Français';
-
     }
     else if (langs.options[langs.selectedIndex].value == 'defr'){
 	    tag_s2t = par_op + 'fr' + par_cl;
@@ -194,6 +199,10 @@ function reset_default(){
     if (tts.speaking) tts.cancel();
     src_is_freezed = false;
     tgt_is_freezed = false;
+	src_textarea.style.fontSize = '20px';
+	src_div.style.fontSize      = '20px';
+	tgt_textarea.style.fontSize = '20px';
+	tgt_div.style.fontSize      = '20px';
 }
 
 function speak(side){
@@ -252,7 +261,8 @@ function enable_textarea(side){
 	if (side == 'src' || side == 'both'){
 		if (!src_is_freezed){
 		    src_textarea.disabled = false;
-    		src_textarea.style.background = enabled_color;
+    		//src_textarea.style.background = enabled_color;
+    		src_div.style.background = enabled_color;
     		src_count_cell.style.background = enabled_color;
     		src_lang_cell.style.background = enabled_color;
 			console.log('src enable');
@@ -264,7 +274,8 @@ function enable_textarea(side){
 	if (side == 'tgt' || side == 'both'){
 		if (!tgt_is_freezed){
 		    tgt_textarea.disabled = false;
-    		tgt_textarea.style.background = enabled_color;
+    		//tgt_textarea.style.background = enabled_color;
+    		tgt_div.style.background = enabled_color;
     		tgt_count_cell.style.background = enabled_color;
     		tgt_lang_cell.style.background = enabled_color;
 			console.log('tgt enable');
@@ -279,14 +290,16 @@ function enable_textarea(side){
 function disable_textarea(side){
 	if (side == 'src' || side == 'both'){
 	    src_textarea.disabled = true;
-    	src_textarea.style.background = disabled_color;
+    	//src_textarea.style.background = disabled_color;
+    	src_div.style.background = disabled_color;
    		src_count_cell.style.background = disabled_color;
    		src_lang_cell.style.background = disabled_color;
 		console.log('src disable');
 	}
 	if (side == 'tgt' || side == 'both'){
 	    tgt_textarea.disabled = true;
-    	tgt_textarea.style.background = disabled_color;
+    	//tgt_textarea.style.background = disabled_color;
+    	tgt_div.style.background = disabled_color;
    		tgt_count_cell.style.background = disabled_color;
    		tgt_lang_cell.style.background = disabled_color;
 		console.log('tgt disable');
@@ -296,10 +309,11 @@ function disable_textarea(side){
 //************************************************************************************
 //*** textareas modified *************************************************************
 //************************************************************************************
-
 //when src_textarea is modified
 src_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
+   	sync_div('src');
+   	//sync_scroll('src');
     if (src_textarea.value.length){ 
 	   	src_textarea.value = clean_line(src_textarea.value); 
 	   	if (!tgt_is_freezed){
@@ -318,6 +332,8 @@ src_textarea.addEventListener('input', (event) => {
 //when tgt_textarea is modified
 tgt_textarea.addEventListener('input', (event) => {
    	hide_menuselect();
+   	sync_div('tgt');
+   	//sync_scroll('tgt');
     if (tgt_textarea.value.length){ 
 	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
 	   	if (!src_is_freezed){
@@ -332,6 +348,41 @@ tgt_textarea.addEventListener('input', (event) => {
    	update_counts();
     if (tts.speaking) tts.cancel();
 });
+
+//src_textarea.addEventListener('scroll', (event) => {sync_scroll('src');});
+
+//tgt_textarea.addEventListener('scroll', (event) => {sync_scroll('tgt');});
+
+function sync_div(side){
+	if (side == 'src'){
+		ta = src_textarea;
+		div = src_div;
+	}
+	else if (side == 'tgt'){
+		ta = tgt_textarea;
+		div = tgt_div;
+	}
+	ta.value = ta.value.replaceAll('\t',' '); //replace all TABs by spaces in textarea
+	text = ta.value;
+	//text = text.replace(/ /g,'&nbsp;'); //text = text.replaceAll(' ','&nbsp;') //prevents multiple spaces problem in <div>
+	text = text.replace(/\r?\n/g,'<br/>'); //text = text.replaceAll('\n','<br>');
+  	if (text.endsWith('<br/>')) { text += "&nbsp;"; } // Add a space to the final line if empty (this prevents newlines problem in <div>)
+	div.innerHTML = text; //.replace(new RegExp("&", "g"), "&").replace(new RegExp("<", "g"), "<"); /* Global RegExp */
+}
+
+function sync_scroll(side){
+	if (side == 'src'){
+		ta = src_textarea;
+		div = src_div;
+	}
+	else if (side == 'tgt'){
+		ta = tgt_textarea;
+		div = tgt_div;
+	}
+	/* Scroll result to scroll coords of event - sync with textarea */
+	div.scrollTop = ta.scrollTop;
+	div.scrollLeft = ta.scrollLeft;
+}
 
 //************************************************************************************
 //*** textareas cursor moved *********************************************************
@@ -404,10 +455,14 @@ async function server_request_sync(){
     one_best = data['oraw'][0];
     if (src_textarea.disabled){ //outputs in source side
 		src_textarea.value = one_best;
+	   	sync_div('src');
+	   	//sync_scroll('src');
 		update_counts();
     }
     if (tgt_textarea.disabled){ //outputs in target side
 		tgt_textarea.value = one_best;
+	   	sync_div('tgt');
+	   	//sync_scroll('tgt');
 		update_counts();
     }
     enable_textarea('src');
@@ -484,20 +539,28 @@ menuselect.onchange = function(){
     if (cursor_moved_type == 'gap') {
 	    if (cursor_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+		   	sync_div('src');
+		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+		   	sync_div('tgt');
+		   	//sync_scroll('tgt');
 		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
     	}
     }
     else if (cursor_moved_type == 'pref') {
     	if (cursor_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
+		   	sync_div('src');
+		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (cursor_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
+		   	sync_div('tgt');
+		   	//sync_scroll('tgt');
 		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
     	}
     }
@@ -536,6 +599,15 @@ function update_counts(){
 	if (textareaMaxLen>0) {
 		src_count.innerHTML += '/'+textareaMaxLen;
 		tgt_count.innerHTML += '/'+textareaMaxLen;
+	}
+	while (src_textarea.clientHeight < src_textarea.scrollHeight ||  tgt_textarea.clientHeight < tgt_textarea.scrollHeight){
+		size = parseInt(window.getComputedStyle(src_textarea,null).getPropertyValue("font-size").slice(0, -2));
+		if (size < 15) break;
+		console.log('size='+size);
+		src_textarea.style.fontSize = (size - 1) + 'px';
+		src_div.style.fontSize      = (size - 1) + 'px';
+		tgt_textarea.style.fontSize = (size - 1) + 'px';
+		tgt_div.style.fontSize      = (size - 1) + 'px';
 	}
 }
 

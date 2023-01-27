@@ -11,12 +11,11 @@ html * {
     user-select: none;
 }
 
-#src_textarea, #tgt_textarea {
+#src_textarea, #tgt_textarea, #src_div, #tgt_div {
     resize: none;
     font-family: Poppins;
-    font-size: 22px;
+    font-size: 20px;
     border-radius: 0px;
-    background: transparent; 
     box-shadow: 0 0 0;
     padding: 10px;
     outline: none;
@@ -25,12 +24,31 @@ html * {
     left: 0; 
     right: 0; 
     bottom: 0; 
-    overflow: hidden;
-    white-space: pre-wrap;
+    /*overflow: auto;  Can be scrolled */
+    /*overflow: hidden;*/
+    /*white-space: pre-wrap;*/
     position: absolute;
 }
 
+#src_textarea, #tgt_textarea {
+    z-index: 1; /* Move editing in front of highlighting */
+    resize: none; /*to prevent resizing textarea*/
+    /* Make textarea almost completely transparent */
+    color: transparent; /*transparent;*/
+    background: transparent;
+    caret-color: black; /* Or choose your favorite color */
+  }
+  #src_div, #tgt_div {
+    z-index: 0; /* move highlighting under editing */
+    text-align: left; /* this is to align text in div to the left as textarea */
+    color: black;
+    /*overflow-wrap: break-word;*/
+    white-space: normal;
+  }
+
+
 #menuselect {
+    z-index: 2; /* move menuselect over both div and textarea */
     padding: 0px;
     font-size: 18px;
     border-radius: 0px;
