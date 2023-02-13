@@ -35,7 +35,7 @@
   
 	<center>
 	  	<!-- ############### Parameters (IP, Port, Delay, Alternatives) ############################################# !--> 
-		<table id="pars_table" border="0" hidden="hidden">
+		<table id="settings_table" border="0" hidden="hidden">
 			<tr>
 				<td style="text-align:left; font-size:16px; color: #336699">
 					IP &nbsp;<input type="text" id="IP" maxlength="15" size="15" value="127.0.0.1">&nbsp;&nbsp; Port &nbsp;<input type="text" id="PORT" maxlength="4" size="4" value="5000">
@@ -85,7 +85,7 @@
 			</tr>
 
 			<!-- ############### (textareas) #################### !--> 
-			<tr style="background-color:#ffffff; height:500px">
+			<tr style="background-color:#ffffff; height:150px">
 				<td style="text-align:left; position:relative; border-right: solid 2px #dddddd;">
 					<textarea id="src_textarea" spellcheck="false" autocomplete="off" autocorrect="off" autofocus></textarea>
 					<div id="src_div" spellcheck="false" autocomplete="off" autocorrect="off" aria-hidden="true"></div>
@@ -99,13 +99,13 @@
 
 			<!-- ############### (counters) #################### !--> 
 			<tr width="100%">
-				<td id="src_count_cell">
+				<td id="src_gadgets_cell">
 					<span id="src_freeze" class="material-symbols-outlined" style="cursor: pointer;"  title="Freeze/unfreeze left content">lock</span>
 					<span id="src_copy" class="material-symbols-outlined"   style="cursor: pointer;" title="Copy left content to clipboard">content_copy</span>
 					<span id="src_speak" class="material-symbols-outlined"  style="cursor: pointer;" title="Listen left content">volume_up</span>
 					<label id="src_count" style="vertical-align:top; float:right; width:30px"></label>
 				</td>
-				<td id="tgt_count_cell">
+				<td id="tgt_gadgets_cell">
 					<label id="tgt_count" style="vertical-align:top; float: left; width:30px"></label>
 					<span id="tgt_speak"  class="material-symbols-outlined" style="cursor: pointer;" title="Listen right content">volume_up</span>
 					<span id="tgt_copy"   class="material-symbols-outlined" style="cursor: pointer;" title="Copy right content to clibpoard">content_copy</span>
@@ -119,9 +119,9 @@
 			<tr>
 				<td style="vertical-align:top;">
 						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
-						Type your text in a text box. The other text box will immediately be synchronised with the corresponding translation. <br>
+						Type your text in a box. The other box will immediately be synchronised with the corresponding translation. <br>
 						&nbsp; &nbsp; <span class="material-symbols-outlined" style="vertical-align: bottom">check</span>
-						Further refine your text on any side until obtaining a suitable result. <br>
+						Further refine your text on any box until obtaining a suitable result. <br>
 						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
 						Single-click on the begining of a word to obtain alternative translations starting on such word. <br>
 						<span class="material-symbols-outlined" style="vertical-align: bottom">check</span> 
@@ -152,7 +152,6 @@
 
 		<!-- ############### floating select ####################################################### !-->
 		<select size="5" id="menuselect" hidden></select>
-
 		<script type="text/javascript" src="./bisync.js"></script>
 	</center>
 </body>

@@ -1,36 +1,4 @@
-
-const tts = window.speechSynthesis;
-let address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
-let IP = document.getElementById("IP");
-let PORT = document.getElementById("PORT");
-let src_textarea = document.getElementById("src_textarea");
-let tgt_textarea = document.getElementById("tgt_textarea");
-let src_div = document.getElementById("src_div");
-let tgt_div = document.getElementById("tgt_div");
-let src_speak = document.getElementById("src_speak");
-let tgt_speak = document.getElementById("tgt_speak");
-let src_count = document.getElementById("src_count");
-let tgt_count = document.getElementById("tgt_count");
-let reset_all = document.getElementById("reset_all");
-let settings = document.getElementById("settings");
-let pars_table = document.getElementById("pars_table");
-let src_freeze = document.getElementById("src_freeze");
-let tgt_freeze = document.getElementById("tgt_freeze");
-let src_clear = document.getElementById("src_clear");
-let tgt_clear = document.getElementById("tgt_clear");
-let src_count_cell = document.getElementById("src_count_cell");
-let tgt_count_cell = document.getElementById("tgt_count_cell");
-let src_lang = document.getElementById("src_lang");
-let tgt_lang = document.getElementById("tgt_lang");
-let langs = document.getElementById("langs");
-let alt = document.getElementById("alt");
-let alt_incr = document.getElementById("alt_incr");
-let alt_decr = document.getElementById("alt_decr");
-let delay = document.getElementById("delay");
-let delay_incr = document.getElementById("delay_incr");
-let delay_decr = document.getElementById("delay_decr");
-let menuselect = document.getElementById("menuselect");
-console.log('Server address: ' + address_server);
+/****** MAIN ******/
 
 let par_op = '｟';
 let par_cl = '｠';
@@ -41,30 +9,63 @@ let mousePosX = 0;
 let mousePosY = 0;
 let disabled_color = '#FAFAFA';
 let enabled_color = 'transparent';
-let src_is_freezed = false;
-let tgt_is_freezed = false;
+const tts = window.speechSynthesis;
 
-src_lang.innerHTML = 'English';
-tgt_lang.innerHTML = 'Français';
+//Settings
+let reset_all = document.getElementById("reset_all");
+let settings = document.getElementById("settings");
+let settings_table = document.getElementById("settings_table");
+let IP = document.getElementById("IP");
+let PORT = document.getElementById("PORT");
+let address_server = "http://" + document.getElementById("IP").value + ":" + document.getElementById("PORT").value + "/";
+let langs = document.getElementById("langs");
+let alt = document.getElementById("alt");
+let alt_incr = document.getElementById("alt_incr");
+let alt_decr = document.getElementById("alt_decr");
+let delay = document.getElementById("delay");
+let delay_incr = document.getElementById("delay_incr");
+let delay_decr = document.getElementById("delay_decr");
+
+//Content
+let src_lang = document.getElementById("src_lang");
+let tgt_lang = document.getElementById("tgt_lang");
+let src_textarea = document.getElementById("src_textarea");
+let tgt_textarea = document.getElementById("tgt_textarea");
+let src_div = document.getElementById("src_div");
+let tgt_div = document.getElementById("tgt_div");
+
+//Gadgets
+let src_gadgets_cell = document.getElementById("src_gadgets_cell");
+let tgt_gadgets_cell = document.getElementById("tgt_gadgets_cell");
+let src_speak = document.getElementById("src_speak");
+let tgt_speak = document.getElementById("tgt_speak");
+let src_count = document.getElementById("src_count");
+let tgt_count = document.getElementById("tgt_count");
+let src_freeze = document.getElementById("src_freeze");
+let tgt_freeze = document.getElementById("tgt_freeze");
+
+//Menu with alternatives
+let menuselect = document.getElementById("menuselect");
+console.log('Server address: ' + address_server);
 
 //when the initial HTML document has been completely loaded and parsed, without waiting for style sheets, images, and subframes to finish loading
 document.addEventListener("DOMContentLoaded", reset_default());
 
+
+/**************************************************************/
+/*************************** EVENTS ***************************/
+/**************************************************************/
+
 //hide menuselect when escape released
 document.addEventListener('keyup', (event) => {
-	if (event.keyCode == 27) {
-		//console.log('keyup 27 (hide_menuselect)')
-		hide_menuselect();
-	}
+	if (event.keyCode == 27) {hide_menuselect();}
 });
 
 //hide menuselect when click outside menuselect
 document.addEventListener('click', (event) => {
 	mousePosX = event.clientX;
 	mousePosY = event.clientY;
-	if (!menuselect.hasAttribute("hidden") && !menuselect.contains(event.target)) {
-		hide_menuselect();
-	}
+	if (!menuselect.hasAttribute("hidden") && !menuselect.contains(event.target)) {hide_menuselect();}
 });
 
 //change of address
@@ -76,67 +77,40 @@ langs.addEventListener('change', (event) => {reset_default();});
 
 //click alt_incr
 alt_incr.addEventListener('click', (event) => {
-	if (alt.innerHTML == '15'){
-		//console.log('cannot alt incr (maximum value)'); 		
-	}
-	else{
-		alt.innerHTML = parseInt(alt.innerHTML) + 1;
-		//console.log('incr alt to '+alt.innerHTML); 
-	}
+	if (alt.innerHTML == '15'){}//max reached
+	else {alt.innerHTML = parseInt(alt.innerHTML) + 1;}
 });
 
 //click alt_decr
 alt_decr.addEventListener('click', (event) => {
-	if (alt.innerHTML == '2'){
-		//console.log('cannot alt decr (minimum value)'); 		
-	}
-	else{
-		alt.innerHTML = parseInt(alt.innerHTML) - 1;
-		//console.log('incr alt to '+alt.innerHTML); 
-	}
+	if (alt.innerHTML == '2'){}//min reached
+	else {alt.innerHTML = parseInt(alt.innerHTML) - 1;}
 });
 
 //click delay_incr
 delay_incr.addEventListener('click', (event) => {
-	if (delay.innerHTML == 'OFF'){
-		delay.innerHTML = 1;
-		//console.log('incr delay to '+delay.innerHTML); 
-	}
-	else if (delay.innerHTML == "5"){
-		//console.log('cannot delay incr (maximum value)'); 				
-	}
-	else{
-		delay.innerHTML = parseInt(delay.innerHTML) + 1;
-		//console.log('incr delay to '+delay.innerHTML); 
-	}
+	if (delay.innerHTML == 'OFF') {delay.innerHTML = 1;}
+	else if (delay.innerHTML == "5"){}
+	else {delay.innerHTML = parseInt(delay.innerHTML) + 1;}
 });
 
 //click delay_decr
 delay_decr.addEventListener('click', (event) => {
-	if (delay.innerHTML == '1'){
-		delay.innerHTML = "OFF";
-		//console.log('decr delay to '+delay.innerHTML); 
-	}
-	else if (delay.innerHTML == "OFF"){
-		//console.log('cannot delay decr (minimum value)'); 				
-	}
-	else{
-		delay.innerHTML = parseInt(delay.innerHTML) - 1;
-		//console.log('decr delay to '+delay.innerHTML); 
-	}
+	if (delay.innerHTML == '1') {delay.innerHTML = "OFF";}
+	else if (delay.innerHTML == "OFF"){}
+	else {delay.innerHTML = parseInt(delay.innerHTML) - 1;}
 });
 
 //press settings
 settings.addEventListener('click', (event) => {
-	if (pars_table.getAttribute("hidden") == "hidden") {
-		pars_table.removeAttribute("hidden");
+	if (settings_table.getAttribute("hidden") == "hidden") {
+		settings_table.removeAttribute("hidden");
 		settings.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 	}
 	else {
-		pars_table.setAttribute("hidden", "hidden");
+		settings_table.setAttribute("hidden", "hidden");
 		settings.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 	}
-	//console.log('settings'); 
 });
 
 //press button reset_all
@@ -168,7 +142,58 @@ src_textarea.addEventListener('click',(event) => caret_moved(event, 'src')); // 
 tgt_textarea.addEventListener('click',(event) => caret_moved(event, 'tgt')); // Click down (only left button must be considered)
 //tgt_textarea.addEventListener('keyup',(event) => caret_moved(event, 'tgt')); // Any key released (only arrows must be considered)
 
+//when src_textarea is modified
+src_textarea.addEventListener('input', (event) => {
+   	hide_menuselect();
+   	sync_div('src');
+   	//sync_scroll('src');
+    if (src_textarea.value.length){ 
+	   	src_textarea.value = clean_line(src_textarea.value); 
+	   	if (!tgt_is_freezed){
+	    	disable_textarea('tgt'); //disable the other textarea
+	   		clear_and_reset_timeout(true);
+	   	}
+    }
+    else{ //textarea fully deleted
+    	enable_textarea('both');
+	   	clear_and_reset_timeout(false);
+    }
+   	update_counts();
+    if (tts.speaking) tts.cancel();
+});
+
+//when tgt_textarea is modified
+tgt_textarea.addEventListener('input', (event) => {
+   	hide_menuselect();
+   	sync_div('tgt');
+   	//sync_scroll('tgt');
+    if (tgt_textarea.value.length){ 
+	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
+	   	if (!src_is_freezed){
+	    	disable_textarea('src'); //disable the other textarea
+	   		clear_and_reset_timeout(true);
+	   	}
+    }
+    else{ //textarea fully deleted
+    	enable_textarea('both');
+	   	clear_and_reset_timeout(false);
+    }
+   	update_counts();
+    if (tts.speaking) tts.cancel();
+});
+
+//src_textarea.addEventListener('scroll', (event) => {sync_scroll('src');});
+
+//tgt_textarea.addEventListener('scroll', (event) => {sync_scroll('tgt');});
+
+
+/*****************************************************************/
+/*************************** FUNCTIONS ***************************/
+/*****************************************************************/
+
 function reset_default(){
+	tgt_is_freezed = false;
+	src_is_freezed = false;
 	enable_textarea('both');
     src_textarea.value = '';
     sync_div('src');
@@ -196,12 +221,14 @@ function reset_default(){
     }
     update_counts();
     if (tts.speaking) tts.cancel();
-    src_is_freezed = false;
-    tgt_is_freezed = false;
 	src_textarea.style.fontSize = '20px';
 	src_div.style.fontSize      = '20px';
 	tgt_textarea.style.fontSize = '20px';
 	tgt_div.style.fontSize      = '20px';
+	src_freeze.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
+	tgt_freeze.style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
+	//src_freeze.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
+	//tgt_freeze.style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24; cursor: pointer;"
 }
 
 function speak(side){
@@ -260,97 +287,35 @@ function enable_textarea(side){
 	if (side == 'src' || side == 'both'){
 		if (!src_is_freezed){
 		    src_textarea.disabled = false;
-    		//src_textarea.style.background = enabled_color;
-    		src_div.style.background = enabled_color;
-    		src_count_cell.style.background = enabled_color;
+    		src_div.style.background = enabled_color; //src_textarea.style.background = enabled_color;
+    		src_gadgets_cell.style.background = enabled_color;
     		src_lang_cell.style.background = enabled_color;
-			//console.log('src enable');
-    	}
-    	else{
-    		//console.log('src not enabled due to src_is_freezed')
     	}
 	}
 	if (side == 'tgt' || side == 'both'){
 		if (!tgt_is_freezed){
 		    tgt_textarea.disabled = false;
-    		//tgt_textarea.style.background = enabled_color;
-    		tgt_div.style.background = enabled_color;
-    		tgt_count_cell.style.background = enabled_color;
+    		tgt_div.style.background = enabled_color; //tgt_textarea.style.background = enabled_color;
+    		tgt_gadgets_cell.style.background = enabled_color;
     		tgt_lang_cell.style.background = enabled_color;
-			//console.log('tgt enable');
-    	}
-    	else{
-    		//console.log('tgt not enabled due to tgt_is_freezed')
     	}
 	}
 }
-
 
 function disable_textarea(side){
 	if (side == 'src' || side == 'both'){
 	    src_textarea.disabled = true;
-    	//src_textarea.style.background = disabled_color;
-    	src_div.style.background = disabled_color;
-   		src_count_cell.style.background = disabled_color;
+    	src_div.style.background = disabled_color; //src_textarea.style.background = disabled_color;
+   		src_gadgets_cell.style.background = disabled_color;
    		src_lang_cell.style.background = disabled_color;
-		//console.log('src disable');
 	}
 	if (side == 'tgt' || side == 'both'){
 	    tgt_textarea.disabled = true;
-    	//tgt_textarea.style.background = disabled_color;
-    	tgt_div.style.background = disabled_color;
-   		tgt_count_cell.style.background = disabled_color;
+    	tgt_div.style.background = disabled_color; //tgt_textarea.style.background = disabled_color;
+   		tgt_gadgets_cell.style.background = disabled_color;
    		tgt_lang_cell.style.background = disabled_color;
-		//console.log('tgt disable');
 	}
 }
-
-//************************************************************************************
-//*** textareas modified *************************************************************
-//************************************************************************************
-//when src_textarea is modified
-src_textarea.addEventListener('input', (event) => {
-   	hide_menuselect();
-   	sync_div('src');
-   	//sync_scroll('src');
-    if (src_textarea.value.length){ 
-	   	src_textarea.value = clean_line(src_textarea.value); 
-	   	if (!tgt_is_freezed){
-	    	disable_textarea('tgt'); //disable the other textarea
-	   		clear_and_reset_timeout(true);
-	   	}
-    }
-    else{ //textarea fully deleted
-    	enable_textarea('both');
-	   	clear_and_reset_timeout(false);
-    }
-   	update_counts();
-    if (tts.speaking) tts.cancel();
-});
-
-//when tgt_textarea is modified
-tgt_textarea.addEventListener('input', (event) => {
-   	hide_menuselect();
-   	sync_div('tgt');
-   	//sync_scroll('tgt');
-    if (tgt_textarea.value.length){ 
-	   	tgt_textarea.value = clean_line(tgt_textarea.value); 
-	   	if (!src_is_freezed){
-	    	disable_textarea('src'); //disable the other textarea
-	   		clear_and_reset_timeout(true);
-	   	}
-    }
-    else{ //textarea fully deleted
-    	enable_textarea('both');
-	   	clear_and_reset_timeout(false);
-    }
-   	update_counts();
-    if (tts.speaking) tts.cancel();
-});
-
-//src_textarea.addEventListener('scroll', (event) => {sync_scroll('src');});
-
-//tgt_textarea.addEventListener('scroll', (event) => {sync_scroll('tgt');});
 
 function sync_div(side){
 	if (side == 'src'){
@@ -382,10 +347,6 @@ function sync_scroll(side){
 	div.scrollTop = ta.scrollTop;
 	div.scrollLeft = ta.scrollLeft;
 }
-
-//************************************************************************************
-//*** textareas caret moved *********************************************************
-//************************************************************************************
 
 function caret_moved(e,side) {
 	caret_moved_side = side;
@@ -422,6 +383,47 @@ function caret_moved(e,side) {
 	   		server_request_pref();
 		}
 	}
+}
+
+function update_counts(){
+	src_count.innerHTML = src_textarea.value.length;
+	tgt_count.innerHTML = tgt_textarea.value.length;
+	if (textareaMaxLen>0) {
+		src_count.innerHTML += '/'+textareaMaxLen;
+		tgt_count.innerHTML += '/'+textareaMaxLen;
+	}
+	while (src_textarea.clientHeight < src_textarea.scrollHeight ||  tgt_textarea.clientHeight < tgt_textarea.scrollHeight){
+		size = parseInt(window.getComputedStyle(src_textarea,null).getPropertyValue("font-size").slice(0, -2));
+		if (size < 15) break;
+		src_textarea.style.fontSize = (size - 1) + 'px';
+		src_div.style.fontSize      = (size - 1) + 'px';
+		tgt_textarea.style.fontSize = (size - 1) + 'px';
+		tgt_div.style.fontSize      = (size - 1) + 'px';
+	}
+}
+
+function clean_line(txt){
+    txt = txt.replace('  ',' ');
+    if (textareaSingleLine) {txt = txt.replace('\n',' ');}
+    if (textareaMaxLen > 0 && txt.length > textareaMaxLen) {txt = txt.substring(0,textareaMaxLen);}
+    return txt;
+}
+
+function clear_and_reset_timeout(do_reset){
+    if (timeoutID) { //clear if already set
+	   	clearTimeout(timeoutID);
+    }
+    if (do_reset && delay.innerHTML != "OFF"){ //set new timeout
+    	timeoutID = setTimeout(server_request_sync,parseInt(delay.innerHTML)*1000);
+    }
+}
+
+function hide_menuselect(){
+	if (!menuselect.hasAttribute('hidden')){
+		menuselect.setAttribute("hidden", "hidden");
+		clear_and_reset_timeout(false);
+		enable_textarea('both');
+	}	
 }
 
 //************************************************************************************
@@ -472,6 +474,7 @@ async function server_request_gap(){
 	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_with_gap
 		Start = src_textarea.selectionStart;
 		End = src_textarea.selectionEnd;
+		str_gapped = src_textarea.value.substring(Start,End);
 		tgt_with_gap = src_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + src_textarea.value.substring(End);
         lang = tag_t2s;
         src = tgt_textarea.value;
@@ -480,6 +483,7 @@ async function server_request_gap(){
 	else{ //side=='tgt'// src ((s2t)) tgt_with_gap
 		Start = tgt_textarea.selectionStart;
 		End = tgt_textarea.selectionEnd;
+		str_gapped = tgt_textarea.value.substring(Start,End);
 		tgt_with_gap = tgt_textarea.value.substring(0,Start) + par_op+'GAP'+par_cl + tgt_textarea.value.substring(End);
         lang = tag_s2t;
         src = src_textarea.value;
@@ -495,13 +499,14 @@ async function server_request_gap(){
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-    optionsMenu(data['oraw']);
+    optionsMenu(data['oraw'],str_gapped);
 }
 
 async function server_request_pref(){
 	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_pref
 		Start = src_textarea.selectionStart;
 		tgt_pref = src_textarea.value.substring(0,Start);
+		str_gapped = src_textarea.value.substring(Start);
         lang = tag_t2s;
         src = tgt_textarea.value;
 	    disable_textarea('tgt');
@@ -509,6 +514,7 @@ async function server_request_pref(){
 	else{ //side=='tgt'// src ((s2t)) tgt_pref
 		Start = tgt_textarea.selectionStart;
 		tgt_pref = tgt_textarea.value.substring(0,Start);
+		str_gapped = tgt_textarea.value.substring(Start);
         lang = tag_s2t;
         src = src_textarea.value;
 	    disable_textarea('src');
@@ -523,7 +529,7 @@ async function server_request_pref(){
     }
     const data = await response.json();
     console.log("RES: "+JSON.stringify(data));
-	optionsMenu(data['oraw']);
+	optionsMenu(data['oraw'],str_gapped);
 }
 
 //************************************************************************************
@@ -568,7 +574,7 @@ menuselect.onchange = function(){
    	hide_menuselect();
 };
 
-function optionsMenu(options){
+function optionsMenu(options, str_gapped){
 	//remove previous select options
 	while (menuselect.options.length > 0) {menuselect.remove(0);}
 
@@ -577,6 +583,12 @@ function optionsMenu(options){
 	    opt = document.createElement('option');
     	opt.value = i;
 	    opt.innerHTML = options[i];
+	    console.log(str_gapped+' *** '+options[i])
+	    if (options[i] == str_gapped){
+			opt.style.backgroundColor = 'lightgrey';
+	    	//opt.selected = true;
+			//menuselect.selectedIndex = i; 
+	    }
     	menuselect.appendChild(opt);
 	}
     //positionning menu
@@ -586,59 +598,4 @@ function optionsMenu(options){
     menuselect.removeAttribute("hidden"); //is visible
 }
 
-
-//************************************************************************************
-//*** other **************************************************************************
-//************************************************************************************
-
-
-function update_counts(){
-	src_count.innerHTML = src_textarea.value.length;
-	tgt_count.innerHTML = tgt_textarea.value.length;
-	if (textareaMaxLen>0) {
-		src_count.innerHTML += '/'+textareaMaxLen;
-		tgt_count.innerHTML += '/'+textareaMaxLen;
-	}
-	while (src_textarea.clientHeight < src_textarea.scrollHeight ||  tgt_textarea.clientHeight < tgt_textarea.scrollHeight){
-		size = parseInt(window.getComputedStyle(src_textarea,null).getPropertyValue("font-size").slice(0, -2));
-		if (size < 15) break;
-		src_textarea.style.fontSize = (size - 1) + 'px';
-		src_div.style.fontSize      = (size - 1) + 'px';
-		tgt_textarea.style.fontSize = (size - 1) + 'px';
-		tgt_div.style.fontSize      = (size - 1) + 'px';
-	}
-}
-
-function clean_line(txt){
-    txt = txt.replace('  ',' ');
-    if (textareaSingleLine) {txt = txt.replace('\n',' ');}
-    if (textareaMaxLen > 0 && txt.length > textareaMaxLen) {txt = txt.substring(0,textareaMaxLen);}
-    return txt;
-}
-
-function clear_and_reset_timeout(do_reset){
-    if (timeoutID) { //clear if already set
-	   	clearTimeout(timeoutID);
-    }
-    if (do_reset && delay.innerHTML != "OFF"){ //set new timeout
-    	timeoutID = setTimeout(server_request_sync,parseInt(delay.innerHTML)*1000);
-    }
-}
-
-function hide_menuselect(){
-	if (!menuselect.hasAttribute('hidden')){
-		menuselect.setAttribute("hidden", "hidden");
-		clear_and_reset_timeout(false);
-		enable_textarea('both');
-	}	
-}
-
-/*
-function autoGrow(oField,oField2) {
-    if (oField.scrollHeight > oField.clientHeight & oField.rows < 20) {
-	oField.style.height = `${oField.scrollHeight}px`;
-	oField2.style.height = `${oField.scrollHeight}px`;
-	}
-}
-*/
 

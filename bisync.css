@@ -66,7 +66,7 @@ option:hover {
     background-color: #EDFC92; 
 }
 
-#src_count_cell {
+#src_gadgets_cell {
     padding-left: 5px;
     text-align: left;
     vertical-align: top;
@@ -77,7 +77,7 @@ option:hover {
     border-right: solid 2px #dddddd; /* must show border */
 }
 
-#tgt_count_cell {
+#tgt_gadgets_cell {
     padding-right: 5px;
     text-align: right;
     vertical-align: top; 
