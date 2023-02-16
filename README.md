@@ -10,10 +10,10 @@ In the general setting, BiSync works as a classical MT system providing the tran
 
 * Clone this repository into a machine with an available web browser to run the client (bisync.html).
 * Clone this repository into a machine to run the server (bisync.py).
-* Download available BiSync models into the machine where the server will run (use *-cpu to run on CPU and *-gpu when a GPU is available):
-  - en-fr-cpu, en-fr-gpu
-  - en-es-cpu, en-es-gpu
-  - es-fr-cpu, es-fr-gpu
+* Download available BiSync models into the machine where the server will run:
+  - en-fr
+  - en-es
+  - es-fr
 
 ## Instructions
 
