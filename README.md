@@ -45,7 +45,9 @@ Open bisync.html using any web browser (preferably Chrome):
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Select the left and right-side languages (the model must habe been trained with such languages).
   - Select the number of alternatives to request as well as the delay before synchronisation takes place.
+  <center>
   <img src="https://github.com/jmcrego/BiSync/blob/main/pics/bisync_settings.png" alt="BiSync settings" width="250"/>
+  </center>
 * Use:
   - Edit (or post-edit) any input box and BiSync will automatically synchronise the other box to restore parallelism.
   ![Bilingual synchronisation](https://github.com/jmcrego/BiSync/blob/main/pics/tired.png?raw=true)
