@@ -4,7 +4,7 @@
 
 BiSync is a bilingual writing assistant that allows users to freely compose text in two languages while maintaining the two monolingual texts synchronized. It is trained to restore parallelism by following similar updates to those introduced by the user.
 BiSync also includes additional functionalities, such as the display of alternative prefix translations and paraphrases, which are intended to facilitate the authoring of texts. 
-Read <a href="https://arxiv.org/pdf/2210.13163.pdf" :target="_blank">this</a> paper for further details on the BiSync network.
+Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> paper for further details on the BiSync network.
 
 ## Download and Install
 
@@ -17,7 +17,7 @@ git clone https://github.com/jmcrego/BiSync.git
 pip install -r requirements.txt
 ```
 * Download available BiSync models (to the same directory where you clone this repository):
-  - [go](http://stackoverflow.com){:target="_blank" rel="noopener"} and <a href="https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link" :target="_blank">ct2_en-fr_int8.tgz</a>
+  - <a href="https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link" target="_blank">ct2_en-fr_int8.tgz</a>
 * Uncompress the .tgz file:
 ```
 tar xvzf ct2_en-fr_int8.tgz
