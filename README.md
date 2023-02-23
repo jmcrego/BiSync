@@ -13,11 +13,11 @@ In the general setting, BiSync works as a classical MT system providing the tran
 * Download available BiSync models into the machine where the server will run:
   - ct2_en-fr_int8.tgz
 
-* Uncompress the file:
+* Uncompress the file (creates a directory with the model, vocabulary and bpe codes):
 ```
 tar xvzf ct2_en-fr_int8.tgz
 ```
- * This will create a directory with the model, vocabulary and bpe codes
+
 
 ## Instructions
 
