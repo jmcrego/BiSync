@@ -17,7 +17,7 @@ In the general setting, BiSync works as a classical MT system providing the tran
 ```
 tar xvzf ct2_en-fr_int8.tgz
 ```
-** This will create a directory with the model, vocabulary and bpe dictionary
+ * This will create a directory with the model, vocabulary and bpe codes
 
 ## Instructions
 
