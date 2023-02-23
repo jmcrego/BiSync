@@ -8,12 +8,11 @@ Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> pap
 
 ## Download and Install
 
-* Clone this repository into a machine with an available web browser to run the client (bisync.html).
+* Clone this repository into a machine with an available web browser to run the client.
 ```
 git clone https://github.com/jmcrego/BiSync.git
 ```
-* Clone this repository into a machine to run the server (bisync.py).
-  - Only if client and server are run in different machines.
+* Clone this repository into a machine to run the server (only if client and server are run in different machines):
   - Dependencies in requirements.txt are needed to run the server.
   ```
   pip install -r requirements.txt
