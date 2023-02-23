@@ -16,6 +16,10 @@ In the general setting, BiSync works as a classical MT system providing the tran
 * Uncompress the file (creates a directory with the model, vocabulary and bpe codes):
 ```
 tar xvzf ct2_en-fr_int8.tgz
+ls ct2_en-fr_int8
+bpe_32k
+model.bin
+shared_vocabulary.txt
 ```
 
 
