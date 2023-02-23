@@ -45,12 +45,11 @@ Open bisync.html using any web browser (preferably Chrome):
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Select the left and right-side languages (the model must habe been trained with such languages).
   - Select the number of alternatives to request as well as the delay before synchronisation takes place.
-  <p align="center">
-  <img src="https://github.com/jmcrego/BiSync/blob/main/pics/bisync_settings.png" alt="BiSync settings" width="250"/>
-  </p>
+  <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/bisync_settings.png" alt="BiSync settings" width="250"/> </p>
 * Use:
   - Edit (or post-edit) any input box and BiSync will automatically synchronise the other box to restore parallelism.
   ![Bilingual synchronisation](https://github.com/jmcrego/BiSync/blob/main/pics/tired.png?raw=true)
+  <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired.png" alt="Bilingual synchronisation"/> </p>
   - Place the cursor on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
   ![Prefix alternatives](https://github.com/jmcrego/BiSync/blob/main/pics/tired_prefix.png?raw=true)
   - Select a sequence of words to get alternative translations for the selected sequence.
