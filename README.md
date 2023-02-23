@@ -18,7 +18,6 @@ pip install -r requirements.txt
 ```
 * Download available BiSync models (to the same directory where you clone this repository):
   - <a href="https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link" target="_blank">ct2_en-fr_int8.tgz</a>
-  - [ct2_en-fr_int8.tgz](https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link){:target="_blank" rel="noopener"}
 * Uncompress the .tgz file:
 ```
 tar xvzf ct2_en-fr_int8.tgz
