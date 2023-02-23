@@ -5,7 +5,8 @@
 BiSync is a bilingual writing assistant that allows users to freely compose text in two languages while maintaining the two monolingual texts synchronized. It is trained to restore parallelism by following similar updates to those introduced by the user.
 BiSync also includes additional functionalities, such as the display of alternative prefix translations and paraphrases, which are intended to facilitate the authoring of texts. 
 Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> paper for further details on the BiSync network.
-![alt text](https://github.com/jmcrego/BiSync/blob/main/pics/tired.png?)
+![Snapshot of the BiSync assistant](https://github.com/jmcrego/BiSync/blob/main/pics/tired.png?raw=true)
+
 ## Download and Install
 
 * Clone this repository:
@@ -45,7 +46,10 @@ Open bisync.html using any web browser (preferably Chrome):
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Select the left and right-side languages (the model must habe been trained with such languages).
   - Select the number of alternatives to request as well as the delay before synchronisation takes place.
+  ![BiSync settings](https://github.com/jmcrego/BiSync/blob/main/pics/bisync_settings.png?raw=true)
 * Use:
   - Edit (or post-edit) any input box and BiSync will automatically synchronise the other box to restore parallelism.
   - Place the cursor on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
+  ![Prefix alternatives](https://github.com/jmcrego/BiSync/blob/main/pics/tired_prefix.png?raw=true)
   - Select a sequence of words to get alternative translations for the selected sequence.
+  ![Paraphrase alternatives](https://github.com/jmcrego/BiSync/blob/main/pics/tired_gap.png?raw=true)
