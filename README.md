@@ -8,16 +8,15 @@ Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> pap
 
 ## Download and Install
 
-* Clone this repository into a machine with an available web browser to run the client.
+* Clone this repository:
 ```
 git clone https://github.com/jmcrego/BiSync.git
 ```
-* Clone this repository into a machine to run the server (only if client and server are run in different machines):
-  - Dependencies in requirements.txt are needed to run the server.
-  ```
-  pip install -r requirements.txt
-  ```
-* Download available BiSync models into the machine where the server will run, same directory where you clone this repository:
+* Dependencies in requirements.txt are needed to run the server.
+```
+pip install -r requirements.txt
+```
+* Download available BiSync models (same directory where you clone this repository):
   - <a href="https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link" target="_blank">ct2_en-fr_int8.tgz</a>
 * Uncompress the .tgz file:
 ```
