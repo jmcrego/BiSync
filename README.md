@@ -52,5 +52,7 @@ Open bisync.html using any web browser (preferably Chrome):
   <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired.png" alt="Bilingual synchronisation"/> </p>
   - Place the cursor on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
   ![Prefix alternatives](https://github.com/jmcrego/BiSync/blob/main/pics/tired_prefix.png?raw=true)
+  <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired_prefix.png" alt="Prefix alternatives"/> </p>
   - Select a sequence of words to get alternative translations for the selected sequence.
   ![Paraphrase alternatives](https://github.com/jmcrego/BiSync/blob/main/pics/tired_gap.png?raw=true)
+  <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired_gap.png" alt="Paraphrase alternatives"/> </p>
