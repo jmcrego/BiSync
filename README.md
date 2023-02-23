@@ -49,7 +49,7 @@ Open bisync.html using any web browser (preferably Chrome):
 * Use:
   - Edit (or post-edit) any input box and BiSync will automatically synchronise the other box to restore parallelism.
     <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired.png" alt="Bilingual synchronisation"/> </p>
-  - Place the cursor on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
+  - Click on the beginning of a word to get alternative translations starting on such word (previous words will remain unchanged).
     <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired_prefix.png" alt="Prefix alternatives"/> </p>
   - Select a sequence of words to get alternative translations for the selected sequence.
     <p align="center"> <img src="https://github.com/jmcrego/BiSync/blob/main/pics/tired_gap.png" alt="Paraphrase alternatives"/> </p>
