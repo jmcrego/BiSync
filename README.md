@@ -11,9 +11,11 @@ In the general setting, BiSync works as a classical MT system providing the tran
 * Clone this repository into a machine with an available web browser to run the client (bisync.html).
 * Clone this repository into a machine to run the server (bisync.py).
 * Download available BiSync models into the machine where the server will run:
-  - en-fr
-  - en-es
-  - es-fr
+  - ct2_en-fr_int8.tgz
+
+```
+tar xvzf ct2_en-fr_int8.tgz
+```
 
 ## Instructions
 
