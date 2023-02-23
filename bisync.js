@@ -445,8 +445,8 @@ async function server_request_sync(){
         tgt = tgt_textarea.value;
     }
     params = { "src": src, "lang": tag, "tgt": tgt, "alt": alt.innerHTML, "mode": "sync"}
-    console.log("REQ: "+JSON.stringify(params));
-    response = await fetch(address_server, {"method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
+    console.log("REQ: "+JSON.stringify(params)); //credentials
+    response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
         console.log("RES: HTTP error: "+`${response.status}`);
         alert("HTTP error: "+`${response.status}`);
