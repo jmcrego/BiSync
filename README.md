@@ -21,7 +21,6 @@ ls ct2_en-fr_int8
   258K shared_vocabulary.txt
 ```
 
-
 ## Instructions
 
 ### Server
@@ -36,7 +35,7 @@ Dependencies in requirements.txt are needed to run the server.
 
 ### Client
 
-Load bisync.html using any web browser (preferably Chrome):
+Open bisync.html using any web browser (preferably Chrome):
 * Configuration:
   - Update IP and Port settings with the address where the BiSync server was launched.
   - Select the left and right-side languages (the model must habe been trained with such languages).
