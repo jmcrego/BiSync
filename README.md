@@ -17,9 +17,9 @@ In the general setting, BiSync works as a classical MT system providing the tran
 ```
 tar xvzf ct2_en-fr_int8.tgz
 ls ct2_en-fr_int8
-bpe_32k
-model.bin
-shared_vocabulary.txt
+358K bpe_32k
+ 59M model.bin
+258K shared_vocabulary.txt
 ```
 
 
