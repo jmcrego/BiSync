@@ -6,7 +6,7 @@ BiSync is a bilingual writing assistant that allows users to freely compose text
 BiSync also includes additional functionalities, such as the display of alternative prefix translations and paraphrases, which are intended to facilitate the authoring of texts. 
 Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> paper for further details on the BiSync network.
 
-## Download
+## Download and Install
 
 * Clone this repository into a machine with an available web browser to run the client (bisync.html).
 ```
@@ -14,6 +14,10 @@ git clone https://github.com/jmcrego/BiSync.git
 ```
 * Clone this repository into a machine to run the server (bisync.py).
   - Only if client and server are run in different machines.
+  - Dependencies in requirements.txt are needed to run the server.
+  ```
+  pip install -r requirements.txt
+  ```
 * Download available BiSync models into the machine where the server will run, same directory where you clone this repository:
   - <a href="https://drive.google.com/file/d/1UlX82eprW3dT8WrZDr7dkn_ACrAdW9vl/view?usp=share_link" target="_blank">ct2_en-fr_int8.tgz</a>
 * Uncompress the .tgz file:
@@ -35,7 +39,6 @@ To run the model (linux or macos) use:
 export FLASK_APP=bisync.py
 flask run --host=127.0.0.1 --port=5000
 ```
-Dependencies in requirements.txt are needed to run the server.
 
 ### Client
 
