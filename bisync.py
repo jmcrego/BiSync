@@ -14,7 +14,7 @@ from flask_cors import CORS
 
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(levelname)s %(message)s', datefmt='%Y-%m-%d_%H:%M:%S', level=getattr(logging, 'INFO', None), filename='./bisync.log')
 
-mdir = "./ct2_model_ckpt-500000_int8"
+mdir = "./ct2_en-fr_int8"
 translator = ctranslate2.Translator(mdir, device="cpu")
 logging.info('loaded Model {}'.format(mdir))
 onmttok = pyonmttok.Tokenizer('aggressive', joiner_annotate=True, segment_numbers=True, bpe_model_path=mdir+"/bpe_32k")
