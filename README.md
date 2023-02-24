@@ -6,7 +6,7 @@ BiSync is a bilingual writing assistant that allows users to freely compose text
 BiSync also includes additional functionalities, such as the display of alternative prefix translations and paraphrases, which are intended to facilitate the authoring of texts. 
 Read <a href="https://arxiv.org/pdf/2210.13163.pdf" target="_blank">this</a> paper for further details on the BiSync network.
 
-<a href="https://youtu.be/WypVDEWiemg" target="_blank">This</a> video demonstrates BiSync.
+<a href="https://youtu.be/_l-ugDHfNgU" target="_blank">This</a> video demonstrates BiSync.
 
 ## Download and Install
 
