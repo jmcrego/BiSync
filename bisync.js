@@ -33,6 +33,8 @@ let src_textarea = document.getElementById("src_textarea");
 let tgt_textarea = document.getElementById("tgt_textarea");
 let src_div = document.getElementById("src_div");
 let tgt_div = document.getElementById("tgt_div");
+let src_initial = '';
+let tgt_initial = '';
 
 //Gadgets
 let src_gadgets_cell = document.getElementById("src_gadgets_cell");
@@ -196,9 +198,11 @@ function reset_default(){
 	src_is_freezed = false;
 	enable_textarea('both');
     src_textarea.value = '';
+	src_initial = '';
     sync_div('src');
  	//sync_scroll('src');
     tgt_textarea.value = '';
+	tgt_initial = '';
     sync_div('tgt');
     //sync_scroll('tgt');
     if (langs.options[langs.selectedIndex].value == 'enfr'){
@@ -332,6 +336,7 @@ function sync_div(side){
 	text = text.replace(/\r?\n/g,'<br/>'); //text = text.replaceAll('\n','<br>');
   	if (text.endsWith('<br/>')) { text += "&nbsp;"; } // Add a space to the final line if empty (this prevents newlines problem in <div>)
 	div.innerHTML = text; //.replace(new RegExp("&", "g"), "&").replace(new RegExp("<", "g"), "<"); /* Global RegExp */
+	//div.innerHTML = '<p class="yellow-text-shadow">' + text + '</p>';
 }
 
 function sync_scroll(side){
@@ -430,21 +435,46 @@ function hide_menuselect(){
 //*** server requests ****************************************************************
 //************************************************************************************
 
+function do_update(x_cur, x_ini){
+	//'｟INS｠'; '｟DEL｠'; '｟SUB｠';
+	console.log('len x_cur = '+x_cur.length)
+	console.log('len x_ini = '+x_ini.length)
+	if (x_cur.length > x_ini.length){
+		return '｟INS｠';
+	}
+	if (x_cur.length < x_ini.length){
+		return '｟DEL｠';
+	}
+	return '｟SUB｠';
+}
+
 async function server_request_sync(){
 	if (src_is_freezed || tgt_is_freezed){
 		return;		
 	}
-    if (src_textarea.disabled){ //target-to-source
-        src = tgt_textarea.value;
+    if (src_textarea.disabled){ //target-to-source (tgt modified)
+    	if (tgt_textarea.value == tgt_initial){ 
+    		enable_textarea('src');
+    		return; 
+    	}
         tag = tag_t2s;
+        src = tgt_textarea.value;
         tgt = src_textarea.value;   
+        tgt_ini = src_initial;
+        src_ini = tgt_initial;
     }
-    if (tgt_textarea.disabled){ //source-to-target
-    	src = src_textarea.value;
+    if (tgt_textarea.disabled){ //source-to-target (src modified)
+    	if (src_textarea.value == src_initial){ 
+    		enable_textarea('tgt');
+    		return; 
+    	}
         tag = tag_s2t;
+    	src = src_textarea.value;
         tgt = tgt_textarea.value;
+        tgt_ini = tgt_initial;
+        src_ini = src_initial;
     }
-    params = { "src": src, "lang": tag, "tgt": tgt, "alt": alt.innerHTML, "mode": "sync"}
+    params = { "src": src, "tgt": tgt, "lang": tag, "tgt_ini": tgt_ini, "src_ini": src_ini, "alt": alt.innerHTML, "mode": "sync"}
     console.log("REQ: "+JSON.stringify(params)); //credentials
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -456,12 +486,16 @@ async function server_request_sync(){
     one_best = data['oraw'][0];
     if (src_textarea.disabled){ //outputs in source side
 		src_textarea.value = one_best;
+		src_initial = src_textarea.value; //is the new src_initial
+		tgt_initial = tgt_textarea.value; //is the new tgt_initial
 	   	sync_div('src');
 	   	//sync_scroll('src');
 		update_counts();
     }
     if (tgt_textarea.disabled){ //outputs in target side
 		tgt_textarea.value = one_best;
+		src_initial = src_textarea.value; //is the new src_initial
+		tgt_initial = tgt_textarea.value; //is the new tgt_initial
 	   	sync_div('tgt');
 	   	//sync_scroll('tgt');
 		update_counts();
@@ -469,6 +503,8 @@ async function server_request_sync(){
     enable_textarea('src');
     enable_textarea('tgt');
 }
+
+//************************************************************************************
 
 async function server_request_gap(){
 	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_with_gap
@@ -489,7 +525,7 @@ async function server_request_gap(){
         src = src_textarea.value;
         disable_textarea('src');
 	}
-    params = { "src": src, "lang": lang, "tgt": tgt_with_gap, "alt": alt.innerHTML, "mode": "gap"}
+    params = { "src": src, "tgt": tgt_with_gap, "lang": lang, "tgt_ini": "", "src_ini": "", "alt": alt.innerHTML, "mode": "gap"}
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -501,6 +537,8 @@ async function server_request_gap(){
     console.log("RES: "+JSON.stringify(data));
     optionsMenu(data['oraw'],str_gapped);
 }
+
+//************************************************************************************
 
 async function server_request_pref(){
 	if (caret_moved_side == 'src'){ // tgt ((t2s)) src_pref
@@ -519,7 +557,7 @@ async function server_request_pref(){
         src = src_textarea.value;
 	    disable_textarea('src');
 	}
-    params = { "src": src, "lang": lang, "tgt": tgt_pref, "alt": alt.innerHTML, "mode": "pref"};
+    params = { "src": src, "tgt": tgt_pref, "lang": lang, "tgt_ini": "", "src_ini": "", "alt": alt.innerHTML, "mode": "pref"};
     console.log("REQ: "+JSON.stringify(params));
     response = await fetch(address_server, {"credentials": "same-origin", "method": "POST", "headers": {"Content-Type": "application/json"}, "body": JSON.stringify(params)});
     if (! response.ok){
@@ -544,12 +582,14 @@ menuselect.onchange = function(){
     if (caret_moved_type == 'gap') {
 	    if (caret_moved_side == 'src'){
 			src_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+			src_initial = src_textarea.value; //is the new src_initial
 		   	sync_div('src');
 		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (caret_moved_side == 'tgt') {
 			tgt_textarea.value = tgt_with_gap.replace(par_op+'GAP'+par_cl,resp);
+			tgt_initial = tgt_textarea.value; //is the new tgt_initial
 		   	sync_div('tgt');
 		   	//sync_scroll('tgt');
 		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
@@ -558,12 +598,16 @@ menuselect.onchange = function(){
     else if (caret_moved_type == 'pref') {
     	if (caret_moved_side == 'src'){ 
 			src_textarea.value = src_textarea.value.substring(0,Start) + resp;
+			src_initial = src_textarea.value; //is the new src_initial
+			tgt_initial = tgt_textarea.value; //is the new tgt_initial (not needed)
 		   	sync_div('src');
 		   	//sync_scroll('src');
 		   	if (!tgt_is_freezed){ clear_and_reset_timeout(true); }
 	    }
     	else if (caret_moved_side=='tgt') {
 			tgt_textarea.value = tgt_textarea.value.substring(0,Start) + resp;
+			tgt_initial = tgt_textarea.value; //is the new tgt_initial
+			src_initial = src_textarea.value; //is the new src_initial (not needed)
 		   	sync_div('tgt');
 		   	//sync_scroll('tgt');
 		   	if (!src_is_freezed){ clear_and_reset_timeout(true); }
