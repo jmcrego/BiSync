@@ -2,3 +2,4 @@ flask==2.*
 Flask-Cors==3.0.10
 pyonmttok==1.31.*
 ctranslate2==3.3.*
+edit-distance==1.0.*
