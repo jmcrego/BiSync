@@ -11,7 +11,7 @@ from flask_cors import CORS
 # or
 # flask run --host=127.0.0.1 --port=5000
 ### to test, you can send client data using:
-#curl -X POST -H "Content-type: application/json" -d "{\"src\": \"This is my new sentence.\", \"lang\":\"｟fr｠\", \"tgt\":\"\", \"mode\":\"sync\"}" "http://127.0.0.1:5000/"
+#curl -X POST -H "Content-type: application/json" -d "{\"src\": \"This is my new sentence.\", \"lang\":\"｟fr｠\", \"tgt\":\"\", \"mode\":\"sync\", \"src_ini\": \"\", \"tgt_ini\": \"\", \"alt\": \"5\"}" "http://127.0.0.1:5000/"
 
 logging.basicConfig(format='[%(asctime)s.%(msecs)03d] %(levelname)s %(message)s', datefmt='%Y-%m-%d_%H:%M:%S', level=getattr(logging, 'INFO', None), filename='./bisync.log')
 
