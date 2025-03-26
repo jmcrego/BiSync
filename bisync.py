@@ -1,7 +1,7 @@
 import logging
 import pyonmttok
 import ctranslate2
-import edit_distance
+#import edit_distance
 from flask import Flask, request, json, jsonify
 from flask_cors import CORS
 
